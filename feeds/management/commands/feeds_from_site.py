@@ -8,6 +8,14 @@ import requests
 from ... import models
 
 
+def response_is_html(response):
+    if 'html' in index_resp.headers.get('Content-Type', ''):
+        return True
+    if index_resp.text.strip().startswith('<!'):
+        return True
+    return False
+
+
 class Command(base.BaseCommand):
     help = 'Add RSS feeds for urls from a page.'
 
@@ -16,7 +24,7 @@ class Command(base.BaseCommand):
 
     def handle(self, site_url, *args, **kwargs):
         index_resp = requests.get(site_url)
-        if index_resp.text.strip().startswith('<!'):
+        if response_is_html(index_resp):
             index_urls = [
                 e.attrib['href']
                 for e in
@@ -29,13 +37,13 @@ class Command(base.BaseCommand):
                 for e in
                 etree.fromstring(index_resp.text).xpath('.//*[starts-with(text(), "http://")] | .//*[starts-with(text(), "https://")]')
             ]
-        for article_url in index_urls:
+        for article_url in set(index_urls):
             parent_url = parse.urljoin(article_url, '.')
             for url in [article_url, parent_url]:
                 if '://' not in url:
                     url = parse.urljoin(site_url, url)
                 article_resp = requests.get(url)
-                if article_resp.text.strip().startswith('<!'):
+                if response_is_html(article_resp):
                     try:
                         article_tree = html.fromstring(article_resp.text)
                     except Exception:
