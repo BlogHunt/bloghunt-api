@@ -38,7 +38,7 @@ class FeedPage(object):
 
 class Feed(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    rss_url = models.URLField(unique=True)
+    rss_url = models.URLField('RSS URL', unique=True)
     title = models.CharField(max_length=250, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     link = models.URLField(blank=True, null=True)
