@@ -52,3 +52,6 @@ class Feed(models.Model):
         channel = channel if channel is not None else tree
         nsmatch = re.match('\{.*\}', channel.tag)
         return FeedPage(channel, url=self.rss_url, defaultns=nsmatch.group(0) if nsmatch else '')
+
+    def __str__(self):
+        return self.rss_url
