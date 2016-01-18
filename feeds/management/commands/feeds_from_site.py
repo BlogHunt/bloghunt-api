@@ -9,9 +9,9 @@ from ... import models
 
 
 def response_is_html(response):
-    if 'html' in index_resp.headers.get('Content-Type', ''):
+    if 'html' in response.headers.get('Content-Type', ''):
         return True
-    if index_resp.text.strip().startswith('<!'):
+    if response.text.strip().startswith('<!'):
         return True
     return False
 
