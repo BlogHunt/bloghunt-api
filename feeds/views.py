@@ -7,8 +7,7 @@ from . import models, serializers
 
 
 class FeedViewSet(viewsets.ModelViewSet):
-    queryset = models.Feed.objects.filter(
-        last_updated__isnull=False).order_by('rss_url')
+    queryset = models.Feed.objects.filter(last_updated__isnull=False)
     serializer_class = serializers.FeedSerializer
 
     @detail_route(methods=['get'])
