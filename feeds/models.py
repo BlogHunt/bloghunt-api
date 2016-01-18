@@ -42,6 +42,7 @@ class Feed(models.Model):
     title = models.CharField(max_length=250, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     link = models.URLField(blank=True, null=True)
+    last_updated = models.DateTimeField(editable=False, null=True)
 
     def get_feedpage(self):
         response = requests.get(self.rss_url)
