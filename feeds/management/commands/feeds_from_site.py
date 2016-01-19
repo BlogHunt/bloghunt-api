@@ -55,6 +55,10 @@ class Command(base.BaseCommand):
                     if verbosity > 0:
                         self.stderr.write('URL appears invalid {}'.format(url))
                     continue
+                except Exception:
+                    if verbosity > 0:
+                        self.stderr.write('Error getting {}'.format(url))
+                    continue
                 if response_is_html(article_resp):
                     try:
                         article_tree = html.fromstring(article_resp.text)
