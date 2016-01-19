@@ -24,6 +24,7 @@ class Command(base.BaseCommand):
         parser.add_argument('site_url')
 
     def handle(self, site_url, *args, **kwargs):
+        checked_urls = set()
         index_resp = requests.get(site_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'})
         if response_is_html(index_resp):
             index_urls = [
@@ -43,6 +44,9 @@ class Command(base.BaseCommand):
             for url in [article_url, parent_url]:
                 if '://' not in url:
                     url = parse.urljoin(site_url, url)
+                if url in checked_urls:
+                    continue
+                checked_urls.add(url)
                 try:
                     article_resp = requests.get(url)
                 except InvalidSchema:
