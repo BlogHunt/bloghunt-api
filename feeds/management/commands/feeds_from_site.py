@@ -4,6 +4,7 @@ from django.core.management import base
 from django.db.utils import IntegrityError
 from lxml import etree, html
 import requests
+from requests.exceptions import InvalidSchema
 
 from ... import models
 
@@ -42,7 +43,10 @@ class Command(base.BaseCommand):
             for url in [article_url, parent_url]:
                 if '://' not in url:
                     url = parse.urljoin(site_url, url)
-                article_resp = requests.get(url)
+                try:
+                    article_resp = requests.get(url)
+                except InvalidSchema:
+                    continue
                 if response_is_html(article_resp):
                     try:
                         article_tree = html.fromstring(article_resp.text)
