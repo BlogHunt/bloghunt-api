@@ -4,7 +4,7 @@ from django.core.management import base
 from django.db.utils import IntegrityError
 from lxml import etree, html
 import requests
-from requests.exceptions import InvalidSchema
+from requests.exceptions import InvalidSchema, InvalidURL
 
 from ... import models
 
@@ -50,6 +50,10 @@ class Command(base.BaseCommand):
                 try:
                     article_resp = requests.get(url)
                 except InvalidSchema:
+                    continue
+                except InvalidURL:
+                    if verbosity > 0:
+                        self.stderr.write('URL appears invalid {}'.format(url))
                     continue
                 if response_is_html(article_resp):
                     try:
