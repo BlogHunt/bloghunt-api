@@ -23,7 +23,7 @@ class Command(base.BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('site_url')
 
-    def handle(self, site_url, *args, **kwargs):
+    def handle(self, site_url, verbosity, *args, **kwargs):
         checked_urls = set()
         index_resp = requests.get(site_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'})
         if response_is_html(index_resp):
@@ -55,19 +55,22 @@ class Command(base.BaseCommand):
                     try:
                         article_tree = html.fromstring(article_resp.text)
                     except Exception:
-                        self.stderr.write('Unable to parse HTML {}'.format(url))
+                        if verbosity > 0:
+                            self.stderr.write('Unable to parse HTML {}'.format(url))
                         continue
                     feeds = article_tree.findall('.//head/link[@type="application/rss+xml"]')
                 else:
                     try:
                         feed_tree = etree.fromstring(article_resp.text)
                     except Exception:
-                        self.stderr.write('Unable to parse XML {}'.format(url))
+                        if verbosity > 0:
+                            self.stderr.write('Unable to parse XML {}'.format(url))
                         continue
                     if feed_tree.tag.endswith('rss'):
                         feeds = [url]
                     else:
-                        self.stderr.write('Non-feed xml document {}'.format(url))
+                        if verbosity > 0:
+                            self.stderr.write('Non-feed xml document {}'.format(url))
                 for feed in feeds:
                     href = feed.attrib['href']
                     if '://' not in href:
@@ -76,9 +79,11 @@ class Command(base.BaseCommand):
                         models.Feed.objects.create(rss_url=href)
                     except IntegrityError:
                         pass
-                    print(feed.get('title'), href)
+                    if verbosity > 0:
+                        self.stdout.write('{} {}'.format(feed.get('title'), href))
 
                 if feeds:
                     break
             else:
-                self.stdout.write('No feed for {}'.format(article_url))
+                if verbosity > 1:
+                    self.stdout.write('No feed for {}'.format(article_url))
