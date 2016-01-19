@@ -11,6 +11,8 @@ import feeds.views
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'feeds', feeds.views.FeedViewSet)
+router.register(r'tags', feeds.views.TagViewSet)
+router.register(r'keywords', feeds.views.KeywordViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
