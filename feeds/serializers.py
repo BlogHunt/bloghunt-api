@@ -6,6 +6,22 @@ from . import models
 class FeedSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        fields = ['url', 'rss_url', 'title', 'description', 'link']
+        fields = ['url', 'rss_url', 'title', 'description', 'link', 'tags']
         model = models.Feed
         read_only_fields = ['title', 'description', 'link']
+
+
+class TagSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        fields = ['name', 'slug']
+        model = models.Tag
+        read_only_fields = []
+
+
+class KeywordSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        fields = ['word', 'tag']
+        model = models.Keyword
+        read_only_fields = []

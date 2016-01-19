@@ -17,3 +17,13 @@ class FeedViewSet(viewsets.ModelViewSet):
             'description': feed_page.description,
             'link': feed_page.link,
         })
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = models.Tag.objects.order_by('slug')
+    serializer_class = serializers.TagSerializer
+
+
+class KeywordViewSet(viewsets.ModelViewSet):
+    queryset = models.Keyword.objects.order_by('tag')
+    serializer_class = serializers.KeywordSerializer
