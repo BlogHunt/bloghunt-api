@@ -10,7 +10,7 @@ class Command(base.BaseCommand):
     help = 'Populate RSS feed information from the feeds.'
 
     def handle(self, *args, **kwargs):
-        for feed in models.Feed.objects.exclude(last_updated__lt=timezone.now() - timedelta(days=25)):
+        for feed in models.Feed.objects.exclude(last_updated__lt=timezone.now() - timedelta(days=7)):
             try:
                 feedpage = feed.get_feedpage()
             except Exception:
