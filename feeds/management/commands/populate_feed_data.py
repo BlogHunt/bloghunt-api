@@ -20,4 +20,9 @@ class Command(base.BaseCommand):
             feed.description = feedpage.description
             feed.link = feedpage.link
             feed.last_updated = timezone.now()
+            
+            for category in feedpage.categories:
+                matches = models.Keyword.objects.filter(word=category.text.lower())
+                [feed.tags.add(kw.tag) for kw in matches]
+                
             feed.save(update_fields=['title', 'description', 'link', 'last_updated'])
