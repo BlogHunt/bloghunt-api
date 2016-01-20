@@ -2,6 +2,7 @@ defusedxml==0.4.1
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.9.1
+django-filter==0.12.0
 djangorestframework==3.3.2
 lxml==3.5.0
 psycopg2==2.6.1
