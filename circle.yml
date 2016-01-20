@@ -2,7 +2,7 @@ machine:
   environment:
     DATABASE_URL: postgres://ubuntu@localhost/circle_test
   python:
-    version: 3.5.1
+    version: 3.5.0
 test:
   pre:
     - pip install -U coverage flake8
