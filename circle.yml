@@ -1,0 +1,14 @@
+machine:
+  environment:
+    DATABASE_URL: postgres://ubuntu@localhost/circle_test
+  python:
+    version: 3.5.0
+test:
+  pre:
+    - pip install -U coverage flake8
+  override:
+    - coverage run manage.py test
+    - flake8
+  post:
+    - pip install -U codecov
+    - codecov

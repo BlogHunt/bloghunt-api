@@ -25,7 +25,10 @@ class Command(base.BaseCommand):
 
     def handle(self, site_url, verbosity, *args, **kwargs):
         checked_urls = set()
-        index_resp = requests.get(site_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'})
+        index_resp = requests.get(site_url, headers={'User-Agent': (
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) ' +
+            'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+        )})
         if response_is_html(index_resp):
             index_urls = [
                 e.attrib['href']
@@ -37,7 +40,8 @@ class Command(base.BaseCommand):
             index_urls = [
                 e.text
                 for e in
-                etree.fromstring(index_resp.text.encode()).xpath(b'.//*[starts-with(text(), "http://")] | .//*[starts-with(text(), "https://")]')
+                etree.fromstring(index_resp.text.encode()).xpath(b'.//*[starts-with(text(), "http://")] | ' +
+                                                                 b'.//*[starts-with(text(), "https://")]')
             ]
         for article_url in set(index_urls):
             parent_url = parse.urljoin(article_url, '.')
