@@ -30,14 +30,14 @@ class Command(base.BaseCommand):
             index_urls = [
                 e.attrib['href']
                 for e in
-                html.fromstring(index_resp.text.encode('utf-8')).findall('.//*[@href]')
+                html.fromstring(index_resp.text.encode()).findall('.//*[@href]')
                 if 'href' in e.attrib
             ]
         else:
             index_urls = [
                 e.text
                 for e in
-                etree.fromstring(index_resp.text.encode('utf-8')).xpath(b'.//*[starts-with(text(), "http://")] | .//*[starts-with(text(), "https://")]')
+                etree.fromstring(index_resp.text.encode()).xpath(b'.//*[starts-with(text(), "http://")] | .//*[starts-with(text(), "https://")]')
             ]
         for article_url in set(index_urls):
             parent_url = parse.urljoin(article_url, '.')

@@ -2,7 +2,7 @@ import re
 from urllib import parse
 import uuid
 
-from defusedxml import cElementTree as etree
+from lxml import etree
 from django.db import models
 import requests
 
@@ -47,11 +47,12 @@ class Feed(models.Model):
     def get_feedpage(self):
         response = requests.get(self.rss_url)
         response.raise_for_status()
-        tree = etree.fromstring(response.text)
-        channel = tree.find('channel')
+        tree = etree.fromstring(response.text.encode())
+        channel = tree.find('{*}channel')
         channel = channel if channel is not None else tree
         nsmatch = re.match('\{.*\}', channel.tag)
-        return FeedPage(channel, url=self.rss_url, defaultns=nsmatch.group(0) if nsmatch else '')
+        defaultns = nsmatch.group(0) if nsmatch else ''
+        return FeedPage(channel, url=self.rss_url, defaultns=defaultns)
 
     def __str__(self):
         return self.rss_url
