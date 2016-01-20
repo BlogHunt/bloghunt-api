@@ -74,7 +74,7 @@ class Command(base.BaseCommand):
                         if verbosity > 0:
                             self.stderr.write('Unable to parse XML {}'.format(url))
                         continue
-                    if feed_tree.tag.endswith('rss'):
+                    if feed_tree.tag.endswith('rss') or feed_tree.tag.endswith('rdf'):
                         feeds = [url]
                     else:
                         if verbosity > 0:
