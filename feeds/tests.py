@@ -44,3 +44,10 @@ class TestFeedPage(unittest.TestCase):
             'description': 'A weblog about scripting and stuff like that.',
             'link': 'http://www.scripting.com/',
         })
+
+    def test_atom(self):
+        self.check_feed('atom.xml', {
+            'title': 'Example Feed',
+            'description': None,
+            'link': 'http://example.org/',
+        })
