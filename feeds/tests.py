@@ -2,6 +2,9 @@ import os
 import unittest
 from unittest import mock
 
+from django.contrib import auth
+from django.core.urlresolvers import reverse
+from rest_framework import status, test as resttest
 import requests
 
 from . import models
@@ -51,3 +54,16 @@ class TestFeedPage(unittest.TestCase):
             'description': None,
             'link': 'http://example.org/',
         })
+
+
+class TestApiCreateFeed(resttest.APITestCase):
+
+    def setUp(self):
+        self.user = auth.get_user_model().objects.create_user('tester', password='password', is_superuser=True)
+
+    def test_create_new_feed(self):
+        mock_feed_url = 'http://example.com/feed.xml'
+        self.client.force_authenticate(self.user)
+        response = self.client.post(reverse('feed-list'), {'rss_url': mock_feed_url}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(list(models.Feed.objects.values_list('rss_url', flat=True)), [mock_feed_url])
