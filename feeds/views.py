@@ -8,6 +8,7 @@ from . import models, serializers
 class FeedViewSet(viewsets.ModelViewSet):
     queryset = models.Feed.objects.filter(last_updated__isnull=False)
     serializer_class = serializers.FeedSerializer
+    filter_fields = ('tags',)
 
     @detail_route(methods=['get'])
     def preview(self, request, pk):
