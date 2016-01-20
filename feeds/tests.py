@@ -65,6 +65,7 @@ class TestApiCreateFeed(resttest.APITestCase):
     def test_create_new_feed(self):
         mock_feed_url = 'http://example.com/feed.xml'
         self.client.force_authenticate(self.user)
-        response = self.client.post(reverse('feed-list'), {'rss_url': mock_feed_url}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = {'rss_url': mock_feed_url, 'tags': []}
+        response = self.client.post(reverse('feed-list'), data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         self.assertEqual(list(models.Feed.objects.values_list('rss_url', flat=True)), [mock_feed_url])
