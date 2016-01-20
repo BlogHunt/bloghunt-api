@@ -59,7 +59,8 @@ class TestFeedPage(unittest.TestCase):
 class TestApiCreateFeed(resttest.APITestCase):
 
     def setUp(self):
-        self.user = auth.get_user_model().objects.create_user('tester', password='password', is_superuser=True)
+        self.user = auth.get_user_model().objects.create_user(
+            'tester', password='password', is_superuser=True)
 
     def test_create_new_feed(self):
         mock_feed_url = 'http://example.com/feed.xml'

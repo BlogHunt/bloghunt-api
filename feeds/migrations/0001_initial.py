@@ -17,7 +17,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Feed',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.UUIDField(
+                    default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('rss_url', models.URLField(unique=True)),
                 ('title', models.CharField(blank=True, max_length=250, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
