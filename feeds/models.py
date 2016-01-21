@@ -50,8 +50,11 @@ class Tag(models.Model):
 
 class Keyword(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    word = models.CharField(max_length=250, blank=True, null=True, unique=True)
+    word = models.CharField(max_length=250, blank=True, null=True, unique=False)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (("word", "tag"),)
 
 
 class Feed(models.Model):
