@@ -1,13 +1,17 @@
+from datetime import timedelta
 import os
 import unittest
 from unittest import mock
 
+from django import test as djangotest
 from django.contrib import auth
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from rest_framework import status, test as resttest
 import requests
 
 from . import models
+from .management.commands import populate_feed_data
 
 MODULE_PATH = os.path.dirname(__file__)
 FEED_FIXTURE_PATH = os.path.abspath(os.path.join(MODULE_PATH, 'fixtures', 'feeds'))
@@ -69,3 +73,17 @@ class TestApiCreateFeed(resttest.APITestCase):
         response = self.client.post(reverse('feed-list'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         self.assertEqual(list(models.Feed.objects.values_list('rss_url', flat=True)), [mock_feed_url])
+
+
+class TestPopulateFeedData(djangotest.TestCase):
+
+    def setUp(self):
+        self.new_feed, self.update_feed, self.recent_feed = models.Feed.objects.bulk_create([
+            models.Feed(rss_url='http://example.com/1', last_updated=None),
+            models.Feed(rss_url='http://example.com/2', last_updated=timezone.now() - timedelta(weeks=10)),
+            models.Feed(rss_url='http://example.com/3', last_updated=timezone.now()),
+        ])
+
+    def test_filter_to_update(self):
+        feeds_to_update = populate_feed_data.Command.get_feeds_to_update(all_feeds=False)
+        self.assertEqual(set([self.new_feed, self.update_feed]), set(feeds_to_update))

@@ -10,8 +10,11 @@ from ... import models
 class Command(base.BaseCommand):
     help = 'Populate RSS feed information from the feeds.'
 
-    def handle(self, *args, **kwargs):
-        for feed in models.Feed.objects.exclude(last_updated__gt=timezone.now() + timedelta(days=7)):
+    def add_arguments(self, parser):
+        parser.add_argument('--all', action='store_true', dest='all_feeds', default=False, help='Process all feed objects.')
+
+    def handle(self, all_feeds, *args, **kwargs):
+        for feed in self.get_feeds_to_update(all_feeds):
             try:
                 feedpage = feed.get_feedpage()
             except Exception as e:
@@ -32,3 +35,9 @@ class Command(base.BaseCommand):
                     except ObjectDoesNotExist as e:
                         pass
             feed.save(update_fields=['title', 'description', 'link', 'last_updated', 'image', 'cloud'])
+
+    @staticmethod
+    def get_feeds_to_update(all_feeds):
+        if all_feeds:
+            return models.Feed.objects.all()
+        return models.Feed.objects.exclude(last_updated__gt=timezone.now() - timedelta(days=7))
