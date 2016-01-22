@@ -11,7 +11,10 @@ class Command(base.BaseCommand):
     help = 'Populate RSS feed information from the feeds.'
 
     def add_arguments(self, parser):
-        parser.add_argument('--all', action='store_true', dest='all_feeds', default=False, help='Process all feed objects.')
+        parser.add_argument(
+            '--all', action='store_true', dest='all_feeds', default=False,
+            help='Process all feed objects.',
+        )
 
     def handle(self, all_feeds, *args, **kwargs):
         for feed in self.get_feeds_to_update(all_feeds):
