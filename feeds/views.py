@@ -17,6 +17,8 @@ class FeedViewSet(viewsets.ModelViewSet):
             'title': feed_page.title,
             'description': feed_page.description,
             'link': feed_page.link,
+            'image': feed_page.image,
+            'cloud': feed_page.cloud,
         })
 
 

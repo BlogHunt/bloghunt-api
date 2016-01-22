@@ -39,6 +39,24 @@ class FeedPage(object):
     def categories(self):
         return self.tree.findall('{}category'.format(self.defaultns))
 
+    @property
+    def image(self):
+        image_elems = self.tree.findall('{}image/url'.format(self.defaultns))
+        for image_elem in image_elems:
+            if image_elem.attrib.get('rel') == 'self':
+                continue
+            image = image_elem.text or image_elem.attrib.get('href')
+            return image
+
+    @property
+    def cloud(self):
+        cloud_elems = self.tree.findall('{}cloud'.format(self.defaultns))
+        for cloud_elem in cloud_elems:
+            if cloud_elem.attrib.get('rel') == 'self':
+                continue
+            cloud = cloud_elem.text or cloud_elem.attrib.get('href')
+            return cloud
+
 
 class Tag(models.Model):
     slug = models.SlugField(primary_key=True)
@@ -65,6 +83,8 @@ class Feed(models.Model):
     link = models.URLField(blank=True, null=True)
     last_updated = models.DateTimeField(editable=False, null=True)
     tags = models.ManyToManyField(Tag)
+    image = models.URLField('Image URL', blank=True, null=True)
+    cloud = models.URLField('Cloud URL', blank=True, null=True)
 
     def get_feedpage(self):
         response = requests.get(self.rss_url)
