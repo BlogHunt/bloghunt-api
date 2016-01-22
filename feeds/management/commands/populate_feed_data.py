@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.core.management import base
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 from ... import models
 
@@ -10,7 +11,7 @@ class Command(base.BaseCommand):
     help = 'Populate RSS feed information from the feeds.'
 
     def handle(self, *args, **kwargs):
-        for feed in models.Feed.objects.exclude(last_updated__gt=timezone.now() - timedelta(days=7)):
+        for feed in models.Feed.objects.exclude(last_updated__gt=timezone.now() + timedelta(days=7)):
             try:
                 feedpage = feed.get_feedpage()
             except Exception as e:
@@ -28,7 +29,6 @@ class Command(base.BaseCommand):
                 for kw in matches:
                     try:
                         feed.tags.add(kw.tag)
-                    except Exception:
+                    except ObjectDoesNotExist as e:
                         pass
-
             feed.save(update_fields=['title', 'description', 'link', 'last_updated', 'image', 'cloud'])

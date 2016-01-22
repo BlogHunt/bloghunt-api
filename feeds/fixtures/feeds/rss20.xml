@@ -6,7 +6,11 @@
 		<link>http://www.scripting.com/</link>
 		<description>A weblog about scripting and stuff like that.</description>
 		<language>en-us</language>
-		<blogChannel:blogRoll>http://radio.weblogs.com/0001015/userland/scriptingNewsLeftLinks.opml</blogChannel:blogRoll>
+        <cloud>http://meerkat.oreillynet.com</cloud>
+        <image>
+            <url>http://meerkat.oreillynet.com/someimage.jpg</url>
+        </image>
+        <blogChannel:blogRoll>http://radio.weblogs.com/0001015/userland/scriptingNewsLeftLinks.opml</blogChannel:blogRoll>
 		<blogChannel:mySubscriptions>http://radio.weblogs.com/0001015/gems/mySubscriptions.opml</blogChannel:mySubscriptions>
 		<blogChannel:blink>http://diveintomark.org/</blogChannel:blink>
 		<copyright>Copyright 1997-2002 Dave Winer</copyright>

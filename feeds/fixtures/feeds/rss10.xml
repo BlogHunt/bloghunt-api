@@ -12,10 +12,7 @@
   <channel rdf:about="http://meerkat.oreillynet.com/?_fl=rss1.0">
     <title>Meerkat</title>
     <link>http://meerkat.oreillynet.com</link>
-    <cloud>http://meerkat.oreillynet.com</cloud>
-    <image>
-        <url>http://meerkat.oreillynet.com/someimage.jpg</url>
-    </image>
+
     <description>Meerkat: An Open Wire Service</description>
     <dc:publisher>The O'Reilly Network</dc:publisher>
     <dc:creator>Rael Dornfest (mailto:rael@oreilly.com)</dc:creator>
