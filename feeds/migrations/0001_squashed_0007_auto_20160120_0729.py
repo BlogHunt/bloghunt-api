@@ -9,12 +9,6 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    replaces = [
-        ('feeds', '0001_initial'), ('feeds', '0002_auto_20160118_2113'), ('feeds', '0003_feed_last_updated'),
-        ('feeds', '0004_auto_20160119_0122'), ('feeds', '0005_auto_20160119_0134'),
-        ('feeds', '0006_auto_20160120_0716'), ('feeds', '0007_auto_20160120_0729'),
-    ]
-
     initial = True
 
     dependencies = [
