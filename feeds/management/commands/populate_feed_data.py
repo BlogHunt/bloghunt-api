@@ -31,7 +31,7 @@ class Command(base.BaseCommand):
             feed.last_updated = timezone.now()
 
             for category in feedpage.categories:
-                matches = models.Keyword.objects.filter(word=category.text.lower())
+                matches = models.Keyword.objects.filter(word__iexact=category)
                 for kw in matches:
                     try:
                         feed.tags.add(kw.tag)
