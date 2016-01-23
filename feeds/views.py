@@ -8,7 +8,14 @@ from . import models, serializers
 class FeedViewSet(viewsets.ModelViewSet):
     queryset = models.Feed.objects.filter(last_updated__isnull=False)
     serializer_class = serializers.FeedSerializer
-    filter_fields = ('tags',)
+    filter_fields = (
+        'tags',
+    )
+    search_fields = (
+        'title',
+        'description',
+        'rss_url',
+    )
 
     @detail_route(methods=['get'])
     def preview(self, request, pk):
