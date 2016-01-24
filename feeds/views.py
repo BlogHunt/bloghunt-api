@@ -6,7 +6,7 @@ from . import models, serializers
 
 
 class FeedViewSet(viewsets.ModelViewSet):
-    queryset = models.Feed.objects.filter(last_updated__isnull=False)
+    queryset = models.Feed.objects.filter(last_updated__isnull=False, title__isnull=False)
     serializer_class = serializers.FeedSerializer
     filter_fields = (
         'tags',
