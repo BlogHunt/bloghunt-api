@@ -89,7 +89,7 @@ class Feed(models.Model):
     def get_feedpage(self):
         response = requests.get(self.rss_url)
         response.raise_for_status()
-        tree = etree.fromstring(response.text.encode())
+        tree = etree.fromstring(response.text.encode(), parser=etree.XMLParser(recover=True))
         channel = tree.find('{*}channel')
         channel = channel if channel is not None else tree
         nsmatch = re.match('\{.*\}', channel.tag)
