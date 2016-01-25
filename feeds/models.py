@@ -87,10 +87,9 @@ class Feed(models.Model):
     cloud = models.URLField('Cloud URL', blank=True, null=True)
 
     def get_feedpage(self):
-        response = requests.get(
-            self.rss_url,
-            headers={'Accept': 'application/rss+xml, application/rdf+xml, application/atom+xml, application/xml, text/xml'},
-        )
+        response = requests.get(self.rss_url, headers={'Accept': (
+            'application/rss+xml, application/rdf+xml, application/atom+xml, application/xml, text/xml'
+        )})
         response.raise_for_status()
         tree = etree.fromstring(response.text.encode(), parser=etree.XMLParser(recover=True))
         channel = tree.find('{*}channel')
