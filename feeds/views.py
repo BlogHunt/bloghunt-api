@@ -8,12 +8,18 @@ from . import models, serializers
 
 class Position(functions.Func):
     function = 'POSITION'
+    arg_joiner = ' in '
+    arity = 2
 
     def __init__(self, left, right, **extra):
         super().__init__(left, right, **extra)
 
     def as_sqlite(self, compiler, connection):
-        return super().as_sql(compiler, connection, function='INSTR')
+        preserve_arg_joiner = self.arg_joiner
+        self.arg_joiner = ','
+        sql, params = super().as_sql(compiler, connection, function='INSTR')
+        self.arg_joiner = preserve_arg_joiner
+        return sql, params
 
 
 class FeedViewSet(viewsets.ModelViewSet):
