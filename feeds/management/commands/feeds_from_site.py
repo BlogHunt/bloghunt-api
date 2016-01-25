@@ -128,8 +128,8 @@ class Command(base.BaseCommand):
                 if verbosity > 0:
                     self.stdout.write('{} {}'.format(feed.get('title'), href))
 
-            if feeds:
-                return feeds
+            if feed_urls:
+                return feed_urls
         else:
             possible_feed_root = parent_url
             while True:
