@@ -29,6 +29,7 @@ class FeedViewSet(viewsets.ModelViewSet):
         .filter(last_updated__isnull=False, title__isnull=False)
         # order by the rss_url without the schema
         .order_by(functions.Substr('rss_url', Position('rss_url', functions.Value('://')) + 3))
+        .prefetch_related('tags')
     )
     serializer_class = serializers.FeedSerializer
     filter_fields = (
