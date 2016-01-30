@@ -44,7 +44,7 @@ class Command(base.BaseCommand):
                 feed.save(update_fields=['title', 'description', 'link', 'last_updated', 'image', 'cloud'])
             except Exception:
                 if verbosity > 0:
-                    self.stderr.write('Error saving {} ({})'.format(feed.rss_link, feed.pk))
+                    self.stderr.write('Error saving {} ({})'.format(feed.rss_url, feed.pk))
                 raise
 
     @staticmethod
