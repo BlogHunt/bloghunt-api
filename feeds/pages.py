@@ -31,7 +31,11 @@ class FeedPage(object):
 
     @property
     def categories(self):
-        return [e.text for e in self.tree.findall('{}category'.format(self.defaultns)) if e and e.text]
+        return [
+            e.text
+            for e in self.tree.findall('{}category'.format(self.defaultns))
+            if e is not None and e.text
+        ]
 
     @property
     def image(self):
