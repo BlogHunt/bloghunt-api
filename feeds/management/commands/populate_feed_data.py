@@ -45,7 +45,6 @@ class Command(base.BaseCommand):
             except Exception:
                 if verbosity > 0:
                     self.stderr.write('Error saving {} ({})'.format(feed.rss_url, feed.pk))
-                raise
 
     @staticmethod
     def get_feeds_to_update(all_feeds):
