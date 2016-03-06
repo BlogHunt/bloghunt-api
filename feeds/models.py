@@ -35,13 +35,17 @@ class Feed(models.Model):
     tags = models.ManyToManyField(Tag)
     image = models.URLField('Image URL', blank=True, null=True)
     cloud = models.URLField('Cloud URL', blank=True, null=True)
+    cached_content = models.TextField()
 
-    def get_feedpage(self):
-        response = requests.get(self.rss_url, headers={'Accept': (
-            'application/rss+xml, application/rdf+xml, application/atom+xml, application/xml, text/xml'
-        )})
-        response.raise_for_status()
-        tree = etree.fromstring(response.text.encode(), parser=etree.XMLParser(recover=True))
+    def get_feedpage(self, use_cached=False):
+        if not use_cached:
+            response = requests.get(self.rss_url, headers={'Accept': (
+                'application/rss+xml, application/rdf+xml, application/atom+xml, application/xml, text/xml'
+            )})
+            response.raise_for_status()
+            self.cached_content = response.text.encode()
+
+        tree = etree.fromstring(self.cached_content, parser=etree.XMLParser(recover=True))
         channel = tree.find('{*}channel')
         channel = channel if channel is not None else tree
         nsmatch = re.match('\{.*\}', channel.tag)

@@ -41,7 +41,7 @@ class Command(base.BaseCommand):
                     except ObjectDoesNotExist as e:
                         pass
             try:
-                feed.save(update_fields=['title', 'description', 'link', 'last_updated', 'image', 'cloud'])
+                feed.save()
             except Exception:
                 if verbosity > 0:
                     self.stderr.write('Error saving {} ({})'.format(feed.rss_url, feed.pk))
