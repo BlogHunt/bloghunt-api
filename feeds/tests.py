@@ -50,6 +50,7 @@ class TestFeedPage(unittest.TestCase):
             'title': 'Scripting News',
             'description': 'A weblog about scripting and stuff like that.',
             'link': 'http://www.scripting.com/',
+            'categories': {'1765', 'conferences'},
         })
 
     def test_atom(self):
