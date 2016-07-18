@@ -1,5 +1,5 @@
 from django.db.models import functions
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
@@ -61,3 +61,4 @@ class TagViewSet(viewsets.ModelViewSet):
 class KeywordViewSet(viewsets.ModelViewSet):
     queryset = models.Keyword.objects.order_by('tag')
     serializer_class = serializers.KeywordSerializer
+    permission_classes = (permissions.IsAdminUser,)
