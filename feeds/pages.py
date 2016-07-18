@@ -1,4 +1,5 @@
 from urllib import parse
+import itertools
 
 
 class FeedPage(object):
@@ -31,11 +32,12 @@ class FeedPage(object):
 
     @property
     def categories(self):
-        return [
-            e.text
-            for e in self.tree.findall('{}category'.format(self.defaultns))
-            if e is not None and e.text
-        ]
+        return {
+            c.text for c in itertools.chain(*(
+                i.findall('{}category'.format(self.defaultns))
+                for i in self.tree.findall('{}item'.format(self.defaultns)) + [self.tree]
+            )) if c is not None and c.text
+        }
 
     @property
     def image(self):

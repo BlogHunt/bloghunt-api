@@ -1,4 +1,3 @@
-import itertools
 import re
 import uuid
 
@@ -21,6 +20,9 @@ class Keyword(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     word = models.CharField(max_length=250, blank=True, null=True, unique=False)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s -> %s" % (self.word, self.tag.name)
 
     class Meta:
         unique_together = (("word", "tag"),)
