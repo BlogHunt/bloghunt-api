@@ -22,6 +22,9 @@ class Keyword(models.Model):
     word = models.CharField(max_length=250, blank=True, null=True, unique=False)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "%s -> %s" % (self.word, self.tag.name)
+
     class Meta:
         unique_together = (("word", "tag"),)
 
