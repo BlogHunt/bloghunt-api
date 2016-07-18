@@ -1,3 +1,7 @@
+from urllib import parse
+import itertools
+
+
 class FeedPage(object):
 
     def __init__(self, tree, url='', defaultns=''):
