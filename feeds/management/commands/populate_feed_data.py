@@ -16,12 +16,15 @@ class Command(base.BaseCommand):
             help='Process all feed objects.',
         )
 
-    def handle(self, all_feeds, *args, **kwargs):
+    def handle(self, all_feeds, verbosity, *args, **kwargs):
         for feed in self.get_feeds_to_update(all_feeds):
             try:
                 feedpage = feed.get_feedpage()
             except Exception as e:
-                self.stderr.write('Unable to parse {}.\n\t{}'.format(feed.rss_url, e))
+                if verbosity > 1:
+                    self.stderr.write('Unable to parse {}\n\t{}'.format(feed.rss_url, e))
+                feed.last_updated = timezone.now()
+                feed.save(update_fields=['last_updated'])
                 continue
             feed.title = feedpage.title
             feed.description = feedpage.description
@@ -37,7 +40,11 @@ class Command(base.BaseCommand):
                         feed.tags.add(kw.tag)
                     except ObjectDoesNotExist as e:
                         pass
-            feed.save(update_fields=['title', 'description', 'link', 'last_updated', 'image', 'cloud'])
+            try:
+                feed.save()
+            except Exception:
+                if verbosity > 0:
+                    self.stderr.write('Error saving {} ({})'.format(feed.rss_url, feed.pk))
 
     @staticmethod
     def get_feeds_to_update(all_feeds):
