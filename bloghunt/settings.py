@@ -25,8 +25,7 @@ except KeyError:
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['bloghunt.herokuapp.com']
-
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'bloghunt.herokuapp.com').split(':')
 
 # Application definition
 
