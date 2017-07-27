@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12-xs col-md-5 col-md-offset-1">
+    <div class="panel panel-default" style="margin-top:150px;">
+      <form method="post">
+        <div class="panel-body">
+          <h2>
+            Login
+          </h2>
+          {% csrf_token %}
+          {% if form.errors %}
+          <p class="text-danger">Your username and password combination is invalid. Please try again.</p>
+          {% endif %}
+          <div class="row">
+            <div class="col-12-xs container-fluid">
+              <label>Username<br />
+                <input class="form-control" type="text" name="username" size="35">
+              </label><br />
+              <label>Password<br />
+                <input class="form-control" type="password" name="password" size="35">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <a href="/accounts/register/" class="btn btn-link" type="submit">
+            Don't have an account?
+          </a>
+          <button class="btn btn-primary" type="submit">
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="hidden-xs hidden-sm col-md-6">
+    <img src="{% static 'images/spruce-tree.jpg' %}" width="100%" class="pull-right">
+  </div>
+</div>
+{% endblock %}

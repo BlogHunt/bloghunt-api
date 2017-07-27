@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12-xs col-md-5 col-md-offset-1">
+    <div class="panel panel-default" style="margin-top:200px;">
+      <form method="post">
+        <div class="panel-body">
+          <h2>
+            Your registration email has been sent.
+          </h2>
+          {% csrf_token %}
+          {% if form.errors %}
+          <p class="text-danger">Your username and password combination is invalid. Please try again.</p>
+          {% endif %}
+          <div class="row">
+            <div class="col-12-xs container-fluid">
+              <p>Check your email for a link to complete your account creation.</p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="hidden-xs hidden-sm col-md-6">
+    <img src="{% static 'images/owl.png' %}" width="100%" class="pull-right">
+  </div>
+</div>
+{% endblock %}

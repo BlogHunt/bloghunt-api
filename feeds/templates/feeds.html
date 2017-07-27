@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <!-- Search Form -->
+    <div class="h1 text-center">
+        <img src="{% static 'images/spruce-tree-small.jpeg'%}">
+        Pine<br />
+        <small>Find the people and blogs you want.</small>
+    </div><br />
+    <div class="container-fluid">
+        <form method="get" action="/feeds">
+            <div class="input-group">
+              <input type="text" placeholder="The Talk Show"
+                name="search" value="{{ request.GET.search }}" class="form-control">
+              <div class="input-group-btn">
+                <button type="submit" class="btn btn-default">Search</button>
+              </div><!-- /btn-group -->
+            </div><!-- /input-group -->
+        </form>
+    </div>
+    <hr />
+    {% if request.GET.search %}
+    <!-- Search Results -->
+    <div class="container-fluid">
+        <div class="list-group">
+        {% if not results %}
+        <div class="h2">
+            No Results
+        </div>
+        {% endif %}
+        {% for feed in results %}
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-xs-10">
+                    <h4 class="list-group-item-heading">
+                        {% if feed.image %}
+                            <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
+                            &nbsp;
+                        {% endif %}
+                    <a href="{{ feed.link }}" >
+                        {{ feed.title }}
+                    </a>
+                    </h4>
+                    <p class="list-group-item-text text-muted">
+                        {{ feed.description }}
+                    </p>
+                </div>
+                <div class="col-xs-2 text-right">
+                    <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="list-group-item text-center active">
+            <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
+            <p><a href="#">API Documentation</a></p>
+        </div>
+
+        </div>
+        <div class="container-fluid text-center">
+            <div class="">
+            {% if previous %}
+                <a class="btn btn-default" href="{{ previous }}">Previous</a>
+            {% endif %}
+            {% if next %}
+                <a class="btn btn-default" href="{{ next }}">Next</a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- No search; Show Categories -->
+
+
+
+
+    {% endif %}
+{% endblock %}
+

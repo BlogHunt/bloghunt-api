@@ -23,6 +23,8 @@ class Position(functions.Func):
 
 
 class FeedViewSet(viewsets.ModelViewSet):
+    template_name = 'feeds.html'
+
     queryset = (
         models.Feed.objects
         # filter out feeds without data

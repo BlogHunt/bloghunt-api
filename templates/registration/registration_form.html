@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12-xs col-md-5 col-md-offset-1">
+    <div class="panel panel-default" style="margin-top:100px;">
+      <form method="post">
+        <div class="panel-body">
+          <h2>
+            Create your Account
+          </h2>
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-12-xs container-fluid">
+              <label>Username<br />
+                <input class="form-control" type="text" name="username" size="35">
+                <small class="text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                {% if form.errors.username %}
+                  <div class="text-danger">{{ form.errors.username }}</div>
+                {% endif %}
+              </label><br />
+              <label>Email<br />
+                <input class="form-control" type="email" name="email" size="35">
+                {% if form.errors.email %}
+                  <div class="text-danger">{{ form.errors.email }}</div>
+                {% endif %}
+              </label><br />
+              <label>Password<br />
+                <input class="form-control" type="password" name="password1" size="35">
+                {% if form.errors.password1 %}
+                  <div class="text-danger">{{ form.errors.password1 }}</div>
+                {% endif %}
+              </label>
+              <label>Confirm Password<br />
+                <input class="form-control" type="password" name="password2" size="35">
+                <small class="text-muted"> Enter the same password as before, for verification.</small>
+                {% if form.errors.password2 %}
+                  <div class="text-danger">{{ form.errors.password2 }}</div>
+                {% endif %}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button class="btn btn-primary" type="submit">
+            Sign up
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="hidden-xs hidden-sm col-md-6">
+    <img src="{% static 'images/spruce-tree.jpg' %}" width="100%" class="pull-right">
+  </div>
+</div>
+{% endblock %}
