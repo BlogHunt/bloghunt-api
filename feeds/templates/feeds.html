@@ -42,9 +42,17 @@
                         {{ feed.title }}
                     </a>
                     </h4>
+                    {% if feed.description %}
                     <p class="list-group-item-text text-muted">
                         {{ feed.description }}
                     </p>
+                    {% endif %}
+                    {% if feed.time_since_update %}
+                    <hr style="margin:5px;" />
+                    <p class="list-group-item-text text-muted">
+                        Last updated {{ feed.time_since_update }}
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="col-xs-2 text-right">
                     <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>

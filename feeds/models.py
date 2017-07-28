@@ -1,8 +1,9 @@
-import re
-import uuid
+import re, uuid
 
 from lxml import etree
 from django.db import models
+from django.utils import timezone
+from django.conf import settings
 import requests
 
 from . import pages
@@ -39,6 +40,8 @@ class Feed(models.Model):
     image = models.URLField('Image URL', blank=True, null=True)
     cloud = models.URLField('Cloud URL', blank=True, null=True)
     cached_content = models.TextField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_feeds',
+        on_delete=models.CASCADE, blank=True, null=True)
 
     def get_feedpage(self, use_cached=False):
         if not use_cached:
@@ -57,3 +60,19 @@ class Feed(models.Model):
 
     def __str__(self):
         return self.rss_url
+
+    @property
+    def time_since_update(self):
+        if self.last_updated is None:
+            return None
+        now = timezone.now()
+        delta = now - self.last_updated
+
+        if delta.days == 1:
+            return 'yesterday'
+        elif delta.days > 1:
+            return '%s %s ago' % (delta.days, 'days')
+        else:
+            return '%s %s ago' % (delta.hours, 'hours')
+
+
