@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <!-- Search Form -->
+    <div class="h1 text-center">
+        <img src="{% static 'images/spruce-tree-small.jpeg'%}">
+        Pine<br />
+        <small>Find the people and blogs you want.</small>
+    </div><br />
+    <div class="container-fluid">
+        <form method="get" action="/feeds">
+            <div class="input-group">
+              <input type="text" placeholder="The Talk Show"
+                name="search" value="{{ request.GET.search }}" class="form-control">
+              <div class="input-group-btn">
+                <button type="submit" class="btn btn-default">Search</button>
+              </div><!-- /btn-group -->
+            </div><!-- /input-group -->
+        </form>
+    </div>
+    <hr />
+    <!-- No search; Show Categories -->
+    <div class="row">
+        {% for tag in results %}
+        <div class="col-xs-12 col-sm-4" style="height:320px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="panel-title" href="{{ tag.url }}">{{ tag.name }}</a>
+                </div>
+                <div class="panel-body">
+                    {% for feed in tag.feeds %}
+                    <div class="row" style="padding-bottom:10px;">
+                        <a href="{{ feed.url }}">
+                            <div class="col-xs-12">
+                            {% if feed.image %}
+                                <img class="img-circle" width="50px" src="{{ feed.image }}" alt="{{ feed.title }}" />
+                            {% else %}
+                                <img class="img-circle" width="50px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+                            {% endif %}
+                            {{ feed.title }}
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="container-fluid text-center">
+        {% if request.GET.search %}
+        <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
+        {% endif %}
+        <p><a href="/documentation">Feed/API Documentation</a></p>
+    </div>
+{% endblock %}

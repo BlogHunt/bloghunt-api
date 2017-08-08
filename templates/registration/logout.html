@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12-xs col-md-5 col-md-offset-1">
+    <h2 style="margin-top:150px;">
+        You have been successfully logged out
+    </h2>
+  </div>
+  <div class="hidden-xs hidden-sm col-md-6">
+    <img src="{% static 'images/spruce-tree.jpg' %}" width="100%" class="pull-right">
+  </div>
+</div>
+{% endblock %}

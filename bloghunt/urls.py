@@ -15,10 +15,18 @@ import feeds.views
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'feeds', feeds.views.FeedViewSet)
 router.register(r'tags', feeds.views.TagViewSet)
-router.register(r'keywords', feeds.views.KeywordViewSet)
+# router.register(r'keywords', feeds.views.KeywordViewSet)
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url='/feeds')),
+    url(r'^$', feeds.views.HomeViewSet.as_view({ 'get': 'list'})),
+    url(r'^feeds/new/done$', feeds.views.DoneFeedView.as_view(),
+        name='done-new-feed'),
+    url(r'^feeds/new/confirm$', feeds.views.ConfirmFeedView.as_view(),
+        name='confirm-new-feed'),
+    url(r'^feeds/new$', feeds.views.NewFeedView.as_view(),
+        name='new-feed'),
+    url(r'^about$', feeds.views.about_view),
+    url(r'^documentation$', feeds.views.documentation_view),
     url(r'^', include(router.urls)),
 
     url(r'^admin/', admin.site.urls),

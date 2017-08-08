@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="h1 text-center">
+        Pine Documentation
+    </div>
+    <div class="container-fluid">
+        <!-- Usage -->
+        <div class="h2">
+            Usage
+        </div>
+        <p>Both the website and REST API are free to use. Results of the API can be used in both commercial and non-commercial projects, but commercial projects are <strong>required</strong> to cite that the results came from "Pine Search". In these cases we'd ask that you also provide a link to our site. We support the open web and we'd love it if the open web supported us too.</p>
+        <!-- Feed Spec -->
+        <div class="h2">
+            How we parse feeds
+        </div>
+        <p>
+        Coming soon...
+        </p>
+        <!-- API Documentation -->
+        <div class="h2">
+            API Documentation
+        </div>
+        <p>As part of our the goal of providing a global search index of blogs, Pine features a simple, free, and open REST API for developers to use. The API is read-only so you'll still need to use the site to submit feeds. Access to the API does not require a login token or OAuth key.</p>
+        <p>The REST API follows the same structure as the HTML site: a home page, feed search, feed detail pages, and tag based search. In each of these cases appending <code>.json</code> or adding the query parameter <code>format=json</code> to any read-only page should be sufficient. For convenience, at the bottom of most pages is a link to view the same request using the REST API.</p>
+        <p>All requests to the API and site are rate limited to <code>100/minute</code> to prevent runaway performance degradation, but even with those restrictions in place please be nice to our server. If you need more requests please contact support and we'll be happy to talk to you about accommodating your needs.</p>
+        <div class="h3">
+            Endpoints
+        </div>
+        <ul>
+            <li><code>/</code>
+                This is the root endpoint url. This endpoint contains a series of links to other public parts of the API.
+            </li>
+            <li><code>/feeds.json?search=</code>
+                This endpoint requires a search query parameter containing a given user's query string (URL encoded of course) and returns a list of paginated results for feeds matching the query. Each feed in result set also includes a detail link (see below) which can be used to retrieve the feed's information directly.
+            </li>
+            <li><code>/feeds/{id}.json</code>
+                This endpoint returns the details for the feed indicated by the <code>{id}</code> in the URL and contains all of the information about a feed including when the feed claims that it was last updated.
+            </li>
+            <li><code>/tags.json</code>
+
+            </li>
+        </ul>
+        <!-- Support -->
+        <div class="h2">
+            Getting help
+        </div>
+        <p>
+        Coming soon...
+        </p>
+    </div>
+{% endblock %}
+

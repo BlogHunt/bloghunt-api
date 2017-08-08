@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
+    {% if error or results != None %}
     <!-- Search Form -->
     <div class="h1 text-center">
         <img src="{% static 'images/spruce-tree-small.jpeg'%}">
@@ -20,15 +21,16 @@
         </form>
     </div>
     <hr />
-    {% if request.GET.search %}
+    {% endif %}
+    {% if error %}
+    <!-- Search Error -->
+        <div class="container-fluid text-center">
+            <h2>Please enter a valid search</h2>
+        </div>
+    {% elif results != None %}
     <!-- Search Results -->
     <div class="container-fluid">
         <div class="list-group">
-        {% if not results %}
-        <div class="h2">
-            No Results
-        </div>
-        {% endif %}
         {% for feed in results %}
         <div class="list-group-item">
             <div class="row">
@@ -38,7 +40,7 @@
                             <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
                             &nbsp;
                         {% endif %}
-                    <a href="{{ feed.link }}" >
+                    <a href="{{ feed.url }}" >
                         {{ feed.title }}
                     </a>
                     </h4>
@@ -55,16 +57,20 @@
                     {% endif %}
                 </div>
                 <div class="col-xs-2 text-right">
-                    <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>
+                    <div class="container-fluid" style="margin-bottom:10px;">
+                        <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>
+                    </div>
+                    <div class="container-fluid">
+                        <a href="{{ feed.link }}"><i class="fa fa-globe"></i> Site</a>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
-        <div class="list-group-item text-center active">
-            <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
-            <p><a href="#">API Documentation</a></p>
+        {% empty %}
+        <div class="h2">
+            No Results
         </div>
-
+        {% endfor %}
         </div>
         <div class="container-fluid text-center">
             <div class="">
@@ -78,11 +84,38 @@
         </div>
     </div>
     {% else %}
-    <!-- No search; Show Categories -->
-
-
-
-
+    <!-- Detail Query -->
+    <div class="h1">
+        {% if image %}
+            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ title }}" />
+        {% else %}
+            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+        {% endif %}&nbsp;
+        <a href="{{ link }}">{{ title }}&#8594;</a><br />
+        {% for tag in tags %}
+        <a class="badge" href="{{ tag.url }}">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+    <div class="container-fluid">
+        <p class="lead">{{ description|default:"" }}</p>
+        <p>Last updated {{ time_since_update }}</p>
+        <div class="container-fluid text-center">
+        </div>
+        <div class="container-fluid text-center">
+            <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-2x fa-feed"></i>&nbsp;Feed</a>
+        </div>
+    </div>
     {% endif %}
+    <hr />
+    <div class="container-fluid text-center">
+        {% if error or results != None %}
+        <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
+        {% else %}
+        <p><a href="{{ request.get_full_path }}?format=json">API Query for this item</a></p>
+        {% endif %}
+        <p><a href="/documentation">Feed/API Documentation</a></p>
+    </div>
 {% endblock %}
 

@@ -36,7 +36,7 @@ class Feed(models.Model):
     description = models.TextField(blank=True, null=True)
     link = models.URLField(blank=True, null=True)
     last_updated = models.DateTimeField(editable=False, null=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, related_name='feeds')
     image = models.URLField('Image URL', blank=True, null=True)
     cloud = models.URLField('Cloud URL', blank=True, null=True)
     cached_content = models.TextField()

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    {% if request.method == 'GET' %}
+    <!-- Get Form, or Make New -->
+    <div class="h1 text-center">
+        Submit a blog<br />
+    </div><br />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <p>
+                    Add a link to your site (or link us directly to it's RSS feed).
+                    It's that easy! It might take some time for us to
+                    process, but we'll add it to our list. Check back later to see
+                    how your site looks.
+                </p>
+                <p>
+                    Reminder: Before submitting <a href="/documentation">check out our documentation.</a>
+                    Only valid feeds will be accepted.
+                </p>
+                <form method="post" action="{% url 'confirm-new-feed' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="link"
+                            placeholder="http://mysite.com(/feed.xml)" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Submit</button>
+                        </span>
+                    </div>
+                </form><br />
+                <p>
+                    If you're having trouble with a feed, contact our support.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Post Submitted -->
+    <div class="container-fluid">
+        {{ form.as_p }}
+    </div>
+    {% endif %}
+{% endblock %}
+
