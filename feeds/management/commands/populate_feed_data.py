@@ -26,20 +26,9 @@ class Command(base.BaseCommand):
                 feed.last_updated = timezone.now()
                 feed.save(update_fields=['last_updated'])
                 continue
-            feed.title = feedpage.title
-            feed.description = feedpage.description
-            feed.link = feedpage.link
-            feed.image = feedpage.image
-            feed.cloud = feedpage.cloud
-            feed.last_updated = timezone.now()
 
-            for category in feedpage.categories:
-                matches = models.Keyword.objects.filter(word__iexact=category)
-                for kw in matches:
-                    try:
-                        feed.tags.add(kw.tag)
-                    except ObjectDoesNotExist as e:
-                        pass
+            feed.update_using_feedpage(feedpage)
+
             try:
                 feed.save()
             except Exception:

@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load rest_framework %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+{% endblock %}
+
+{% block morescript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script> -->
+{% endblock %}
 
 {% block content %}
-    {% if request.method == 'GET' %}
     <!-- Get Form, or Make New -->
     <div class="h1 text-center">
-        Submit a blog<br />
+        Submit a site<br />
     </div><br />
     <div class="container-fluid">
         <div class="row">
@@ -20,27 +29,26 @@
                     Reminder: Before submitting <a href="/documentation">check out our documentation.</a>
                     Only valid feeds will be accepted.
                 </p>
-                <form method="post" action="{% url 'confirm-new-feed' %}">
+                <form method="post" action="{% url 'new-feed' %}">
                     {% csrf_token %}
                     <div class="input-group">
-                        <input class="form-control" type="text" name="link"
-                            placeholder="http://mysite.com(/feed.xml)" />
+                        {% render_form serializer %}
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">Submit</button>
                         </span>
                     </div>
-                </form><br />
+                    <ul>
+                    {% for error in errors %}
+                    <li class="text-danger">{{ error.message }}</li>
+                    {% endfor %}
+                    </ul>
+                </form>
+                <br />
                 <p>
                     If you're having trouble with a feed, contact our support.
                 </p>
             </div>
         </div>
     </div>
-    {% else %}
-    <!-- Post Submitted -->
-    <div class="container-fluid">
-        {{ form.as_p }}
-    </div>
-    {% endif %}
 {% endblock %}
 

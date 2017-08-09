@@ -37,7 +37,19 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         fields = ['url', 'rss_url', 'title', 'description', 'link', 'tags', 'cloud', 'image', 'time_since_update']
         model = models.Feed
-        read_only_fields = ['title', 'description', 'link', 'time_since_update']
+        read_only_fields = ['url', 'rss_url', 'title', 'description', 'link', 'cloud', 'image', 'time_since_update']
+        extra_kwargs = {
+            'tags': {
+                'template': 'fields/multi-select-input.html'
+            }
+        }
+
+    def create(self, validated_data):
+        tags = validated_data.pop('tags')
+        feed = models.Feed.objects.create(**validated_data)
+        feed.tags = [Tag.objects.get(name=name) for name in tags]
+        feed.save()
+        return feed
 
 
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
@@ -46,3 +58,16 @@ class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Feed
 
 
+class NewFeedSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        fields = ['rss_url',]
+        model = models.Feed
+        extra_kwargs = {
+            'rss_url': {
+                'style': {
+                    'placeholder': 'http://mysite.com(/feed.xml)',
+                    'autofocus': True,
+                    'hide_label': True,
+                }
+            }
+        }

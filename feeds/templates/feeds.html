@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load rest_framework %}
+
+{% block morehead %}
+{% endblock %}
 
 {% block content %}
     {% if error or results != None %}
@@ -85,26 +89,43 @@
     </div>
     {% else %}
     <!-- Detail Query -->
-    <div class="h1">
-        {% if image %}
-            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ title }}" />
-        {% else %}
-            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
-        {% endif %}&nbsp;
-        <a href="{{ link }}">{{ title }}&#8594;</a><br />
-        {% for tag in tags %}
-        <a class="badge" href="{{ tag.url }}">
-            {{ tag.name }}
-        </a>
-        {% endfor %}
-    </div>
-    <div class="container-fluid">
-        <p class="lead">{{ description|default:"" }}</p>
-        <p>Last updated {{ time_since_update }}</p>
-        <div class="container-fluid text-center">
-        </div>
-        <div class="container-fluid text-center">
-            <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-2x fa-feed"></i>&nbsp;Feed</a>
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="container-fluid text-center">
+                        {% if image %}
+                            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ feed.title }}" />
+                        {% else %}
+                            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+                        {% endif %}&nbsp;<br />
+                        <div class="h3">
+                            <a target="_blank" href="{{ link }}">{{ title }}</a><br />
+                        </div>
+                        <div class="text-center container-fluid">
+                            {% if time_since_update %}
+                            <p>Last updated {{ time_since_update }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="text-left container-fluid">
+                            <div class="h4">
+                                Description
+                            </div>
+                            <p>{{ description|default:"" }}</p>
+                            <hr />
+                            <div class="h4">Tags</div>
+                            {% for tag in tags %}
+                            <a class="badge" href="{{ tag.url }}">
+                                {{ tag.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div class="container-fluid text-right">
+                            <a class="btn-sm btn-default" href="{{ rss_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
+                        </div>
+                    </div>
+                 </div>
+            </div>
         </div>
     </div>
     {% endif %}

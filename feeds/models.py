@@ -4,6 +4,7 @@ from lxml import etree
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 import requests
 
 from . import pages
@@ -60,6 +61,23 @@ class Feed(models.Model):
 
     def __str__(self):
         return self.rss_url
+
+    def update_using_feedpage(self, feedpage):
+        self.title = feedpage.title
+        self.description = feedpage.description
+        self.link = feedpage.link
+        self.image = feedpage.image
+        self.cloud = feedpage.cloud
+        self.last_updated = timezone.now()
+
+        for category in feedpage.categories:
+            matches = Keyword.objects.filter(word__iexact=category)
+            for kw in matches:
+                try:
+                    self.tags.add(kw.tag)
+                except ObjectDoesNotExist as e:
+                    pass
+        return self
 
     @property
     def time_since_update(self):
