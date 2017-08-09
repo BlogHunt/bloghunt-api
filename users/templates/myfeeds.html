@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block morescript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
+
+    <script>
+        $('.deleteform').ajaxForm({
+            method: 'DELETE'
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% if error or results != None %}
+    <div class="container-fluid">
+        <div class="h2">
+            My Sites
+        </div>
+        <div class="list-group">
+        {% for feed in results %}
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-xs-10">
+                    <h4 class="list-group-item-heading">
+                        {% if feed.image %}
+                            <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
+                            &nbsp;
+                        {% endif %}
+                    {% if feed.title and feed.url %}
+                    <a href="{{ feed.url }}" >
+                        {{ feed.title }}
+                    </a>
+                    {% else %}
+                    <p>Unparsed Site Feed</p>
+                    <small>This feed is waiting to be crawled.
+                    Check back in a bit.</small>
+                    {% endif %}
+                    </h4>
+                    {% if feed.description %}
+                    <p class="list-group-item-text text-muted">
+                        {{ feed.description }}
+                    </p>
+                    {% endif %}
+                    {% if feed.time_since_update %}
+                    <hr style="margin:5px;" />
+                    <p class="list-group-item-text text-muted">
+                        Last updated {{ feed.time_since_update }}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="col-xs-2 text-right">
+                    <div class="container-fluid" style="margin-bottom:10px;">
+                        <a href="{{ feed.rss_url }}" target="_blank"><i class="fa fa-feed"></i> Feed</a>
+                    </div>
+                    {% if feed.link %}
+                    <div class="container-fluid">
+                        <a href="{{ feed.url }}" target="_blank"><i class="fa fa-globe"></i> Site</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <hr />
+            <div class="container-fluid text-right">
+                <form class="deleteform" action="{{ feed.url }}">
+                <button type="submit" class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="h4">
+            You don't have any feeds.
+        </div>
+        {% endfor %}
+        </div>
+        <div class="container-fluid text-center">
+            <div class="">
+            {% if previous %}
+                <a class="btn btn-default" href="{{ previous }}">Previous</a>
+            {% endif %}
+            {% if next %}
+                <a class="btn btn-default" href="{{ next }}">Next</a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Detail Query -->
+    <div class="h1">
+        {% if image %}
+            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ title }}" />
+        {% else %}
+            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+        {% endif %}&nbsp;
+        <a href="{{ link }}">{{ title }}&#8594;</a><br />
+        {% for tag in tags %}
+        <a class="badge" href="{{ tag.url }}">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+    <div class="container-fluid">
+        <p class="lead">{{ description|default:"" }}</p>
+        <p>Last updated {{ time_since_update }}</p>
+        <div class="container-fluid text-center">
+        </div>
+        <div class="container-fluid text-center">
+            <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-2x fa-feed"></i>&nbsp;Feed</a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
