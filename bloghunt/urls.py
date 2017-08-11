@@ -15,6 +15,7 @@ import feeds.views, users.views
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'feeds', feeds.views.FeedViewSet)
 router.register(r'tags', feeds.views.TagViewSet)
+router.register(r'recommendations', users.views.FeedRecommendationViewSet)
 # router.register(r'keywords', feeds.views.KeywordViewSet)
 
 user_router = routers.DefaultRouter(trailing_slash=False)

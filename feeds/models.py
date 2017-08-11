@@ -41,7 +41,7 @@ class Feed(models.Model):
     image = models.URLField('Image URL', blank=True, null=True)
     cloud = models.URLField('Cloud URL', blank=True, null=True)
     cached_content = models.TextField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_feeds',
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_feeds',
         on_delete=models.CASCADE, blank=True, null=True)
 
     def get_feedpage(self, use_cached=False):
@@ -93,4 +93,7 @@ class Feed(models.Model):
         else:
             return '%s %s ago' % (delta.hours, 'hours')
 
+    @property
+    def total_recommendations(self):
+        return self.recommendations.count()
 

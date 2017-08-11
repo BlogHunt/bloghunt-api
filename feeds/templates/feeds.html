@@ -1,8 +1,20 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
 {% load staticfiles %}
 {% load rest_framework %}
 
-{% block morehead %}
+{% block morescript %}
+    <script src="{% static "js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+   <script>
+     window.drf = {
+      csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+      csrfCookieName: "{{ csrf_cookie_name|default:'csrftoken' }}"
+    };
+   $(document).ready(function() {
+      $('form').ajaxForm();
+    });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -100,28 +112,63 @@
                             <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
                         {% endif %}&nbsp;<br />
                         <div class="h3">
+                            {% if title %}
                             <a target="_blank" href="{{ link }}">{{ title }}</a><br />
+                            {% else %}
+                            <p>Unparsed Site Feed</p>
+                            <small>This feed is waiting to be crawled.
+                            Check back in a bit.</small>
+                            {% endif %}
                         </div>
                         <div class="text-center container-fluid">
                             {% if time_since_update %}
                             <p>Last updated {{ time_since_update }}</p>
                             {% endif %}
                         </div>
+                        <div class="text-center container-fluid">
+                            {{ total_recommendations }} people like this.
+                            {% if user.is_authenticated %}
+                                {% if not recommendation %}
+                                <form method="POST" action="{% url 'feedrecommendation-list' format='json' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="feed" value="{{ url }}" />
+                                    <button class="btn-xs btn-primary">Recommend</button>
+                                </form>
+                                {% else %}
+                                <form method="DELETE" action="{% url 'feedrecommendation-detail' pk=recommendation.id format='json' %}">
+                                    <input type="hidden" name="feed" value="{{ url }}" />
+                                    <button class="btn-xs btn-warning">Un-Recommend</button>
+                                </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
                         <div class="text-left container-fluid">
                             <div class="h4">
                                 Description
                             </div>
-                            <p>{{ description|default:"" }}</p>
+                            {% if description %}
+                                <p>{{ description }}</p>
+                            {% else %}
+                                <p><i class="text-muted">No description</i></p>
+                            {% endif %}
                             <hr />
                             <div class="h4">Tags</div>
                             {% for tag in tags %}
                             <a class="badge" href="{{ tag.url }}">
                                 {{ tag.name }}
                             </a>
+                            {% empty %}
+                            <i class="text-muted">No tags</i>
                             {% endfor %}
                         </div>
+                        <hr />
                         <div class="container-fluid text-right">
-                            <a class="btn-sm btn-default" href="{{ rss_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
+                                </span>
+                                <input type="text" value="{{ rss_url }}" class="form-control">
+                            </div>
                         </div>
                     </div>
                  </div>

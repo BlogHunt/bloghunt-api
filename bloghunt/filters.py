@@ -10,4 +10,6 @@ class IsOwnerFilterBackend(filters.BaseFilterBackend):
         try:
             return queryset.filter(user=request.user)
         except django.core.exceptions.FieldError:
+            return queryset.filter(owner=request.user.id)
+        except django.core.exceptions.FieldError:
             return queryset.filter(id=request.user.id)

@@ -22,3 +22,13 @@ class UserFeedViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.request.user.submitted_feeds
+
+
+class FeedRecommendationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+        viewsets.GenericViewSet):
+    template_name = 'recommendations.html'
+    serializer_class = serializers.FeedRecommendationSerializer
+    filter_backends = (filters.IsOwnerFilterBackend,)
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = models.FeedRecommendation.objects.all()

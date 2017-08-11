@@ -28,13 +28,14 @@ class Position(functions.Func):
         return sql, params
 
 
-class FeedViewSet(viewsets.ModelViewSet):
+class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     template_name = 'feeds.html'
 
     queryset = (
         models.Feed.objects
         # filter out feeds without data
-        .filter(last_updated__isnull=False, title__isnull=False)
+#         .filter(last_updated__isnull=False, title__isnull=False)
         # order by the rss_url without the schema
         .order_by(functions.Substr('rss_url', Position('rss_url', functions.Value('://')) + 3))
         .prefetch_related('tags')
@@ -46,11 +47,11 @@ class FeedViewSet(viewsets.ModelViewSet):
     search_fields = (
         'title',
         'description',
-        'rss_url',
     )
 
     def list(self, request, *args, **kwargs):
-        if request.GET.get('search', False):
+        q = request.GET.get('search', '').strip()
+        if q:
             return super().list(self, request, *args, **kwargs)
         else:
             return Response({
@@ -82,11 +83,11 @@ class NewFeedView(views.APIView):
         serializer = serializers.NewFeedSerializer(data=request.POST)
         if not serializer.is_valid():
             return Response({'serializer': serializer})
-        feed = serializer.save(user=request.user)
+        feed = serializer.save(owner=request.user)
 
         # Initial feed crawl.
         try:
-            feed.update_using_feedpage(feed.get_feedpage())
+#             feed.update_using_feedpage(feed.get_feedpage())
             feed.save()
         except requests.exceptions.HTTPError:
             feed.delete()

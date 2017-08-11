@@ -1,6 +1,8 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
 from . import models
+import users.models
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -12,7 +14,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ['feeds']
 
     def get_feeds(self, tag):
-        queryset = models.Feed.objects.filter(tags=tag)[:4]
+        queryset = models.Feed.objects.filter(tags=tag).order_by('-recommendations')[:4]
         serializer = SimpleFeedSerializer(queryset, many=True, context=self.context)
         return serializer.data
 
@@ -33,11 +35,18 @@ class KeywordSerializer(serializers.HyperlinkedModelSerializer):
 
 class FeedSerializer(serializers.HyperlinkedModelSerializer):
     tags = SimpleTagSerializer(many=True)
+    recommendation = serializers.SerializerMethodField()
 
     class Meta:
-        fields = ['url', 'rss_url', 'title', 'description', 'link', 'tags', 'cloud', 'image', 'time_since_update']
+        fields = [
+            'url', 'rss_url', 'title', 'description', 'link', 'tags', 'cloud',
+            'image', 'time_since_update', 'total_recommendations', 'recommendation'
+        ]
         model = models.Feed
-        read_only_fields = ['url', 'rss_url', 'title', 'description', 'link', 'cloud', 'image', 'time_since_update']
+        read_only_fields = [
+            'url', 'rss_url', 'title', 'description', 'link', 'cloud',
+            'image', 'time_since_update', 'total_recommendations', 'recommendation'
+        ]
         extra_kwargs = {
             'tags': {
                 'template': 'fields/multi-select-input.html'
@@ -50,6 +59,13 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
         feed.tags = [Tag.objects.get(name=name) for name in tags]
         feed.save()
         return feed
+
+    def get_recommendation(self, feed):
+        user = self.context['request'].user
+        try:
+            return users.models.FeedRecommendation.objects.get(user=user, feed=feed)
+        except (ObjectDoesNotExist, TypeError):
+            return None
 
 
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):

@@ -2,12 +2,16 @@
 {% load staticfiles %}
 
 {% block morescript %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
-
-    <script>
-        $('.deleteform').ajaxForm({
-            method: 'DELETE'
-        });
+    <script src="{% static "js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+   <script>
+     window.drf = {
+      csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+      csrfCookieName: "{{ csrf_cookie_name|default:'csrftoken' }}"
+    };
+   $(document).ready(function() {
+      $('form').ajaxForm();
+    });
     </script>
 {% endblock %}
 
@@ -27,16 +31,21 @@
                             <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
                             &nbsp;
                         {% endif %}
-                    {% if feed.title and feed.url %}
-                    <a href="{{ feed.url }}" >
-                        {{ feed.title }}
-                    </a>
-                    {% else %}
-                    <p>Unparsed Site Feed</p>
-                    <small>This feed is waiting to be crawled.
-                    Check back in a bit.</small>
+                        {% if feed.title and feed.url %}
+                        <a href="{{ feed.url }}" >
+                            {{ feed.title }}
+                        </a>
+                        {% else %}
+                        <p>Unparsed Site Feed</p>
+                        <small>This feed is waiting to be crawled.
+                        Check back in a bit.</small>
                     {% endif %}
                     </h4>
+                    {% if not feed.title %}
+                    <p class="list-group-item-text text-muted">
+                        {{ feed.rss_url }}
+                    </p>
+                    {% endif %}
                     {% if feed.description %}
                     <p class="list-group-item-text text-muted">
                         {{ feed.description }}
@@ -62,8 +71,8 @@
             </div>
             <hr />
             <div class="container-fluid text-right">
-                <form class="deleteform" action="{{ feed.url }}">
-                <button type="submit" class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                <form data-method="DELETE" action="{{ feed.url }}">
+                    <button class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>
                 </form>
             </div>
         </div>
@@ -71,6 +80,8 @@
         <div class="h4">
             You don't have any feeds.
         </div>
+        <p>You can <a href="{% url 'new-feed' %}">add new feeds here</a></p>
+
         {% endfor %}
         </div>
         <div class="container-fluid text-center">
