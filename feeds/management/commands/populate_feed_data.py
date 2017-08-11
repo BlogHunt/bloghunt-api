@@ -39,4 +39,4 @@ class Command(base.BaseCommand):
     def get_feeds_to_update(all_feeds):
         if all_feeds:
             return models.Feed.objects.all()
-        return models.Feed.objects.exclude(last_updated__gt=timezone.now() - timedelta(days=7))
+        return models.Feed.objects.exclude(last_updated__gt=timezone.now() - timedelta(hours=6))

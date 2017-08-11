@@ -1,4 +1,4 @@
-from django.db.models import functions
+from django.db.models import functions, Count
 from django.shortcuts import redirect
 from rest_framework import viewsets, mixins, views, renderers
 from rest_framework.decorators import (detail_route, api_view,
@@ -37,7 +37,8 @@ class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         # filter out feeds without data
 #         .filter(last_updated__isnull=False, title__isnull=False)
         # order by the rss_url without the schema
-        .order_by(functions.Substr('rss_url', Position('rss_url', functions.Value('://')) + 3))
+        .annotate(recommendations_count=Count('recommendations'))
+        .order_by('-recommendations_count')
         .prefetch_related('tags')
     )
     serializer_class = serializers.FeedSerializer
