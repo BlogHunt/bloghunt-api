@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load rest_framework %}
+
+{% block title %}{{ name|default:"Tags" }}{% endblock %}
+
+{% block content %}
+    <div class="h1 text-center">
+        Top Feeds in {{ name }}
+    </div><br />
+    {% if feeds != None %}
+    <!-- Tag Top Results -->
+    <div class="container-fluid">
+        <div class="list-group">
+        {% for feed in feeds %}
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-xs-10">
+                    <h4 class="list-group-item-heading">
+                        {% if feed.image %}
+                            <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
+                            &nbsp;
+                        {% endif %}
+                    <a href="{{ feed.url }}" >
+                        {{ feed.title }}
+                    </a>
+                    </h4>
+                    {% if feed.description %}
+                    <p class="list-group-item-text text-muted">
+                        {{ feed.description }}
+                    </p>
+                    {% endif %}
+                    <hr style="margin:5px;" />
+                    <p class="list-group-item-text text-muted">
+                    {% if feed.time_since_update %}
+                        Last updated {{ feed.time_since_update }}
+                    {% endif %}
+                    {% if feed.time_since_update and feed.total_recommendations %},{% endif %}
+                    {% if feed.total_recommendations == 1 %}
+                        {{ feed.total_recommendations }} recommendation
+                    {% elif feed.total_recommendations > 1 %}
+                        {{ feed.total_recommendations }} recommendations
+                    {% endif %}
+                    </p>
+                </div>
+                <div class="col-xs-2 text-right">
+                    <div class="container-fluid" style="margin-bottom:10px;">
+                        <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>
+                    </div>
+                    <div class="container-fluid">
+                        <a href="{{ feed.link }}"><i class="fa fa-globe"></i> Site</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="h2">
+            No Results
+        </div>
+        {% endfor %}
+        </div>
+        <div class="container-fluid text-center">
+            <div class="">
+            {% if previous %}
+                <a class="btn btn-default" href="{{ previous }}">Previous</a>
+            {% endif %}
+            {% if next %}
+                <a class="btn btn-default" href="{{ next }}">Next</a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <hr />
+    <div class="container-fluid text-center">
+        {% if error or results != None %}
+        <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
+        {% else %}
+        <p><a href="{{ request.get_full_path }}?format=json">API Query for this item</a></p>
+        {% endif %}
+        <p><a href="/documentation">Feed/API Documentation</a></p>
+    </div>
+{% endblock %}
