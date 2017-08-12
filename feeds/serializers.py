@@ -70,7 +70,10 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
 
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        fields = ['url', 'rss_url', 'title', 'link', 'image']
+        fields = [
+            'url', 'rss_url', 'title', 'link', 'image',
+            'total_recommendations', 'description', 'time_since_update'
+        ]
         model = models.Feed
 
 
