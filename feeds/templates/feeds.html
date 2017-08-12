@@ -3,6 +3,8 @@
 {% load staticfiles %}
 {% load rest_framework %}
 
+{% block title %}{{ title|default:"Feeds" }}{% endblock %}
+
 {% block morescript %}
     <script src="{% static "js/ajax-form.js" %}"></script>
     <script src="{% static "rest_framework/js/csrf.js" %}"></script>

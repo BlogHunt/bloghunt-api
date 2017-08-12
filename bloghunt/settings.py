@@ -147,8 +147,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/minute',
-        'user': '100/minute',
+        'anon': '60/minute',
+        'user': '60/minute',
         'upload': '5/day',
     },
     'PAGE_SIZE': 25,

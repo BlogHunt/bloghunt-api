@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block title %}My Feeds{% endblock %}
+
 {% block morescript %}
     <script src="{% static "js/ajax-form.js" %}"></script>
     <script src="{% static "rest_framework/js/csrf.js" %}"></script>
