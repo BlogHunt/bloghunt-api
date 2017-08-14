@@ -6,6 +6,7 @@ import users.models
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
+    PAGE_SIZE = 10
     feeds = serializers.SerializerMethodField()
 
     class Meta:
@@ -14,9 +15,13 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ['feeds']
 
     def get_feeds(self, tag):
-        queryset = models.Feed.objects.filter(tags=tag).order_by('-recommendations')[:4]
+        queryset = models.Feed.objects.filter(tags=tag).order_by('-recommendations')[:self.PAGE_SIZE]
         serializer = SimpleFeedSerializer(queryset, many=True, context=self.context)
         return serializer.data
+
+
+class TagSummarySerializer(TagSerializer):
+    PAGE_SIZE = 4
 
 
 class SimpleTagSerializer(serializers.HyperlinkedModelSerializer):

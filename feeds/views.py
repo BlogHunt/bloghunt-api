@@ -115,7 +115,7 @@ class KeywordViewSet(viewsets.ModelViewSet):
 class HomeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     template_name = 'home.html'
     queryset = models.Tag.objects.order_by('slug')
-    serializer_class = serializers.TagSerializer
+    serializer_class = serializers.TagSummarySerializer
 
 
 @api_view()
