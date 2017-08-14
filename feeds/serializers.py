@@ -26,11 +26,16 @@ class SimpleTagSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class KeywordSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         fields = ['word', 'tag']
         model = models.Keyword
         read_only_fields = []
+
+
+class SimpleFeedRecommendationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = users.models.FeedRecommendation
+        fields = ('url', )
 
 
 class FeedSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,7 +44,7 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         fields = [
-            'url', 'rss_url', 'title', 'description', 'link', 'tags', 'cloud',
+            'url', 'rss_url', 'title', 'description', 'link', 'tags', 'cloud', 'last_updated',
             'image', 'time_since_update', 'total_recommendations', 'recommendation'
         ]
         model = models.Feed
@@ -63,9 +68,12 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
     def get_recommendation(self, feed):
         user = self.context['request'].user
         try:
-            return users.models.FeedRecommendation.objects.get(user=user, feed=feed)
+            obj = users.models.FeedRecommendation.objects.get(user=user, feed=feed)
         except (ObjectDoesNotExist, TypeError):
             return None
+        return SimpleFeedRecommendationSerializer(obj, context={
+            'request': self.context['request']
+        }).data
 
 
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):

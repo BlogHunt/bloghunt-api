@@ -22,11 +22,6 @@
 {% block content %}
     {% if error or results != None %}
     <!-- Search Form -->
-    <div class="h1 text-center">
-        <img src="{% static 'images/spruce-tree-small.jpeg'%}">
-        Pine<br />
-        <small>Find the people and blogs you want.</small>
-    </div><br />
     <div class="container-fluid">
         <form method="get" action="/feeds">
             <div class="input-group">

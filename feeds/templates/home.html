@@ -8,7 +8,7 @@
     <div class="h1 text-center">
         <img src="{% static 'images/spruce-tree-small.jpeg'%}">
         Pine<br />
-        <small>Find the people and blogs you want.</small>
+        <small>A blog directory for the modern web.</small>
     </div><br />
     <div class="container-fluid">
         <form method="get" action="/feeds">
@@ -25,7 +25,7 @@
     <!-- No search; Show Categories -->
     <div class="row">
         {% for tag in results %}
-        <div class="col-xs-12 col-sm-4" style="height:320px;">
+        <div class="col-xs-12 col-sm-4" style="max-height:320px;">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a class="panel-title" href="{{ tag.url }}">{{ tag.name }}</a>
