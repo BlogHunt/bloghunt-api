@@ -93,7 +93,7 @@
                     {% endif %}
                 </div>
                 <div class="col-xs-2 text-right">
-                    <form data-method="DELETE" action="{% url 'sites-detail' pk=site.id %}">
+                    <form data-method="DELETE" action="{% url 'sites-detail' pk=site.id format='json' %}">
                         <button class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button>
                     </form>
                 </div>
