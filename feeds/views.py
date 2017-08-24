@@ -13,22 +13,6 @@ from bloghunt.response import error_response
 from . import models, serializers, tasks
 
 
-class Position(functions.Func):
-    function = 'POSITION'
-    arg_joiner = ' in '
-    arity = 2
-
-    def __init__(self, left, right, **extra):
-        super().__init__(left, right, **extra)
-
-    def as_sqlite(self, compiler, connection):
-        preserve_arg_joiner = self.arg_joiner
-        self.arg_joiner = ','
-        sql, params = super().as_sql(compiler, connection, function='INSTR')
-        self.arg_joiner = preserve_arg_joiner
-        return sql, params
-
-
 class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     template_name = 'feeds.html'
 

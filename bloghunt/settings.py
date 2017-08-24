@@ -26,19 +26,14 @@ except KeyError:
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'bloghunt.herokuapp.com').split(':')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'pinesearch.com').split(':')
+if DEBUG:
+    ALLOWED_HOSTS.append('*')
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    # Local apps
-    'feeds',
-    'users',
-
-    # 3rd party apps
-    'rest_framework',
-
     # Django contrib apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd party apps
+    'oauth2_provider',
+    'rest_framework',
+
+    # Local apps
+    'feeds',
+    'users',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -142,15 +145,17 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.TemplateHTMLRenderer',
         'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
     'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-        'bloghunt.throttling.ScopedRateWriteThrottle',
+        'bloghunt.throttling.GlobalScopedDefaultsTrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
         'user': '60/minute',
-        'upload': '5/day',
+        'user-write': '5/day',
     },
     'PAGE_SIZE': 25,
 }
