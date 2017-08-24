@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load rest_framework %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+{% endblock %}
+
+{% block morescript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script> -->
+{% endblock %}
+
+{% block title %}Submit{% endblock %}
+
+{% block content %}
+    {% if success %}
+    <!-- Get Form, or Make New -->
+    <div class="h1 text-center">
+        Submitted<br />
+    </div><br />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <p>
+                    Your site is being processed. We'll notify you when it's been added
+                    to our system.
+                </p>
+                <p>
+                    You can check the status of the import in your <a href="/users/sites">submitted feeds</a>.
+                </p>
+                <p>
+                    If you're having trouble with a feed, contact our support.
+                </p>
+                <p class="text-center"><a href="/sites/new">Add another site</a></p>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Get Form, or Make New -->
+    <div class="h1 text-center">
+        Submit a site<br />
+    </div><br />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <p>
+                    Add a link to your site (or link us directly to it's RSS feed).
+                    It's that easy! It might take some time for us to
+                    process, but we'll add it to our list. Check back later to see
+                    how your site looks.
+                </p>
+                <p>
+                    Reminder: Before submitting <a href="/documentation">check out our documentation.</a>
+                    Only valid feeds will be accepted.
+                </p>
+                <form method="post" action="{% url 'new-site' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="url" name="link" value="{{link}}" required class="form-control"
+                            placeholder="https://my-awesome-site.com/(feed)">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Submit</button>
+                        </span>
+                    </div>
+                    <ul>
+                    {% for error in errors %}
+                    <li class="text-danger">{{ error.message }}</li>
+                    {% endfor %}
+                    </ul>
+                </form>
+                <br />
+                <p>
+                    If you're having trouble with a feed, contact our support.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+

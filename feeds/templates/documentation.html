@@ -5,7 +5,7 @@
 
 {% block content %}
     <div class="h1 text-center">
-        Documentation
+        General Documentation
     </div>
     <div class="container-fluid" style="margin-bottom:50px;">
         <!-- Usage -->
@@ -13,6 +13,32 @@
             Usage
         </div>
         <p>Both the website and REST API are free to use. Results of the API can be used in both commercial and non-commercial projects, but commercial projects are <strong>required</strong> to cite that the results came from "Pine Search". In these cases we'd ask that you also provide a link to our site. We support the open web and we'd love it if the open web supported us too.</p>
+        <!-- FAQ -->
+        <div class="h2">
+            FAQ
+        </div>
+        <h4>Do you support JSON Feed?</h4>
+        <p>Not yet, but it's coming real soon.</p>
+        <h4>Are there any plans for Advanced Search Syntax?</h4>
+        <p>Yes, this is also coming soon.</p>
+        <h4>Can I build my app/service using Pine for search.</h4>
+        <p>Yes, of course. We do ask that you credit us though. See <b>Usage</b> for more information.</p>
+        <h4>I don't see {my site} in the search results, can I add it?</h4>
+        <p>Yes, that's what Pine is for! Create an account and add your site.</p>
+        <h4>Why did you build this?</h4>
+        <p>Great question, and <a href="/about">here's our answer.</a></p>
+        <!-- Support -->
+        <div class="h2">
+            Getting help
+        </div>
+        <p>For any support questions, including incorrectly parsed feeds, API limit inquiries and anything else, please email us at <a href="mailto:support@pinesearch.com">support@pinesearch.com</a>
+        </p>
+    <div>
+    <hr />
+    <div class="h1 text-center">
+        Developer Documentation
+    </div>
+    <div class="container-fluid" style="margin-bottom:50px;">
         <!-- Feed Spec -->
         <div class="h2">
             How we parse feeds
@@ -37,61 +63,202 @@
             </li>
             <li><code>cloud</code>
                 For RSS feeds, this corresponds to the <code>&lt;cloud&gt;</code> element.
-                <p><b>Note:</b> Wordpress implements this feature automatically and it is highly recommended for Microblogs since it allows support for user-user replies.</p>
+                <p><b>Note:</b> Wordpress implements this feature automatically and it is highly recommended for Microblogs since it allows support for user-to-user replies.</p>
             </li>
             <li><code>link</code>
                 For RSS feeds, this corresponds to the <code>&lt;link&gt;</code> element.
             </li>
         </ul>
-        <p><b>Important:</b> It is strongly recommended that all resources linked to in a given feed are served over HTTPS to protect users privacy.</p>
-
         <!-- API Documentation -->
         <div class="h2">
             API Documentation
         </div>
         <p>As part of our the goal of providing a global search index of blogs, Pine features a simple, free, and open REST API for developers to use. The API is read-only so you'll still need to use the site to submit feeds. Access to the API does not require a login token or OAuth key.</p>
-        <p>The REST API follows the same structure as the HTML site: a home page, feed search, feed detail pages, and tag based search. In each of these cases appending <code>.json</code> or adding the query parameter <code>format=json</code> to any read-only page should be sufficient. For convenience, at the bottom of most pages is a link to view the same request using the REST API.</p>
-        <p>All requests to the API and site are rate limited to <code>60/minute</code> to prevent runaway performance degradation, but even with those restrictions in place please be nice to our server. If you need more requests please contact support and we'll be happy to talk to you about accommodating your needs.</p>
-        <p><b>Note: </b>The API is still under development, and the format is subject to change, but we will try to maintain backwards compatibility in most cases. Fields may be added to responses, but rarely removed or changed unless absolutely necessary.</p>
+        <p>The REST API follows the same structure as the HTML site: a home page, site search, site detail pages, and tag based search. In each of these cases appending <code>.json</code> or adding the query parameter <code>format=json</code> to any read-only page should be sufficient. For convenience, at the bottom of most pages is a link to view the same request using the REST API.</p>
+        <p>All public requests to the API and site are rate limited by client IP to <code>60/minute</code> to prevent spam. Normally this won't be an issue for users or for those looking to write simple scripts against the API. However if you need more frequent access to the API, Upgrading to a Premium Account will remove this restriction. Premium accounts are useful for anyone wanting to build production software against the Pine API.
+        </p>
+        <p><b>Note: </b>The API is still under development and the format is subject to change, but we will try to maintain backwards compatibility in most cases. Fields may be added to responses, but rarely removed or changed unless absolutely necessary.</p>
         <div class="h3">
             Endpoints
         </div>
-        <ul>
-            <li><code>/.json</code>
-                This is the root endpoint url. This endpoint contains a series of links to other public parts of the API.
-            </li>
-            <li><code>/feeds.json?search=</code>
-                This endpoint requires a search query parameter containing a given user's query string (URL encoded of course) and returns a list of paginated results for feeds matching the query. Each feed in result set also includes a detail link (see below) which can be used to retrieve the feed's information directly.
-            </li>
-            <li><code>/feeds/{id}.json</code>
-                This endpoint returns the details for the feed indicated by the <code>{id}</code> in the URL and contains all of the information about a feed including when the feed claims that it was last updated.
-            </li>
-            <li><code>/tags.json</code>
-                This endpoint provides links to all of the different tags and their associated Top Charts of Feeds.
-            <li><code>/tags/{id}.json</code>
-                A given tag and it's Top Charts list and further details will be under this endpoint. Here you'll find a list of feeds sorted by number of recommendations that are classified under the given tag as well as some additional information about the tag itself.
-            </li>
-        </ul>
-        <!-- FAQ -->
-        <div class="h2">
-            FAQ
+
+        <h4>Root Endpoint</h4>
+        <code>/.json</code>
+        <p>This is the root endpoint url. This endpoint contains a series of links to other public parts of the API.</p>
+        <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#root-sample" aria-expanded="false" aria-controls="root-sample">
+          Sample Request
+        </a>
+        <div id="root-sample" class="collapse" >
+<code><pre>
+$ http /.json
+
+{
+    "sites": "https://pinesearch.com/sites.json",
+    "tags": "https://pinesearch.com/tags.json"
+}
+</pre></code>
         </div>
-        <h4>Do you support JSON Feed?</h4>
-        <p>Not yet, but it's coming real soon.</p>
-        <h4>Are there any plans for Advanced Search Syntax?</h4>
-        <p>Yes, this is also coming soon.</p>
-        <h4>Can I build my app/service using Pine for search.</h4>
-        <p>Yes, of course. We do ask that you credit us though. See <b>Usage</b> for more information.</p>
-        <h4>I don't see {my site} in the search results, can I add it?</h4>
-        <p>Yes, that's what Pine is for! Create an account and add your site.</p>
-        <h4>Why did you build this?</h4>
-        <p>Great question, and <a href="/about">here's our answer.</a></p>
-        <!-- Support -->
-        <div class="h2">
-            Getting help
+
+        <!-- Site Search Docs -->
+        <h4>Site Search</h4>
+        <code>/sites.json?search=some+query</code>
+        <p>This endpoint requires a search query parameter containing a given user's query string (URL encoded of course) and returns a list of paginated results for sites matching the query. Each site in result set also includes a detail link (see below) which can be used to retrieve the site's information directly.</p>
+        <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#site-search-sample" aria-expanded="false" aria-controls="site-search-sample">
+          Sample Request
+        </a>
+        <div id="site-search-sample" class="collapse" >
+<code><pre>
+$ http /sites.json?search=wiki
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "description": "News from Wikipedia and the Wikimedia movement",
+            "feeds": [
+                {
+                    "feed_url": "https://blog.wikimedia.org/feed/"
+                },
+                {
+                    "feed_url": "https://blog.wikimedia.org/comments/feed/"
+                }
+            ],
+            "image": "https://secure.gravatar.com/blavatar/...",
+            "link": "https://blog.wikimedia.org",
+            "tags": [],
+            "title": "Wikimedia Blog",
+            "total_recommendations": 0,
+            "url": "http://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+        }
+    ]
+}
+</pre></code>
         </div>
-        <p>For any support questions, including incorrectly parsed feeds, API limit inquiries and anything else, please email us at <a href="mailto:support@pinesearch.com">support@pinesearch.com</a>
-        </p>
+
+        <!-- Site Page Docs -->
+        <h4>Site Page</h4>
+        <code>/sites/{id}.json</code>
+        <p>This endpoint returns the details for the site indicated by the <code>{id}</code> in the URL and contains all of the information about a site including when the site's feeds claim that it was last updated.</p>
+        <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#site-page-sample" aria-expanded="false" aria-controls="site-page-sample">
+          Sample Request
+        </a>
+        <div id="site-page-sample" class="collapse" >
+<code><pre>
+$ http /sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json
+
+{
+    "description": "News from Wikipedia and the Wikimedia movement",
+    "feeds": [
+        {
+            "feed_url": "https://blog.wikimedia.org/feed/"
+        },
+        {
+            "feed_url": "https://blog.wikimedia.org/comments/feed/"
+        }
+    ],
+    "image": "https://secure.gravatar.com/blavatar/...",
+    "link": "https://blog.wikimedia.org",
+    "tags": [],
+    "title": "Wikimedia Blog",
+    "total_recommendations": 0,
+    "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+}
+</pre></code>
+        </div>
+
+        <!-- Tag List Docs -->
+        <h4>Tags List</h4>
+        <code>/tags.json</code>
+        <p>This endpoint provides links to all of the different tags and their associated Top Charts of Sites.</p>
+        <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#tag-list-sample" aria-expanded="false" aria-controls="tag-list-sample">
+          Sample Request
+        </a>
+        <div id="tag-list-sample" class="collapse" >
+<code><pre>
+$ http /tags/art.json
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "name": "Technology",
+            "sites": [
+                {
+                    "description": "News from Wikipedia and the Wikimedia movement",
+                    "feeds": [
+                        {
+                            "feed_url": "https://blog.wikimedia.org/feed/"
+                        },
+                        {
+                            "feed_url": "https://blog.wikimedia.org/comments/feed/"
+                        }
+                    ],
+                    "image": "https://secure.gravatar.com/blavatar/...",
+                    "link": "https://blog.wikimedia.org",
+                    "tags": [
+                        {
+                            "name": "Technology",
+                            "url": "https://pinesearch.com/tags/tech.json"
+                        }
+                    ],
+                    "title": "Wikimedia Blog",
+                    "total_recommendations": 0,
+                    "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+                }
+            ],
+            "url": "https://pinesearch.com/tags/tech.json"
+        }
+    ]
+}</pre></code>
+        </div>
+
+        <!-- Tag Page Docs -->
+        <h4>Tag Page</h4>
+        <code>/tags/{slug}.json</code>
+        <p>A given tag and it's Top Charts list and further details will be under this endpoint. Here you'll find a list of feeds sorted by number of recommendations that are classified under the given tag as well as some additional information about the tag itself.</p>
+        <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#tag-page-sample" aria-expanded="false" aria-controls="tag-page-sample">
+          Sample Request
+        </a>
+        <div id="tag-page-sample" class="collapse" >
+<code><pre>
+$ http /tags/tech.json
+
+{
+    "name": "Technology",
+    "sites": [
+        {
+            "description": "News from Wikipedia and the Wikimedia movement",
+            "feeds": [
+                {
+                    "feed_url": "https://blog.wikimedia.org/feed/"
+                },
+                {
+                    "feed_url": "https://blog.wikimedia.org/comments/feed/"
+                }
+            ],
+            "image": "https://secure.gravatar.com/blavatar/...",
+            "link": "https://blog.wikimedia.org",
+            "recommendation": null,
+            "tags": [
+                {
+                    "name": "Technology",
+                    "url": "https://pinesearch.com/tags/tech.json"
+                }
+            ],
+            "title": "Wikimedia Blog",
+            "total_recommendations": 0,
+            "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+        }
+    ],
+    "url": "https://pinesearch.com/tags/tech.json"
+}
+}
+</pre></code>
     </div>
+</div>
 {% endblock %}
 

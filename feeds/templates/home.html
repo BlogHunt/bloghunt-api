@@ -8,10 +8,10 @@
     <div class="h1 text-center">
         <img src="{% static 'images/spruce-tree-small.jpeg'%}">
         Pine<br />
-        <small>A blog directory for the modern web.</small>
+        <small>The blog directory for the modern web.</small>
     </div><br />
     <div class="container-fluid">
-        <form method="get" action="/feeds">
+        <form method="get" action="/sites">
             <div class="input-group">
               <input type="text" placeholder="The Talk Show"
                 name="search" value="{{ request.GET.search }}" class="form-control">
@@ -31,16 +31,16 @@
                     <a class="panel-title" href="{{ tag.url }}">{{ tag.name }}</a>
                 </div>
                 <div class="panel-body">
-                    {% for feed in tag.feeds %}
+                    {% for site in tag.sites %}
                     <div class="row" style="padding-bottom:10px;">
-                        <a href="{{ feed.url }}">
+                        <a href="{{ site.url }}">
                             <div class="col-xs-12">
-                            {% if feed.image %}
-                                <img class="img-circle" width="50px" src="{{ feed.image }}" alt="{{ feed.title }}" />
+                            {% if site.image %}
+                                <img class="img-circle" width="50px" src="{{ site.image }}" alt="{{ site.title }}" />
                             {% else %}
-                                <img class="img-circle" width="50px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+                                <img class="img-circle" width="50px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ site.title }}" />
                             {% endif %}
-                            {{ feed.title }}
+                            {{ site.title }}
                             </div>
                         </a>
                     </div>
@@ -55,6 +55,6 @@
         {% if request.GET.search %}
         <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
         {% endif %}
-        <p><a href="/documentation">Feed/API Documentation</a></p>
+        <p><a href="/documentation">API Documentation</a></p>
     </div>
 {% endblock %}

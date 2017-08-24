@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 import dj_database_url
 
@@ -141,10 +142,10 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.TemplateHTMLRenderer',
         'rest_framework.renderers.JSONRenderer',
     ),
-     'DEFAULT_THROTTLE_CLASSES': (
+    'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
-        'rest_framework.throttling.ScopedRateThrottle',
+        'bloghunt.throttling.ScopedRateWriteThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
@@ -153,3 +154,25 @@ REST_FRAMEWORK = {
     },
     'PAGE_SIZE': 25,
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+        'rest_framework.renderers.TemplateHTMLRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+
+# Celery Settings
+
+try:
+    BROKER_URL = os.environ['BROKER_URL']
+    CELERY_RESULT_BACKEND = os.environ['BACKEND_URL']
+except KeyError:
+    CELERY_ALWAYS_EAGER = True
+    CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=15)
+CELERY_DEFAULT_EXCHANGE = 'default'
+CELERY_TIMEZONE = 'UTC'

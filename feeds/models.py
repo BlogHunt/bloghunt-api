@@ -1,13 +1,37 @@
-import re, uuid
+import uuid
 
-from lxml import etree
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-import requests
 
-from . import pages
+from . import parsers, utils, pages
+
+
+class Error(models.Model):
+    HTTPError = 'HTTPError'
+    MissingOrInvalidSchemaError = 'MissingOrInvalidSchemaError'
+    ConnectionError = 'ConnectionError'
+    NotAFeedError = 'NotAFeedError'
+    NotAnRSSFeedError = 'NotAnRSSFeedError'
+    SiteHasNoFeedsError = 'SiteHasNoFeedsError'
+
+    identifiers = (
+        (HTTPError, 'HTTP Error'),
+        (MissingOrInvalidSchemaError, 'Missing or Invalid Schema Error'),
+        (ConnectionError, 'Connection Error'),
+        (NotAFeedError, 'Not A Feed Error'),
+        (NotAnRSSFeedError, 'Not An RSS Feed Error'),
+        (SiteHasNoFeedsError, 'Site Has No Feeds Error'),
+    )
+
+    message = models.TextField(max_length=250, blank=True, null=True)
+    identifier = models.CharField(max_length=50, choices=identifiers)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        sitename = getattr(self, 'site', 'No site')
+        return '<Error %s: %s>' % (self.identifier, sitename)
 
 
 class Tag(models.Model):
@@ -30,54 +54,25 @@ class Keyword(models.Model):
         unique_together = (("word", "tag"),)
 
 
-class Feed(models.Model):
+class Site(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    rss_url = models.URLField('RSS URL', unique=True)
-    title = models.CharField(max_length=250, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    link = models.URLField(blank=True, null=True)
-    last_updated = models.DateTimeField(editable=False, null=True)
-    tags = models.ManyToManyField(Tag, related_name='feeds')
-    image = models.URLField('Image URL', blank=True, null=True)
-    cloud = models.URLField('Cloud URL', blank=True, null=True)
-    cached_content = models.TextField()
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_feeds',
-        on_delete=models.CASCADE, blank=True, null=True)
-
-    def get_feedpage(self, use_cached=False):
-        if not use_cached:
-            response = requests.get(self.rss_url, headers={'Accept': (
-                'application/rss+xml, application/rdf+xml, application/atom+xml, application/xml, text/xml'
-            )})
-            response.raise_for_status()
-            self.cached_content = response.text.encode()
-
-        tree = etree.fromstring(self.cached_content, parser=etree.XMLParser(recover=True))
-        channel = tree.find('{*}channel')
-        channel = channel if channel is not None else tree
-        nsmatch = re.match('\{.*\}', channel.tag)
-        defaultns = nsmatch.group(0) if nsmatch else ''
-        return pages.FeedPage(channel, url=self.rss_url, defaultns=defaultns)
+    tags = models.ManyToManyField(Tag, related_name='sites')
+    link = models.URLField(unique=True, blank=True, null=True)
+    created_on = models.DateTimeField(default=timezone.now)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_sites',
+                              on_delete=models.CASCADE, blank=True, null=True)
+    error = models.OneToOneField(Error, related_name='site', on_delete=models.CASCADE,
+                                 blank=True, null=True)
 
     def __str__(self):
-        return self.rss_url
+        return self.title
 
-    def update_using_feedpage(self, feedpage):
-        self.title = feedpage.title
-        self.description = feedpage.description
-        self.link = feedpage.link
-        self.image = feedpage.image
-        self.cloud = feedpage.cloud
-        self.last_updated = timezone.now()
-
-        for category in feedpage.categories:
-            matches = Keyword.objects.filter(word__iexact=category)
-            for kw in matches:
-                try:
-                    self.tags.add(kw.tag)
-                except ObjectDoesNotExist as e:
-                    pass
-        return self
+    @property
+    def _default_feed(self):
+        try:
+            return self.feeds.all()[0]
+        except IndexError:
+            return None
 
     @property
     def time_since_update(self):
@@ -97,3 +92,89 @@ class Feed(models.Model):
     def total_recommendations(self):
         return self.recommendations.count()
 
+    @property
+    def title(self):
+        return getattr(self._default_feed, 'title', 'Untitled site')
+
+    @property
+    def description(self):
+        return getattr(self._default_feed, 'description', None)
+
+    @property
+    def image(self):
+        return getattr(self._default_feed, 'image', None)
+
+    @staticmethod
+    def get_site(url, owner=None, verbose=False):
+        """ Given a URL attempt to create a site object from it by checking
+        if the URL links to either a site or it's Feed.
+
+        :returns: A Site object with associated feeds.
+        """
+        site = Site(owner=owner)
+        if verbose:
+            print('Trying as feed...')
+        try:
+            response_content = utils.encoded_text_from_url(url)
+            feed = Feed.get_feed(url, response_content)
+            if verbose:
+                print('Feed parsed...')
+            site.link = feed.link
+            feed.site = site
+            feed.save()
+        except parsers.NotAnRSSFeedError:
+            if verbose:
+                print('Trying as site...')
+            site_page = pages.get_sitepage(url, response_content)
+            site.link = url
+            for url in site_page.possible_feeds:
+                if verbose:
+                    print('Feed detected...\n%s' % url)
+                try:
+                    feed = Feed.get_feed(url, utils.encoded_text_from_url(url))
+                    if verbose:
+                        print('Feed parsed...')
+                    feed.site = site
+                    feed.save()
+                except parsers.NotAnRSSFeedError:
+                    pass
+        if site.feeds.count() == 0:
+            raise parsers.SiteHasNoFeedsError('Site has no valid feeds.')
+        return site
+
+
+class Feed(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    feed_url = models.URLField('Feed URL', unique=True)
+    title = models.CharField(max_length=250, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    last_updated = models.DateTimeField(editable=False, null=True)
+    image = models.URLField('Image URL', blank=True, null=True)
+    cloud = models.URLField('Cloud URL', blank=True, null=True)
+    cached_content = models.TextField()
+    site = models.ForeignKey(Site, related_name='feeds', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('site', 'feed_url')
+
+    def __str__(self):
+        return self.feed_url
+
+    def update_using_feedpage(self, feedpage):
+        self.title = feedpage.title
+        self.description = feedpage.description
+        self.link = feedpage.link
+        self.image = feedpage.image
+        self.cloud = feedpage.cloud
+        self.last_updated = timezone.now()
+        return self
+
+    @staticmethod
+    def get_feed(url, content):
+        try:
+            feed = Feed.objects.get(feed_url=url)
+        except ObjectDoesNotExist:
+            feed = Feed(cached_content=content, feed_url=url)
+        feed.update_using_feedpage(pages.get_feedpage(url, content, overtime=True))
+        return feed

@@ -1,15 +1,16 @@
 from django.db.models import functions, Count
 from django.shortcuts import redirect
+from django.core import validators
+from django.core.exceptions import ValidationError
 from rest_framework import viewsets, mixins, views, renderers
 from rest_framework.decorators import (detail_route, api_view,
-    permission_classes, renderer_classes, authentication_classes)
+                                       permission_classes, renderer_classes)
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-import requests
 
-from bloghunt import filters
-from . import models, serializers
+from bloghunt.response import error_response
+from . import models, serializers, tasks
 
 
 class Position(functions.Func):
@@ -28,26 +29,24 @@ class Position(functions.Func):
         return sql, params
 
 
-class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-        mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     template_name = 'feeds.html'
 
     queryset = (
-        models.Feed.objects
-        # filter out feeds without data
-#         .filter(last_updated__isnull=False, title__isnull=False)
-        # order by the rss_url without the schema
+        models.Site.objects
+        .filter(error=None)
         .annotate(recommendations_count=Count('recommendations'))
         .order_by('-recommendations_count')
         .prefetch_related('tags')
+        .prefetch_related('feeds')
     )
-    serializer_class = serializers.FeedSerializer
+    serializer_class = serializers.SiteSerializer
     filter_fields = (
         'tags',
     )
     search_fields = (
-        'title',
-        'description',
+        'feeds__title',
+        'feeds__description',
     )
 
     def list(self, request, *args, **kwargs):
@@ -61,7 +60,7 @@ class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     @detail_route(methods=['get'])
     def preview(self, request, pk):
-        feed_page = self.get_object().get_feedpage()
+        feed_page = self.get_object()._default_feed.get_feedpage()
         return Response({
             'title': feed_page.title,
             'description': feed_page.description,
@@ -73,32 +72,27 @@ class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
 class NewFeedView(views.APIView):
     template_name = 'submit.html'
+    throttle_scope = 'upload'
     authentication_classes = (SessionAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        serializer = serializers.NewFeedSerializer()
-        return Response({'serializer': serializer})
+        return Response()
 
     def post(self, request, *args, **kwargs):
-        serializer = serializers.NewFeedSerializer(data=request.POST)
-        if not serializer.is_valid():
-            return Response({'serializer': serializer})
-        feed = serializer.save(owner=request.user)
-
-        # Initial feed crawl.
+        url = request.POST['link'].strip()
         try:
-#             feed.update_using_feedpage(feed.get_feedpage())
-            feed.save()
-        except requests.exceptions.HTTPError:
-            feed.delete()
-            return Response({
-                'errors': [{
-                    'message': 'Feed at URL not found.'
-                }],
-                'serializer': serializer
-            })
-        return redirect('feed-detail', pk=feed.id)
+            validators.URLValidator(schemes=['http', 'https'])(url)
+        except ValidationError:
+            return error_response('Please enter a valid url.', link=url)
+        if not url:
+            return error_response('Please enter a url.', link=url)
+        if models.Site.objects.filter(link=url).exists():
+            return error_response('Site already exists.', link=url)
+        if models.Feed.objects.filter(feed_url=url).exists():
+            return error_response('Site with feed already exists.', link=url)
+        tasks.import_site_and_notify_user.delay(url, request.user.id)
+        return Response({'success': True})
 
 
 class TagViewSet(viewsets.ModelViewSet):

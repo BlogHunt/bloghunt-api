@@ -1,8 +1,26 @@
 from urllib import parse
 import itertools
 
+from . import parsers, utils
 
-class FeedPage(object):
+
+def get_sitepage(url, cached_content=None):
+    """ Ask for new sitepage content from url and return a site page """
+    if not cached_content:
+        cached_content = utils.encoded_text_from_url(url)
+    soup = parsers.get_site_soup(cached_content)
+    return SitePage(soup, url=url)
+
+
+def get_feedpage(url, cached_content=None, overtime=False):
+    """ Ask for new feedpage content from feed_url and return a feed page """
+    if not cached_content:
+        cached_content = utils.encoded_text_from_url(url)
+    channel, defaultns = parsers.get_rss_feed_parts(cached_content, overtime=overtime)
+    return RssFeedPage(channel, url=url, defaultns=defaultns)
+
+
+class RssFeedPage(object):
 
     def __init__(self, tree, url='', defaultns=''):
         self.tree = tree
@@ -56,3 +74,19 @@ class FeedPage(object):
                 continue
             cloud = cloud_elem.text or cloud_elem.attrib.get('href')
             return cloud
+
+
+class SitePage(object):
+
+    def __init__(self, soup, url=''):
+        self.soup = soup
+        self.url = url
+
+    @property
+    def possible_feeds(self):
+        for feed_elem in self.soup.find_all(rel='alternate'):
+            # Check for relative links.
+            if feed_elem['href'][:3] == 'http':
+                yield feed_elem['href']
+            else:
+                yield parse.urljoin(self.url, feed_elem['href'])

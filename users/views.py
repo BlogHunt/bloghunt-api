@@ -13,22 +13,22 @@ from users import models
 from . import serializers
 
 
-class UserFeedViewSet(viewsets.ModelViewSet):
+class UserSiteViewSet(viewsets.ModelViewSet):
     template_name = 'myfeeds.html'
-    serializer_class = serializers.UserFeedSerializer
+    serializer_class = serializers.UserSiteSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.submitted_feeds
+        return self.request.user.submitted_sites.order_by('-created_on')
 
 
-class FeedRecommendationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+class RecommendationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
         viewsets.GenericViewSet):
     template_name = 'recommendations.html'
-    serializer_class = serializers.FeedRecommendationSerializer
+    serializer_class = serializers.RecommendationSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = models.FeedRecommendation.objects.all()
+    queryset = models.Recommendation.objects.all()

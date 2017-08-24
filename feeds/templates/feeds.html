@@ -23,7 +23,7 @@
     {% if error or results != None %}
     <!-- Search Form -->
     <div class="container-fluid">
-        <form method="get" action="/feeds">
+        <form method="get" action="/sites">
             <div class="input-group">
               <input type="text" placeholder="The Talk Show"
                 name="search" value="{{ request.GET.search }}" class="form-control">
@@ -68,14 +68,6 @@
                         Last updated {{ feed.time_since_update }}
                     </p>
                     {% endif %}
-                </div>
-                <div class="col-xs-2 text-right">
-                    <div class="container-fluid" style="margin-bottom:10px;">
-                        <a href="{{ feed.rss_url }}"><i class="fa fa-feed"></i> Feed</a>
-                    </div>
-                    <div class="container-fluid">
-                        <a href="{{ feed.link }}"><i class="fa fa-globe"></i> Site</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -126,14 +118,13 @@
                             {{ total_recommendations }} people like this.
                             {% if user.is_authenticated %}
                                 {% if not recommendation %}
-                                <form method="POST" action="{% url 'feedrecommendation-list' format='json' %}">
+                                <form method="POST" action="{% url 'recommendation-list' format='json' %}">
                                     {% csrf_token %}
-                                    <input type="hidden" name="feed" value="{{ url }}" />
+                                    <input type="hidden" name="site" value="{{ url }}" />
                                     <button class="btn-xs btn-primary">Recommend</button>
                                 </form>
                                 {% else %}
-                                <form method="DELETE" action="{% url 'feedrecommendation-detail' pk=recommendation.id format='json' %}">
-                                    <input type="hidden" name="feed" value="{{ url }}" />
+                                <form method="DELETE" action="{{ recommendation.url }}.json">
                                     <button class="btn-xs btn-warning">Un-Recommend</button>
                                 </form>
                                 {% endif %}
@@ -160,12 +151,18 @@
                         </div>
                         <hr />
                         <div class="container-fluid text-right">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
-                                </span>
-                                <input type="text" value="{{ rss_url }}" class="form-control">
+                            {% for feed in feeds %}
+                            <div class="row" style="margin-bottom:5px;">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default" href="{{ feed.feed_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
+                                        </span>
+                                        <input type="text" value="{{ feed.feed_url }}" class="form-control">
+                                    </div>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
                  </div>
@@ -180,7 +177,7 @@
         {% else %}
         <p><a href="{{ request.get_full_path }}?format=json">API Query for this item</a></p>
         {% endif %}
-        <p><a href="/documentation">Feed/API Documentation</a></p>
+        <p><a href="/documentation">API Documentation</a></p>
     </div>
 {% endblock %}
 

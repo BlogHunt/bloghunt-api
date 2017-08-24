@@ -1,18 +1,27 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block title %}My Feeds{% endblock %}
+{% block title %}Submitted sites{% endblock %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="{% static 'styles/select2.min.css' %}" />
+
+{% endblock %}
 
 {% block morescript %}
     <script src="{% static "js/ajax-form.js" %}"></script>
+    <script src="{% static "js/select2.min.js" %}"></script>
     <script src="{% static "rest_framework/js/csrf.js" %}"></script>
-   <script>
+    <script>
      window.drf = {
       csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
       csrfCookieName: "{{ csrf_cookie_name|default:'csrftoken' }}"
     };
-   $(document).ready(function() {
+    $(document).ready(function() {
       $('form').ajaxForm();
+      $(".site-tags-multiple").select2({
+        maximumSelectionLength: 3
+      });
     });
     </script>
 {% endblock %}
@@ -21,68 +30,80 @@
     {% if error or results != None %}
     <div class="container-fluid">
         <div class="h2">
-            My Sites
+            Submitted Sites
         </div>
         <div class="list-group">
-        {% for feed in results %}
+        {% for site in results %}
         <div class="list-group-item">
             <div class="row">
                 <div class="col-xs-10">
                     <h4 class="list-group-item-heading">
-                        {% if feed.image %}
-                            <img src="{{ feed.image }}" width="40" height="40" class="img-circle"/>
+                        {% if site.image %}
+                            <img src="{{ site.image }}" width="40" height="40" class="img-circle"/>
                             &nbsp;
                         {% endif %}
-                        {% if feed.title and feed.url %}
-                        <a href="{{ feed.url }}" >
-                            {{ feed.title }}
+                        {% if site.title and not site.error %}
+                        <a href="{{ site.url }}" >
+                            {{ site.title }}
                         </a>
                         {% else %}
-                        <p>Unparsed Site Feed</p>
-                        <small>This feed is waiting to be crawled.
-                        Check back in a bit.</small>
-                    {% endif %}
+                        {{ site.title }}
+                        {% endif %}
                     </h4>
-                    {% if not feed.title %}
+                    {% if not site.title %}
                     <p class="list-group-item-text text-muted">
-                        {{ feed.rss_url }}
+                        {{ site.link }}
                     </p>
                     {% endif %}
-                    {% if feed.description %}
+                    {% if site.description %}
                     <p class="list-group-item-text text-muted">
-                        {{ feed.description }}
+                        {{ site.description }}
                     </p>
                     {% endif %}
-                    {% if feed.time_since_update %}
+                    <div class="list-group-item-text text-muted">
+                        <a href="{% url 'sites-detail' pk=site.id %}" class="btn-xs btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+                        &nbsp;
+                        {% for tag in site.tags %}
+                        <a class="badge" href="{{ tag.url }}">
+                            {{ tag.name }}
+                        </a>
+                        {% empty %}
+                        <i class="text-muted">No tags</i>
+                        {% endfor %}
+                    </div>
+                    {% if site.error %}
+                    <p class="list-group-item-text text-muted">
+                        Error: {{ site.error.message }}
+                        Because of this error, this site will be shown in search results.
+                    </p>
+                    <p class="list-group-item-text text-muted">
+                        URL: {{ site.link }}
+                    </p>
+                    <hr />
+                    <p class="list-group-item-text text-muted">
+                        Please refer to our <a href="/documentation">documentation</a>
+                        to see how we parse sites and their feeds.
+                    </p>
+                    {% endif %}
+                    {% if site.time_since_update %}
                     <hr style="margin:5px;" />
                     <p class="list-group-item-text text-muted">
-                        Last updated {{ feed.time_since_update }}
+                        Last updated {{ site.time_since_update }}
                     </p>
                     {% endif %}
                 </div>
                 <div class="col-xs-2 text-right">
-                    <div class="container-fluid" style="margin-bottom:10px;">
-                        <a href="{{ feed.rss_url }}" target="_blank"><i class="fa fa-feed"></i> Feed</a>
-                    </div>
-                    {% if feed.link %}
-                    <div class="container-fluid">
-                        <a href="{{ feed.url }}" target="_blank"><i class="fa fa-globe"></i> Site</a>
-                    </div>
-                    {% endif %}
+                    <form data-method="DELETE" action="{% url 'sites-detail' pk=site.id %}">
+                        <button class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                    </form>
                 </div>
-            </div>
-            <hr />
-            <div class="container-fluid text-right">
-                <form data-method="DELETE" action="{{ feed.url }}">
-                    <button class="btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>
-                </form>
             </div>
         </div>
         {% empty %}
         <div class="h4">
-            You don't have any feeds.
+            You don't have any sites.
         </div>
-        <p>You can <a href="{% url 'new-feed' %}">add new feeds here</a></p>
+        <p>You can <a href="{% url 'new-site' %}">add new sites here</a></p>
 
         {% endfor %}
         </div>
@@ -99,28 +120,91 @@
     </div>
     {% else %}
     <!-- Detail Query -->
-    <div class="h1">
-        {% if image %}
-            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ title }}" />
-        {% else %}
-            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
-        {% endif %}&nbsp;
-        <a href="{{ link }}">{{ title }}&#8594;</a><br />
-        {% for tag in tags %}
-        <a class="badge" href="{{ tag.url }}">
-            {{ tag.name }}
-        </a>
-        {% endfor %}
+    <div class="h2 text-center">
+        Edit Site<br />
+        <small>
+            See your changes on the <a href="{{ url }}">public site page</a><br />
+        </small>
     </div>
-    <div class="container-fluid">
-        <p class="lead">{{ description|default:"" }}</p>
-        <p>Last updated {{ time_since_update }}</p>
-        <div class="container-fluid text-center">
-        </div>
-        <div class="container-fluid text-center">
-            <a class="btn btn-default" href="{{ rss_url }}"><i class="fa fa-2x fa-feed"></i>&nbsp;Feed</a>
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="container-fluid text-center">
+                        {% if image %}
+                            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ feed.title }}" />
+                        {% else %}
+                            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+                        {% endif %}&nbsp;<br />
+                        <div class="h3">
+                            {% if title %}
+                            <a target="_blank" href="{{ link }}">{{ title }}</a><br />
+                            {% else %}
+                            <p>Unparsed Site Feed</p>
+                            <small>This feed is waiting to be crawled.
+                            Check back in a bit.</small>
+                            {% endif %}
+                        </div>
+                        <div class="text-center container-fluid">
+                            {% if time_since_update %}
+                            <p>Last updated {{ time_since_update }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="text-center container-fluid">
+                            {{ total_recommendations|default:"0" }} people like this.
+                        </div>
+                        <div class="text-left">
+                            <div class="h4">
+                                Description
+                            </div>
+                            {% if description %}
+                                <p>{{ description }}</p>
+                            {% else %}
+                                <p><i class="text-muted">No description</i></p>
+                            {% endif %}
+                            <hr />
+                            <div class="h4">
+                                Tags
+                            </div>
+                            <form action="{% url 'sites-detail' pk=id format='json' %}" method="PATCH">
+                                {% csrf_token %}
+                                <div style="margin-bottom:10px;" class="text-center">
+                                    <select name="tags" class="form-control site-tags-multiple" multiple="multiple"
+                                        data-placeholder="Select up to 3 tags." style="width:90%">
+                                    {% for tag in all_tags %}
+                                      <option value="{{tag.slug}}" {% if tag in tags %}selected{% endif %}>{{ tag.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    <div class="visible-xs-block" style="height:5px;"/></div>
+                                    <button type="submit" class="btn-sm btn-primary">Save</button>
+                                </div>
+                            </form>
+                         </div>
+                        <hr />
+                        <div class="container-fluid text-right">
+                            {% for feed in feeds %}
+                            <div class="row" style="margin-bottom:5px;">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default" href="{{ feed.feed_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
+                                        </span>
+                                        <input type="text" value="{{ feed.feed_url }}" disabled class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                 </div>
+            </div>
         </div>
     </div>
     {% endif %}
+    <hr />
+    <div class="container-fluid text-center">
+        <p>If you're having issues with a site,
+        check out the <a href="/documentation">documentation</a>.</p>
+    </div>
 {% endblock %}
 

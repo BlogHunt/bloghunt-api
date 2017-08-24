@@ -7,24 +7,28 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import RedirectView
 from rest_framework import routers
 
-import feeds.views, users.views
+import feeds.views
+import users.views
+
+# Needed imports
+from feeds import tasks
+
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'feeds', feeds.views.FeedViewSet)
+router.register(r'sites', feeds.views.SiteViewSet)
 router.register(r'tags', feeds.views.TagViewSet)
-router.register(r'recommendations', users.views.FeedRecommendationViewSet)
 # router.register(r'keywords', feeds.views.KeywordViewSet)
 
 user_router = routers.DefaultRouter(trailing_slash=False)
-user_router.register(r'feeds', users.views.UserFeedViewSet, base_name='feeds')
+user_router.register(r'sites', users.views.UserSiteViewSet, base_name='sites')
+user_router.register(r'recommendations', users.views.RecommendationViewSet)
 
 urlpatterns = [
-    url(r'^$', feeds.views.HomeViewSet.as_view({ 'get': 'list'})),
-    url(r'^feeds/new$', feeds.views.NewFeedView.as_view(),
-        name='new-feed'),
+    url(r'^$', feeds.views.HomeViewSet.as_view({'get': 'list'})),
+    url(r'^sites/new$', feeds.views.NewFeedView.as_view(),
+        name='new-site'),
     url(r'^about$', feeds.views.about_view),
     url(r'^documentation$', feeds.views.documentation_view),
     url(r'^users/', include(user_router.urls)),

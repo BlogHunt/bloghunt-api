@@ -2,4 +2,4 @@ from django.contrib import admin
 
 from . import models
 
-admin.site.register(models.FeedRecommendation)
+admin.site.register(models.Recommendation)

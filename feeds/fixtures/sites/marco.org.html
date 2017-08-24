@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://marco.org/rss" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"/>
+        <!--[if IE]>
+        <script src="/ie-is-an-idiot.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="https://marco.org/main14.css"/>
+        <script src="https://marco.org/jquery-and-bigfoot.js"></script>
+        <script>
+            $.bigfoot({
+                actionOriginalFN: "ignore",
+                numberResetSelector: "article",
+                buttonMarkup: (
+                    "<a href=\"#\" class=\"footnote-button\" " +
+                        "id=\"{{SUP:data-footnote-backlink-ref}}\" " +
+                        "data-footnote-identifier=\"{{FOOTNOTEID}}\" " +
+                        "data-footnote-style=\"default\"" +
+                        "alt=\"See Footnote {{FOOTNOTEID}}\" " +
+                        "rel=\"footnote\"" +
+                        "data-footnote-content=\"{{FOOTNOTECONTENT}}\">" +
+                            "{{FOOTNOTENUM}}" +
+                    "</a>"
+                )
+            });
+        </script>
+        <title>Marco.org</title>
+
+            </head>
+    <body>
+        <div id="mastheadbackground">&nbsp;</div>
+
+        <section id="posts">
+
+            <div id="masthead">
+                <h1><a href="/">Marco.org</a></h1>
+                <div>
+                    <p id="description">
+                        I&rsquo;m <a href="/about" rel="author">Marco Arment</a>:
+                        a programmer, writer, podcaster, geek, and coffee enthusiast.
+                    </p>
+
+                    <nav>
+                        <a href="/apps">Apps</a>
+                        &bull;
+                        <a href="http://atp.fm/">Podcast</a>
+                        &bull;
+                        <a href="https://twitter.com/marcoarment">Twitter</a>
+                        &bull;
+                        <a href="/about">About</a>
+                    </nav>
+                </div>
+            </div>
+
+
+                                                <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/08/10/removed-send-to-watch">Removing &ldquo;Send to Watch&rdquo;</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-08-10T16:54:34-04:00" pubdate="pubdate">August 10, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/08/10/removed-send-to-watch"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/08/10/removed-send-to-watch</span></a>
+                            </p>
+                        </header>
+
+                        <p>I’ve spent many months of development on Overcast’s Apple Watch app, especially implementing standalone “Send to Watch” playback. Unfortunately, I now need to remove the “Send to Watch” feature.</p>
+
+<p>I’m sorry to the people who used it. While there weren’t many of you (about 0.1% of active users), I’ve heard from some who it meant quite a bit to.</p>
+
+<p>In retrospect, “Send to Watch” wasn’t good enough to ship. I’ve paid for that in a constant stream of negative App Store reviews that have reduced the entire app’s average, but that alone wouldn’t sink the feature. Here’s what happened.</p>
+
+<p>Many people had been asking for standalone playback since the first Apple Watch was released. I spent months of development on it last winter, but I simply wasn’t able to get a minimum acceptable quality level out of the limited watchOS audio APIs.</p>
+
+<p>I shelved the feature until other Apple Watch podcast apps revealed a workaround that made background audio much more usable on watchOS, so I decided to use the same technique and ship the feature anyway, despite its other shortcomings. That was a mistake.</p>
+
+<p>That workaround doesn’t work anymore in watchOS 4. Rewriting “Send to Watch” playback to use the only supported alternative would likely take at least another month of development and testing that I currently can’t spare, and due to its limitations, the resulting usability and experience wouldn’t be good enough for me to confidently ship.<sup id="fnref:pLK9h4axdwphack"><a href="#fn:pLK9h4axdwphack" rel="footnote">1</a></sup></p>
+
+<p>Therefore, I’ve decided to remove “Send to Watch” in the latest update today, a bit ahead of watchOS 4’s expected release, before anyone else gets accustomed to it.</p>
+
+<p>I intend to continue supporting and updating the Watch app as a convenient, lightweight, fast remote control for iPhone playback. But it’s not possible to ship a good standalone podcast player on watchOS today, and it’ll probably take a few more years of hardware and software evolution before that changes.</p>
+
+<p>There isn’t much time left before iOS 11’s release, and I need to spend the rest of the summer working on highly requested features and updates in the main app.</p>
+
+<p>I&#8217;m sorry again for the loss of this feature to the people who used it. If it becomes possible in the future to do it right, I&#8217;ll do my best to bring it back.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pLK9h4axdwphack">
+<p>watchOS normally doesn&#8217;t let apps run continuously in the background, even if they&#8217;re playing audio, unlike iOS. The <code>WKAudioFilePlayer</code> API lets your app hand off a file or playlist to the system for playback, and then try to figure out what happened with it next time your app launches (to know whether the user listened to a certain time, reached the end, skipped to the next episode, etc.). Unfortunately, it has major shortcomings, bugs, and non-ideal behaviors for making a usable podcast app.</p>
+
+<p>The loophole was to declare the app as a workout-monitoring app, which let it run continuously in the background on watchOS 3 if a workout was active &#8212; or, for some reason, if it was playing audio. This let me use the much better <code>AVAudioPlayer</code> to build a usable podcast player on the Watch.</p>
+
+<p>In watchOS 4, that loophole no longer enables background audio playback, so any audio APIs other than <code>WKAudioFilePlayer</code> pause as soon as the foreground app changes or the Watch display sleeps.&#160;<a href="#fnref:pLK9h4axdwphack" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/05/15/mp3-isnt-dead">&ldquo;MP3 is dead&rdquo; missed the real, much better story</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-05-15T22:45:43-04:00" pubdate="pubdate">May 15, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/05/15/mp3-isnt-dead"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/05/15/mp3-isnt-dead</span></a>
+                            </p>
+                        </header>
+
+                        <p>If you <a href="http://gizmodo.com/developers-of-the-mp3-have-officially-killed-it-1795205540">read</a> <a href="https://www.engadget.com/2017/05/12/mp3-is-dead-long-live-aac/">the</a> <a href="http://www.npr.org/sections/therecord/2017/05/11/527829909/the-mp3-is-officially-dead-according-to-its-creators">news</a>, you may think the MP3 file format was recently officially &#8220;killed&#8221; somehow, and any remaining MP3 holdouts should all move to AAC now. These are all simple rewrites of
+<a href="https://www.iis.fraunhofer.de/en/ff/amm/prod/audiocodec/audiocodecs/mp3.html">Fraunhofer IIS&#8217; announcement</a> that they&#8217;re terminating the MP3 patent-licensing program.</p>
+
+<p><a href="https://512pixels.net/2017/05/the-mp3-isnt-dead/">Very</a> <a href="https://sixcolors.com/post/2017/05/long-live-the-mp3/">few</a> <a href="https://motherboard.vice.com/en_us/article/mp3-is-not-dead">people</a> got it right. The others missed <a href="https://en.wikipedia.org/wiki/MP3#Licensing.2C_ownership_and_legislation">what happened last month</a>:</p>
+
+<blockquote>
+  <p>If the longest-running patent mentioned in the aforementioned references is taken as a measure, then <strong>the MP3 technology became patent-free in the United States on 16 April 2017</strong> when U.S. Patent 6,009,399, held by and administered by Technicolor, expired.</p>
+</blockquote>
+
+<p>MP3 is no less alive now than it was last month or will be next year &#8212; the last known MP3 patents have simply expired.</p>
+
+<p>So while there&#8217;s a debate to be had &#8212; in a moment &#8212; about whether MP3 should still be used today, Fraunhofer&#8217;s announcement has nothing to do with that, and is simply the ending of its patent-licensing program (because the patents have all expired) and a suggestion that we move to a newer, <a href="https://www.iis.fraunhofer.de/en/ff/amm/prod/audiocodec/audiocodecs/aaclc.html">still-patented</a> format.</p>
+
+<h3>Why still use MP3 when newer, better formats exist?</h3>
+
+<p>MP3 is very old, but it&#8217;s the same age as <a href="https://en.wikipedia.org/wiki/JPEG">JPEG</a>, which has also long since been surpassed in quality by <a href="https://en.wikipedia.org/wiki/JPEG_2000">newer</a> <a href="https://en.wikipedia.org/wiki/WebP">formats</a>. JPEG is still ubiquitous not because Engadget forgot to declare its death, but because it&#8217;s good enough and supported everywhere, making it the most <em>pragmatic</em> choice most of the time.<sup id="fnref:pFcz0p5c0png"><a href="#fn:pFcz0p5c0png" rel="footnote">1</a></sup></p>
+
+<p>AAC and other newer audio codecs can produce better quality than MP3, but the difference is <a href="http://opus-codec.org/comparison/">only significant at low bitrates</a>. At about 128 kbps or greater, the differences between MP3 and other codecs are very unlikely to be noticed, so it isn&#8217;t meaningfully better for personal music collections. For new music, get AAC if you want, but it&#8217;s not worth spending any time replacing MP3s you already have.</p>
+
+<p>AAC makes a lot of sense for low- and medium-quality applications where bandwidth is extremely limited or expensive, like phone calls and music-streaming services, or as sound for video, for which it&#8217;s the most widely supported format.</p>
+
+<p>It may seem to make sense for podcasts, but it doesn&#8217;t. Podcasters need to distribute a single file type that&#8217;s playable on the most players and devices possible, and though AAC is widely supported today, it&#8217;s <em>still</em> not as widely supported as MP3. So podcasters overwhelmingly choose MP3: among the 50 million podcast episodes in <a href="https://overcast.fm">Overcast&#8217;s</a> database, 92% are MP3, and within the most popular 500 podcasts, 99% are MP3.</p>
+
+<p>And AAC is also still patent-encumbered, which prevents innovation, hinders support, restricts potential uses, and imposes burdensome taxes on anything that goes near it.</p>
+
+<p>So while AAC does offer some benefits, it also brings additional downsides and costs, and the benefits aren&#8217;t necessary or noticeable in some major common uses. Even the file-size argument for lower bitrates is less important than ever in a world of ever-increasing bandwidth and ever-higher relative uses of it.<sup id="fnref:pFcz0p5c0size"><a href="#fn:pFcz0p5c0size" rel="footnote">2</a></sup></p>
+
+<p>Ogg Vorbis and <a href="http://opus-codec.org/comparison/">Opus</a> offer similar quality advantages as AAC with (<a href="http://daringfireball.net/2007/04/wee_bit_more_on_aac">probably</a>) no patent issues, which was necessary to provide audio options to free, open-source software and other contexts that aren&#8217;t compatible with patent licensing. But they&#8217;re not widely supported, limiting their useful applications.</p>
+
+<p>Until a few weeks ago, there had never been an audio format that was small enough to be practical, widely supported by hardware and software, <em>and</em> unrestricted by patents, forcing <a href="http://shaver.off.net/diary/2010/01/23/html5-video-and-codecs/">difficult choices</a> and <a href="http://stackoverflow.com/questions/4923136/why-doesnt-firefox-support-the-mp3-file-format-in-audio">needless friction</a> upon the computing world. Now, at least for audio, that friction has officially ended. There&#8217;s finally a great choice without asterisks.</p>
+
+<p><strong>MP3 is supported by everything, everywhere, and is now patent-free.</strong> There has never been another audio format as widely supported as MP3, it&#8217;s good enough for almost anything, and now, <em>over twenty years</em> since it took the world by storm, it&#8217;s finally free.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pFcz0p5c0png">
+<p>For photos and other image types poorly suited to PNG, of course.&#160;<a href="#fnref:pFcz0p5c0png" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pFcz0p5c0size">
+<p>Suppose a podcast debates switching from 64 kbps MP3 to 48 kbps AAC. That would only save about 7 MB per hour of content, which isn&#8217;t a meaningful amount of data for most people anymore (especially for podcasts, which are typically background-downloaded on Wi-Fi). Read the <a href="https://www.engadget.com/2017/05/12/mp3-is-dead-long-live-aac/">Engadget</a> and <a href="http://gizmodo.com/developers-of-the-mp3-have-officially-killed-it-1795205540">Gizmodo</a> articles, at 3.6 and 5.2 MB, respectively, and you&#8217;ve already spent more than that difference. Watch <a href="https://www.youtube.com/watch?v=KW0eUrUiyxo">a 5-minute YouTube video</a> at default quality, and you&#8217;ll blow through about three times as much.&#160;<a href="#fnref:pFcz0p5c0size" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/04/15/mac-pro-audacity-of-yes">The new Mac Pro: The audacity to say &ldquo;Yes&rdquo; in a design culture of &ldquo;No&rdquo;</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-04-15T21:11:24-04:00" pubdate="pubdate">April 15, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/04/15/mac-pro-audacity-of-yes"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/04/15/mac-pro-audacity-of-yes</span></a>
+                            </p>
+                        </header>
+
+                        <p>Much of modern Apple&#8217;s design philosophy is to relentlessly strip down most products to the bare minimum in certain areas as technological progress allows, following (and largely defining) the modern design fashion of nearly-unquestioned devotion to minimalism.</p>
+
+<p>Saying &#8220;no&#8221; is the easiest path to what&#8217;s considered good design today: if something cannot be easily accommodated, or most people won&#8217;t complain too badly in its absence, just omit it.<sup id="fnref:pKZcmcvQpopenoffices"><a href="#fn:pKZcmcvQpopenoffices" rel="footnote">1</a></sup></p>
+
+<p>While minimalism is <em>one</em> aspect of <em>one</em> view of good design, it&#8217;s often overused, underconsidered, and misunderstood, resulting in products with surface-level appeal that don&#8217;t actually <em>work</em> very well because they were optimized for visual design and minimalism rather than overall real-world usefulness.<sup id="fnref:pKZcmcvQpjobs"><a href="#fn:pKZcmcvQpjobs" rel="footnote">2</a></sup></p>
+
+<p>As with every design decision, removals and omissions have major trade-offs that need to be very carefully considered. Today&#8217;s design culture of &#8220;no&#8221; often goes unquestioned or is assumed to be the best outcome, but minimalism should not be axiomatic in all areas. Often, less is more. But sometimes, it&#8217;s just less.</p>
+
+<p style="text-align: center; margin-top: 2em; margin-bottom: 2em; color: #bbb;">*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*</p>
+
+<p>A lot went wrong with the 2013 Mac Pro. Some of the leading factors that led to its failure:</p>
+
+<ul>
+<li>It was more expensive than its predecessor, while also removing major features that many of its customers still needed. (The 2016 MacBook Pro has the same problem.)</li>
+<li>It was designed to accommodate exactly two GPUs with relatively low heat output each, but CPU-heavy users didn&#8217;t need the second GPU, and GPU-heavy users needed hotter-running GPUs (and often just one <em>really</em> hot one).<sup id="fnref:pKZcmcvQpnvidia"><a href="#fn:pKZcmcvQpnvidia" rel="footnote">3</a></sup> So the only configuration it was offered in was either overspecced (and overpriced) or underpowered for most Mac Pro customers.</li>
+<li>Less than a year after its release, it missed the desktop Retina revolution started by the 5K iMac, and it was beaten handily in single-threaded performance by a CPU generation that Apple never updated it to use.</li>
+</ul>
+
+<p>The last factor was poor timing that could&#8217;ve been fixed with regular updates, but the first two are simply major design flaws by making the wrong choices for this product.</p>
+
+<p>I understand why Apple went down that path, and it&#8217;s all in the context that led to my favorite line ever spoken in an Apple keynote, right after the unveiling of this Mac Pro during the 2013 WWDC keynote:</p>
+
+<p style="text-align: center;">
+<b>&#8220;Can&#8217;t innovate anymore, my ass!&#8221;</b><br/>&mdash;Phil Schiller</p>
+
+<p>Back then, Jobs hadn&#8217;t been gone for long, Cook had a lot to prove, and the <em>overwhelming</em> press and analyst narrative had been that Apple couldn&#8217;t innovate anymore and Samsung was the king of innovation, whatever that meant. (It turned out to just mean big phones.)</p>
+
+<p>This clearly bothered Apple, and it almost certainly influenced their overly aggressive decisions with the design of the 2013 Mac Pro.</p>
+
+<p>But the Mac Pro is the worst place in the entire Apple product lineup to drastically remove capabilities and versatility (and then to not update it for over four years).<sup id="fnref:pKZcmcvQpyearmath"><a href="#fn:pKZcmcvQpyearmath" rel="footnote">4</a></sup></p>
+
+<p>Overly aggressive minimalism fails most spectacularly when there&#8217;s no clear consensus among customers on what can be removed. And if you ask Mac Pro customers what they need and want, there&#8217;s very little overlap:</p>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=HRgtHE9_3KU">Video creators</a> need as many CPU cores as possible, one or two very fast GPUs with support for cutting-edge video output resolutions (like 8K today), PCIe capture, massive amounts of storage, and the most external peripheral bandwidth possible.</li>
+<li><a href="http://atp.fm/">Audio creators</a> need fast single-core CPU performance, low-latency PCIe/Thunderbolt interfaces, rock-solid USB buses, ECC RAM for stability, and reliable silence regardless of load. (Many also use the optical audio inputs and outputs, and would appreciate the return of the line-in jack.)</li>
+<li><a href="https://macperformanceguide.com/blog/2017/20170407_0802-Apple-MacPro-DesiredFeatures.html">Photographers</a> need tons of CPU cores, tons of storage, a lot of RAM, and the biggest and best single displays.</li>
+<li><a href="https://carpeaqua.com/2017/04/09/a-software-developers-mac-pro/">Software developers</a>, which Federighi called out in the briefing this month as possibly the largest part of Apple&#8217;s &#8220;pro&#8221; audience, need tons of CPU cores, the fastest storage possible, tons of RAM, tons of USB ports, and multiple big displays, but hardly any GPU power &#8212; unless they&#8217;re developing games or VR, in which case, they need the most GPU power possible.</li>
+<li><a href="http://hypercritical.co/">Mac gamers</a> need a high-speed/low-core-count CPU, the best single gaming GPU possible, and VR hardware support.</li>
+<li><a href="https://9to5mac.com/2017/04/14/what-the-hackintosh-community-wants-new-modular-mac-pro/">Budget-conscious PC builders</a> need as many PC-standard components and interfaces as possible to maximize potential for upgrades, repairs, and expansion down the road.</li>
+<li><a href="https://512pixels.net/2017/04/what-i-want-in-the-new-mac-pro/">And more</a>, <a href="https://mjtsai.com/blog/2017/04/11/what-i-want-in-the-new-mac-pro/">and more</a>&#8230;</li>
+</ul>
+
+<p>The requirements are all over the map, but most pro users seem to agree on the core principles of an ideal Mac Pro, none of which include size or minimalism:</p>
+
+<ul>
+<li>More internal capacity is better.</li>
+<li>Each component should have a reasonably priced base option, but offer the ability to configure up to the best technology on the market.</li>
+<li>It needs to accommodate a wide variety of needs, some of which Apple won&#8217;t offer, and some of which may require future upgrades.</li>
+</ul>
+
+<p>Or, to distill the requirements down to a single word:</p>
+
+<ul>
+<li>Versatility.</li>
+</ul>
+
+<p>Just as <a href="http://www.macworld.com/article/1156153/macofthefuturegruber.html">macOS&#8217; versatility allows iOS to remain lightweight</a>, the ability of the rest of the Mac lineup to be more aggressive, minimalist, and forward-looking depends on the Mac Pro to cover everyone whose needs don&#8217;t fit into them.<sup id="fnref:pKZcmcvQpbacklash"><a href="#fn:pKZcmcvQpbacklash" rel="footnote">5</a></sup> The Mac Pro must be the catch-all at the high end: anytime someone says the iMac or MacBook Pro isn&#8217;t <em>something</em> enough for them, the solution should be the Mac Pro.</p>
+
+<p>Try to narrow the Mac Pro&#8217;s focus any further than a big, versatile, modular box, and it stops serving the needs of big slices of its market, forcing valuable and influential pro users to either sacrifice major areas of their needs or leave the Mac platform entirely. That&#8217;s why so many previous-generation Mac Pro towers are still in use today (and highly demanded on eBay), which all have components that are at least <em>seven</em> years old: Apple hasn&#8217;t made a Mac Pro since then that has addressed their owners&#8217; needs.</p>
+
+<p>The more needs you try to accommodate, the more you arrive at capabilities similar to the previous Mac Pro tower, just modernized to new components and redesigned to remove outdated options like optical-drive bays, that&#8217;s easy for Apple to update every 1–2 years as new components become available.</p>
+
+<p>The 2013 Mac Pro went in completely the wrong direction: satisfying only a narrow subset of pro users, with such tight tolerances that it couldn&#8217;t be updated.</p>
+
+<p>There is no single design, no single set of trade-offs, that addresses a large set of pro users: they all want different things, and the only way to serve that with one product line is to have it be extremely versatile and offer a wide variety of configuration options. You can&#8217;t do that with a minimalist industrial-design indulgence like the 2013 Mac Pro.</p>
+
+<p>I hope the Apple of 2017 (and beyond) has learned this, and is confident enough in its own abilities and innovation to stare down a minimalist design culture of &#8220;no&#8221; and ship a <a href="http://www.allenpike.com/2013/maximum-viable-products/">maximum viable product</a> at the top of its lineup that says &#8220;yes&#8221; to everything we can throw at it.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pKZcmcvQpopenoffices">
+<p>Like open-plan offices, minimalism is also usually cheaper, making it an easy sell to the finance people. And like open-plan offices, its profitability contributes to its ubiquity, making it seem like a better or more universally applicable idea than it really is.&#160;<a href="#fnref:pKZcmcvQpopenoffices" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pKZcmcvQpjobs">
+<p>I&#8217;m trying to make it through this entire post without any Steve Jobs quotes. It&#8217;s not easy.&#160;<a href="#fnref:pKZcmcvQpjobs" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pKZcmcvQpnvidia">
+<p>I&#8217;m not well-versed in the specifics of this, but I believe they also lost the huge bet they placed on AMD GPUs and OpenCL. High-end GPU computing has largely gone to NVIDIA and CUDA, and Apple seems reluctant to offer NVIDIA GPUs in their products for unknown reasons (likely cost and old beefs, which I suggest they find a way to get past).&#160;<a href="#fnref:pKZcmcvQpnvidia" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pKZcmcvQpyearmath">
+<p>It hasn&#8217;t been four years yet, but by the time the next Mac Pro ships, it&#8217;ll likely be about 4.5.&#160;<a href="#fnref:pKZcmcvQpyearmath" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pKZcmcvQpbacklash">
+<p>I suspect that reactions to the 2016 MacBook Pro would&#8217;ve been significantly more favorable if more pros were accustomed to the Mac Pro addressing their needs. Instead, the message from Apple last fall was clearly, &#8220;Wedge all of your high-end needs into these laptops because the desktop is dead,&#8221; putting a significantly higher burden on them that they couldn&#8217;t meet.&#160;<a href="#fnref:pKZcmcvQpbacklash" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/02/20/overcast3">Overcast 3: Design walkthrough</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-02-20T18:02:04-05:00" pubdate="pubdate">February 20, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/02/20/overcast3"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/02/20/overcast3</span></a>
+                            </p>
+                        </header>
+
+                        <p><style type="text/css"><!--
+    img.v3ss {
+        max-width: 100%;
+        display: block;
+        margin-top: 0.25em;
+    }
+        .v3ss_full img { margin-top: 0; }
+
+    p.v3ss {
+        text-align: center;
+        margin-top: 1.5em;
+        margin-bottom: 1.5em;
+    }
+
+    a.v3ss {
+        display: inline-block;
+        max-width: 44.5%;
+        color: #808088;
+        background-color: #eee;
+        padding: 0.5em 1px 1px 1px;
+        margin: 0 2%;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        a.v3ss_full { padding: 1px; max-width: 46.5%; margin: 1%; }
+--></style></p>
+
+<p class="v3ss">
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-cellactions-new.png"><img src="https://marco.org/media/2017/02/v3-cellactions-new.png" class="v3ss v3ss_full"/></a>
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-nowplaying-new.png"><img src="https://marco.org/media/2017/02/v3-nowplaying-new.png" class="v3ss v3ss_full"/></a>
+</p>
+
+<p><a href="https://overcast.fm/">Overcast 3</a> is now available, and it&#8217;s a huge update, mostly in the design and flow of the interface. I&#8217;ve been working on it since last summer, informed by over two years of testing, usage, and customer feedback.</p>
+
+<p>I designed <a href="https://www.macstories.net/reviews/overcast-review/">Overcast 1.0</a> in 2014 for iOS 7, and it was a product of its time: it used ultra-thin text and lines against stark, sharp-edged, full-screen white sheets and translucent blur panes, with much of the basic functionality behind hidden gestures. That fundamental design carried through every update until today.</p>
+
+<p>My design goals for 3.0 were:</p>
+
+<ol>
+<li><strong>Update the style from iOS 7 to today:</strong> More affordances, more curves, thicker fonts, less translucency, more tactility. App-design fashion doesn&#8217;t stand still, and many iOS 7-era designs now look dated.</li>
+<li><p><strong>Bring all functionality into the open:</strong> Add visible controls and affordances to anything that was previously hard to find or behind a hidden gesture, such as table-cell swipe actions and actions that first require tapping corner &#8220;Edit&#8221; buttons.</p>
+
+<p>You wouldn&#8217;t believe how many customers have asked me to add features that were already there, or couldn&#8217;t find basic functions like deleting episodes, because they weren&#8217;t apparent enough in the design.</p></li>
+<li><p><strong>Adapt to larger phones:</strong> Enlarge touch targets and make one-handed use faster and easier, even when only part of the screen is within easy reach. I also wanted to reduce the potential for (and effects of) mis-tapping, especially around the lower left and right screen edges, which I believe will become increasingly important as future iPhones presumably get thinner side bezels.</p>
+
+<p>Overcast 1.0 was designed for the iPhone 5S. Some fundamentals needed to be revisited now that the vast majority of my customers are on 4.7- and 5.5-inch screens.</p></li>
+</ol>
+
+<h3>Now Playing screen, card metaphor</h3>
+
+<p>I began by revamping the fundamental structure between the rest of the app and the Now Playing screen with a new <strong>card</strong> metaphor, which <strong>slides up</strong> from the bottom instead of pushing in from the right:</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-nowplaying-old.png">Old<img src="https://marco.org/media/2017/02/v3-nowplaying-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-nowplaying-new.png">New<img src="https://marco.org/media/2017/02/v3-nowplaying-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>Most popular music and podcast apps have adopted slide-up methods for their Now Playing screens (including the iOS 10 Music app), so this matches what people are already accustomed to elsewhere.</p>
+
+<p>It can be smoothly pulled up from the miniplayer (or just tap it), and can be smoothly dismissed by swiping down <strong>anywhere</strong> on the Now Playing screen (or tapping the &#8220;down&#8221; chevron).<sup id="fnref:prKwU6CZVedge"><a href="#fn:prKwU6CZVedge" rel="footnote">1</a></sup></p>
+
+<p>This card metaphor is carried throughout all other modal screens in the app, and they all work the same way, speeding up common tasks and greatly enhancing one-handed use.</p>
+
+<p>I also redesigned the Now Playing screen itself. The old one revealed episode notes in a hidden scroll zone &#8212; you&#8217;d need to swipe up on the artwork to reveal them, which relatively few people ever discovered.</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-shownotes-old.png">Old<img src="https://marco.org/media/2017/02/v3-shownotes-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-shownotes-new.png">New<img src="https://marco.org/media/2017/02/v3-shownotes-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>The new Now Playing screen can be swiped horizontally to reveal effects on the left or episode notes on the right, and &#8212; critically &#8212; this is indicated by a standard &#8220;page dots&#8221; indicator below the artwork.<sup id="fnref:prKwU6CZVpagedots"><a href="#fn:prKwU6CZVpagedots" rel="footnote">2</a></sup></p>
+
+<p>The Effects and Playback popovers have been consolidated into a single effects pane:<sup id="fnref:prKwU6CZVcontplay"><a href="#fn:prKwU6CZVcontplay" rel="footnote">3</a></sup></p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-effects-old.png">Old<img src="https://marco.org/media/2017/02/v3-effects-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-effects-new.png">New<img src="https://marco.org/media/2017/02/v3-effects-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>Along with a tightening of the seek-back/forward tap zones, this moved critical controls away from the lower-left and lower-right screen edges, which are often mis-tapped when handling large phones.</p>
+
+<h3>Playlists, episode info, and podcast screens</h3>
+
+<p>Playlists have been manually reorderable since 1.0, but many iOS users never tap &#8220;Edit&#8221; buttons in navigation bars, so many people never even knew they could do it. Even for those who knew they could reorder episodes, the two-step process was cumbersome.</p>
+
+<p>The new playlist screen has full-time reordering handles for faster access and better discoverability:</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-playlist-old.png">Old<img src="https://marco.org/media/2017/02/v3-playlist-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-playlist-new.png">New<img src="https://marco.org/media/2017/02/v3-playlist-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>The miniplayer is also now larger and easier to grab, has larger buttons, and hides when nothing is playing.</p>
+
+<p>I&#8217;ve also replaced the episode-info popovers, which I&#8217;ve hated since the day I shipped them:</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-info-old.png">Old<img src="https://marco.org/media/2017/02/v3-info-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-info-new.png">New<img src="https://marco.org/media/2017/02/v3-info-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>The old popover lacked contrast from its surroundings, had limited space, and required carefully tapping outside its bounds to dismiss, which was often clumsy when one-handed.</p>
+
+<p>The new episode-info card behaves like all other Overcast 3 cards: slides up quickly, then easily dismissed by swiping down anywhere (or inward from the left edge). It can also be <a href="https://marco.org/media/2017/02/v3-info-new-preview.png">previewed with 3D Touch</a> and swiped up for <a href="https://marco.org/media/2017/02/v3-info-new-actions.png">quick actions</a>.</p>
+
+<h3>Playing, deleting, queueing</h3>
+
+<p>Previously, tapping an episode in the list would immediately begin playback. This is nice when you want it, but accidental input was always an issue: I found it too easy to accidentally begin playing something that I was trying to rearrange, delete, or see info about.</p>
+
+<p>A lot of people also never swipe table cells (or tap Edit buttons), therefore never finding the Delete button. I&#8217;ve gotten literally <em>hundreds</em> of emails since Overcast 1.0&#8217;s launch asking how to delete episodes without playing them.</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-cellactions-old.png">Old<img src="https://marco.org/media/2017/02/v3-cellactions-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-cellactions-new.png">New<img src="https://marco.org/media/2017/02/v3-cellactions-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>To address these, I&#8217;ve switched to a two-stage method: tap an episode to select it, which shows various action buttons, and tap the newly revealed Play button to play it.</p>
+
+<p>I expect this to be the most controversial change in Overcast 3, as it does slow down playback, but I&#8217;ve found that it <strong>works</strong> far better and more consistently, most people accustomed to the old way get used to it in a couple of days, and it makes the app far more reliable and discoverable for everyone.</p>
+
+<p>It also gave me a place to put a new button: Queue.</p>
+
+<p class="v3ss v3ss_full">
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-cellactions-new-queue.png"><img src="https://marco.org/media/2017/02/v3-cellactions-new-queue.jpg" class="v3ss v3ss_full"/></a>
+</p>
+
+<p>Some kind of &#8220;Up Next&#8221;-style fast queue management has been one of Overcast&#8217;s most-requested features since day one. It took me a long time to come around to the idea because I thought my playlists served the same role. And they mostly did, but they needed two big changes:</p>
+
+<ol>
+<li>Easy access from around the interface to quickly add episodes to the queue.</li>
+<li>Overcast 3&#8217;s new option for manual playlists, instead of just &#8220;smart&#8221; playlists, matching iTunes&#8217; definitions: manual playlists only ever contain things you add explicitly to them, while &#8220;smart&#8221; playlists (previously the only kind in Overcast) are a set of rules that automatically include or exclude episodes. Many people want their queue/up-next to be a manual playlist.</li>
+</ol>
+
+<p>The new queue features are simply Overcast playlists with special placement in the interface. If you already have a playlist named &#8220;Queue&#8221; or the default &#8220;All Episodes&#8221;, that&#8217;s used, and if not, it&#8217;s created as necessary. These show up everywhere and have full functionality just like every other playlist.</p>
+
+<h3>Miscellany</h3>
+
+<p>The podcast screen always had a huge design flaw. Quick: in the old screen, how do you reverse the sort order of the episodes so it plays oldest to newest?</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-sort-triangle-old.png">Old<img src="https://marco.org/media/2017/02/v3-sort-triangle-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-sort-triangle-new.png">New<img src="https://marco.org/media/2017/02/v3-sort-triangle-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>There&#8217;s no standard for this on iOS, so I copied the desktop/web standard of a triangle indicator on the header that can be tapped to reverse the direction. <strong>Nobody</strong> ever found this, so I&#8217;ve added a clearly labeled option under each podcast&#8217;s Settings as well.</p>
+
+<p>The old podcast-directory screen was <strong>filled</strong> with annoyances: podcasts you&#8217;d already subscribed to would be dimmed out and show an annoying alert if tapped, you could only add one podcast at a time, etc.</p>
+
+<p class="v3ss">
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-recommended-old.png">Old<img src="https://marco.org/media/2017/02/v3-recommended-old.jpg" class="v3ss"/></a>
+<a class="v3ss" href="https://marco.org/media/2017/02/v3-recommended-new.png">New<img src="https://marco.org/media/2017/02/v3-recommended-new.jpg" class="v3ss"/></a>
+</p>
+
+<p>Now, everything&#8217;s visible from everywhere, the same actions show up wherever an episode is listed, and you can add multiple podcasts without having to go back into the directory for each one. (Finally.) And, of course, it&#8217;s a card, so it&#8217;s easy to dismiss by just dragging down.</p>
+
+<p>Some other new stuff:</p>
+
+<p class="v3ss v3ss_full">
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-new-widget.png"><img src="https://marco.org/media/2017/02/v3-new-widget.jpg" class="v3ss v3ss_full"/></a>
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-new-notifications-full.png"><img src="https://marco.org/media/2017/02/v3-new-notifications-full.jpg" class="v3ss v3ss_full"/></a>
+</p>
+
+<p>A widget!</p>
+
+<p>Rich notifications!</p>
+
+<p class="v3ss v3ss_full">
+<a class="v3ss v3ss_full" style="max-width: 33%;" href="https://marco.org/media/2017/02/v3-watch.png"><img src="https://marco.org/media/2017/02/v3-watch.png" class="v3ss v3ss_full"/></a>
+</p>
+
+<p>An all-new, much faster Watch app, finally natively running on watchOS 3! (The old one was watchOS 1. Really.)</p>
+
+<p>And even some Swift! (This is why the app has grown from 7 MB to about 30 MB: since Swift is still young, all Swift apps still come with their own custom copy of the Swift libraries.)</p>
+
+<h3>Much nicer ads</h3>
+
+<p>When my patronage-only model <a href="https://marco.org/2016/09/09/overcast-ads">effectively failed</a> and I added Google ads last September, I had to swallow two bitter pills:</p>
+
+<ul>
+<li><p><strong>Bad ads:</strong> I had little control over the advertisers or the ad content, which could be offensive or reflect badly on my app without my knowledge. I thought I could set adequate limits, but in practice, it wasn&#8217;t good enough.</p>
+
+<p>Google provides an extensive control panel that lets you block certain ad categories. Most are clearly placed in <em>Sensitive Categories</em> and were easily disabled before launch, like gambling, drugs, etc., but I kept hearing from customers who&#8217;d seen other ads that offended both of us. For instance, at least one listener was shown an ad for a gun, which I never even considered would be allowed with all of the &#8220;sensitive&#8221; categories turned off. But <em>Guns &amp; Firearms</em> isn&#8217;t in <em>Sensitive Categories</em> next to drugs and gambling &#8212; it&#8217;s in <em>Business &amp; Industrial > Security Equipment &amp; Services</em>.</p>
+
+<p>So I kept blocking more categories, but it was never enough to result in ads that were consistently acceptable to me.</p>
+
+<p>Other ad networks exist, but they tend to be even worse, or they don&#8217;t make enough money, or both.</p></li>
+<li><p><strong>Mystery code in my app:</strong> I had to embed the closed-source Google ad library into my app, and accept all of its uncomfortable requirements (Advertising Identifier, permission dialogs to use things like Bluetooth or Contacts if an advertiser wanted it, etc.).</p>
+
+<p>This made me a little uneasy in September, but then November happened, and by late January, I wasn&#8217;t comfortable embedding unnecessary closed-source code from a U.S advertising company in my app anymore.</p></li>
+</ul>
+
+<p>I decided to do whatever it took to drop the Google ads and Fabric crash reports and analytics, which was recently acquired by Google.</p>
+
+<p>No closed-source code will be embedded in Overcast anymore,<sup id="fnref:prKwU6CZVchromecast"><a href="#fn:prKwU6CZVchromecast" rel="footnote">4</a></sup> and I won&#8217;t use any more third-party analytics services. I&#8217;m fairly confident that Apple has my back if a government pressures them to violate their customers&#8217; rights and privacy, but it&#8217;s wise to minimize the number of companies that I&#8217;m making that assumption about.</p>
+
+<p>Fortunately, the Google ads made relatively little &#8212; about 90% of Overcast&#8217;s revenue still comes from paid subscriptions, which are doing better now. The presence of ads for non-subscribers is currently more important than the ads themselves, so I can replace them with pretty much anything. So I rolled my own tasteful in-house ads with class-leading <a href="https://overcast.fm/privacy">privacy</a>, which show in the Now Playing and Add Podcast screens:</p>
+
+<p class="v3ss v3ss_full">
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-ad-nowplaying.png"><img src="https://marco.org/media/2017/02/v3-ad-nowplaying.jpg" class="v3ss v3ss_full"/></a>
+<a class="v3ss v3ss_full" href="https://marco.org/media/2017/02/v3-ad-directory.png"><img src="https://marco.org/media/2017/02/v3-ad-directory.jpg" class="v3ss v3ss_full"/></a>
+</p>
+
+<p>Now Playing can show ads for websites, podcasts, apps, or Overcast Premium, while the Add Podcast screen will only ever show ads for podcasts. (Want to buy an ad? <a href="https://overcast.fm/contact">Get in touch</a>.)</p>
+
+<p>That&#8217;s right, <strong>ads for podcasts.</strong> What better place to advertise a podcast successfully than in a podcast player? Tap one, and you get the standard Overcast subscription screen with a complete episode list and one-touch subscribing.</p>
+
+<h3>Go get it already</h3>
+
+<p><a href="https://overcast.fm/">It&#8217;s a huge update</a>. Thank you very much to all of my customers who made this possible.</p>
+
+<p>I hope I&#8217;ve succeeded in my design goals, and I hope you enjoy it.</p>
+
+<p style="text-align: center;"><img src="https://marco.org/media/2017/02/v3-github-merge.png" style="max-width: 75%;"/></p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:prKwU6CZVedge">
+<p>Don&#8217;t worry, edge-swipers: you can also dismiss it by dragging in from the left screen edge, just like the old way, to fit your established muscle memory.&#160;<a href="#fnref:prKwU6CZVedge" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:prKwU6CZVpagedots">
+<p>Well, <em>almost</em> standard. I made my own so I could improve some of the built-in one&#8217;s behaviors and make my own custom little dot icons for Effects and Info.&#160;<a href="#fnref:prKwU6CZVpagedots" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:prKwU6CZVcontplay">
+<p>The continuous-play option previously in Playback, labeled &#8220;When Episode Ends: Play Next/Stop&#8221;, was frequently missed, misunderstood, or invoked accidentally. Many people have asked where the continuous-play option was, and many more asked why their app was suddenly broken and wouldn&#8217;t automatically advance between episodes. It&#8217;s now just a &#8220;Continuous Play&#8221; switch in Settings.&#160;<a href="#fnref:prKwU6CZVcontplay" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:prKwU6CZVchromecast">
+<p>Unfortunately, this precludes Chromecast support. I&#8217;d gladly reconsider if Google documents a way for apps to send audio to Chromecast devices without embedding their closed-source library.&#160;<a href="#fnref:prKwU6CZVchromecast" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/02/01/db-backup-testing">Automatically test your database backups</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-02-01T11:31:08-05:00" pubdate="pubdate">February 1, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/02/01/db-backup-testing"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/02/01/db-backup-testing</span></a>
+                            </p>
+                        </header>
+
+                        <p>One of the issues of yesterday&#8217;s <a href="https://docs.google.com/document/d/1GCK53YDcBWQveod9kfzW-VCxIABGiryG7_z_6jHdVik/pub">GitLab.com &#8220;database incident&#8221;</a> is that most of their database backups weren&#8217;t being tested, and when they needed a restore, they discovered that most of the backup methods hadn&#8217;t been working.</p>
+
+<p>Untested backup methods that turn out to be missing or broken are <em>extremely</em> common. I can&#8217;t fault them much because it&#8217;s a very easy mistake to make: most backups, by nature, never need to be restored from, so you never realize if something changes and they stop working&#8230; until it&#8217;s too late.</p>
+
+<p>The solution is to frequently and <em>automatically</em> test backups by:</p>
+
+<ol>
+<li>Regularly downloading the latest backup from S3 (or wherever) and performing a full restore onto a clean server.</li>
+<li>Testing its validity in a way that a human is sure to notice if it stops working properly.</li>
+</ol>
+
+<p>The first part sounds hard, but isn&#8217;t. For <a href="https://overcast.fm/">Overcast</a>, I run an inexpensive <a href="https://www.linode.com/?r=0e105fac1868f5f735279daa027833f8f77b6e91">Linode</a> server devoted to automatically fetching, installing, and testing the latest backup every day and emailing me a report.<sup id="fnref:pZNX3FLBE1"><a href="#fn:pZNX3FLBE1" rel="footnote">1</a></sup></p>
+
+<p>The emailed report contains query results from multiple database tables that change regularly and are easy for me to mentally verify as I read it every day, such as the number of users and Premium subscribers, how long ago the latest user signed up, and the most recent episode titles of my own podcasts and other popular shows I listen to.</p>
+
+<p>Automated backup testing isn&#8217;t difficult &#8212; it&#8217;s one simple shell script, called by <code>cron</code> every night, piping its results to <code>mail</code>. If you can run a server, you can do this.</p>
+
+<p>The second part is the trick, though: it&#8217;d be too easy to start paying less attention to those daily emails over time, and if they stopped arriving, I may not notice for a while.</p>
+
+<p>My solution is to tie backup tests to a task I do every week: <strong>stats collection.</strong></p>
+
+<p>I keep a running spreadsheet with pretty graphs to monitor the health and growth of my business, I update it once a week, and &#8212; critically &#8212; I pull almost all of the stats I need <strong>from the backup emails.</strong></p>
+
+<p>So if the backup ever stops working in a way that the script doesn&#8217;t detect or I fail to notice from the daily reports, I&#8217;ll still find out pretty quickly, because it&#8217;ll impact this other thing I always do that&#8217;s a high priority for me and involves important business and money things.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pZNX3FLBE1">
+<p>If the script detects any failures itself, it emails me with a very alarming subject line that a Mail.app rule highlights in red and shows an alert for.&#160;<a href="#fnref:pZNX3FLBE1" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/01/31/the-wrong-future">The future of computing</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-01-31T20:27:18-05:00" pubdate="pubdate">January 31, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/31/the-wrong-future"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/31/the-wrong-future</span></a>
+                            </p>
+                        </header>
+
+                        <p>The quarterly results are in and <a href="https://sixcolors.com/post/2017/01/apples-record-quarter-by-the-numbers/">Apple&#8217;s doing fine overall</a>, but the iPad really isn&#8217;t, with <em>another</em> year-over-year decrease in sales.</p>
+
+<p>Apple and commentators can keep saying the iPad is &#8220;the future of computing,&#8221; and it might still be. But we&#8217;re starting its seventh year in a few months, and sales peaked three years ago.</p>
+
+<p>What if the iPad <em>isn&#8217;t</em> the future of computing?</p>
+
+<p>What if, like so much in technology, it&#8217;s mostly just additive, rather than largely replacing PCs and Macs, and furthermore had a cooling-fad effect as initial enthusiasm wore off and customers came to this conclusion?</p>
+
+<p>The moving-average unit sales graph would look something like this, right?</p>
+
+<p style="text-align: center; margin-bottom: 2em;"><img src="https://marco.org/media/2017/01/sixcolors-ipad-avg.png"/><br/><i>(Courtesy of <a href="https://sixcolors.com/post/2017/01/apples-record-quarter-by-the-numbers/">Six Colors</a>)</i></p>
+
+<p>And Mac sales might appear mostly unaffected, or possibly even increasing as iPad sales cooled off, right?</p>
+
+<p style="text-align: center; margin-bottom: 2em;"><img src="https://marco.org/media/2017/01/sixcolors-mac-avg.png"/><br/><i>(Courtesy of <a href="https://sixcolors.com/post/2017/01/apples-record-quarter-by-the-numbers/">Six Colors</a>)</i></p>
+
+<p>Is Apple prepared for that possibility?</p>
+
+<p>Is the Mac?</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/01/23/two-states-of-apple">State of Apple from two perspectives</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-01-23T11:32:05-05:00" pubdate="pubdate">January 23, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/23/two-states-of-apple"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/23/two-states-of-apple</span></a>
+                            </p>
+                        </header>
+
+                        <p>Two of the best pieces I&#8217;ve read about Apple recently:</p>
+
+<ul>
+<li><strong><a href="https://www.aboveavalon.com/notes/2017/1/19/grading-tim-cook">Grading Tim Cook</a>:</strong> The optimistic business-analyst take. Tim&#8217;s doing great and the products are pretty much fine.</li>
+<li><strong><a href="https://medium.com/adventures-in-consumer-technology/apple-inc-a-pre-mortem-568d1a0b7d72">Apple Inc: A Pre-Mortem</a>:</strong> The pessimistic customer take. There are big problems that aren&#8217;t getting better.</li>
+</ul>
+
+<p>They may seem at odds, but I agree with a lot from both, and every Apple enthusiast and commentator would be well-served by reading and considering both.</p>
+
+<p>Apple can &#8212; and, I believe, <em>does</em> &#8212; have both a well-performing CEO <em>and</em> significant problems in its products that have me both worried and saddened as an Apple customer and enthusiast.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/01/10/cr-mbp-battery-update">Apple&rsquo;s statement on the Consumer Reports battery test</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-01-10T16:16:16-05:00" pubdate="pubdate">January 10, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/10/cr-mbp-battery-update"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/10/cr-mbp-battery-update</span></a>
+                            </p>
+                        </header>
+
+                        <p><a href="http://www.macrumors.com/2017/01/10/consumer-reports-mbp-battery-safari-bug/">Apple&#8217;s official response</a> to Consumer Reports&#8217; poor <a href="http://www.consumerreports.org/laptops/macbook-pros-fail-to-earn-consumer-reports-recommendation/">2016 MacBook Pro battery test</a>:</p>
+
+<blockquote>
+  <p>We appreciate the opportunity to work with Consumer Reports over the holidays to understand their battery test results. We learned that when testing battery life on Mac notebooks, Consumer Reports uses a hidden Safari setting for developing web sites which turns off the browser cache. This is not a setting used by customers and does not reflect real-world usage. Their use of this developer setting also triggered an obscure and intermittent bug reloading icons which created inconsistent results in their lab. After we asked Consumer Reports to run the same test using normal user settings, they told us their MacBook Pro systems consistently delivered the expected battery life. We have also fixed the bug uncovered in this test. This is the best pro notebook we’ve ever made, we respect Consumer Reports and we’re glad they decided to revisit their findings on the MacBook Pro.</p>
+</blockquote>
+
+<p>Apple&#8217;s tone and framing here, and in most recent PR statements where they&#8217;re on the defensive, rubs me the wrong way.</p>
+
+<p>Consumer Reports has a spotty history with calling Apple out on product flaws. They&#8217;re usually written overly sensationally, and they often overstate the importance of minor issues.</p>
+
+<p>But almost every time, the problem they&#8217;re reporting is real &#8212; especially in retrospect, after everyone&#8217;s defensiveness has passed and we&#8217;ve lived with the products for a while. It&#8217;s just debatable how big of a deal it is in practice.</p>
+
+<p>The iPhone 4 antenna design really was flawed. The iPad 3 really did get uncomfortably warm. And the 2016 MacBook Pro really did have poor, inconsistent battery life in their test.</p>
+
+<p>Apple&#8217;s framing here is almost Trumpian, evading responsibility for the real problem &#8212; Apple&#8217;s bug &#8212; by attempting to insult the test (&#8220;does not reflect real-world usage&#8221;), discredit and imply malice by Consumer Reports (&#8220;a hidden setting&#8221;), and disregard the bug as irrelevant (&#8220;obscure and intermittent bug&#8221;).</p>
+
+<p>It reframes the story to be about Consumer Reports&#8217; own failings and Apple helping them see the right way forward.</p>
+
+<p>But disabling the browser cache during a battery test to make results more consistent is reasonable, Apple&#8217;s browser offers that feature, and it&#8217;s neither <a href="https://marco.org/media/2017/01/cr-mbp-battery-update.png">very well hidden</a> nor unused by any customers.<sup id="fnref:prgwLPqcB1"><a href="#fn:prgwLPqcB1" rel="footnote">1</a></sup></p>
+
+<p>Nothing about a battery-life test truly reflects &#8220;real-world usage.&#8221; Battery tests are approximations, designed to mimic the most common tasks but in an artificial, automated, repetitive way for hours on end to get reproducible results.</p>
+
+<p>Real-world usage is <em>so</em> varied, with such wildly different software and usage patterns, that nobody&#8217;s battery test is relevant to much of anything except relative comparisons of its own results. A test that lasts 5 hours on a 13-inch and 6 hours on a 15-inch tells you that the 15-inch probably has better battery life than the 13-inch, but that&#8217;s about it &#8212; it certainly doesn&#8217;t mean that <em>your</em> 15-inch will get 6 hours the way <em>you</em> use it.</p>
+
+<p>Reloading web pages without a browser cache is no more or less valid than whatever Apple uses to tell me that my laptop will get 10 hours of battery life when my actual workload usually gets about half of that.</p>
+
+<p>The real story here is that Consumer Reports <em>did</em> get very poor and inconsistent results from their battery test, which was a reasonable and valid test, due to a real bug in Apple&#8217;s web browser.</p>
+
+<p>With the bug now fixed (in beta, at least), the MacBook Pros deserve a retest, and Consumer Reports is conducting one.</p>
+
+<p>But their previous results were real, and Apple&#8217;s bug was to blame.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:prgwLPqcB1">
+<p>There are a <em>lot</em> of web developers out there, and I bet a lot of them use MacBook Pros. Power users, geeks, and developers are Apple&#8217;s customers, too.&#160;<a href="#fnref:prgwLPqcB1" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/01/09/ten-years-of-iphone">Ten years of iPhone</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-01-09T11:04:57-05:00" pubdate="pubdate">January 9, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/09/ten-years-of-iphone"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/09/ten-years-of-iphone</span></a>
+                            </p>
+                        </header>
+
+                        <p>I&#8217;ll never forget watching the <a href="https://www.youtube.com/watch?v=9hUIxyE2Ns8">iPhone keynote</a> live.<sup id="fnref:poJNAjxW71"><a href="#fn:poJNAjxW71" rel="footnote">1</a></sup></p>
+
+<p>It was a cold Tuesday afternoon in New York. My hair was still brown. We were supposed to be <a href="https://en.wikipedia.org/wiki/Tumblr#History">working</a>, but even <a href="https://en.wikipedia.org/wiki/David_Karp">David</a> had to suspend his usual workaholism for a few minutes in awe of what we were seeing.</p>
+
+<p>Everything about the iPhone seemed impossible to the technology world of early 2007.</p>
+
+<p><em>&#8220;You can&#8217;t make a good phone without buttons.&#8221;</em><br />
+<em>&#8220;You can&#8217;t fit a desktop-class OS on a phone.&#8221;</em><br />
+<em>&#8220;There&#8217;s no way that&#8217;s a full-blown web browser.&#8221;</em><br />
+<em>&#8220;That has to cost a thousand dollars.&#8221;</em></p>
+
+<p>Yet over the course of an hour, Steve destroyed every rule we thought we knew.</p>
+
+<p>Not only was it truly mind-blowing at the time, but in retrospect, <em>so much</em> of modern computing was invented for the first iPhone and revealed to the world in that hour. <a href="https://youtu.be/9hUIxyE2Ns8?t=15m20s">Just watch the software demos</a>: most modern UI mechanics and behaviors, large and small, began that day.</p>
+
+<p>When it shipped six months later, it was possibly the best 1.0 in tech history, followed by a decade of relentless hardware and software improvements with the highest success rate and fastest advancement of any product line I&#8217;ve ever seen.</p>
+
+<p>I&#8217;ve seen a lot of major product launches and technology changes in my life and career so far, but nothing else I&#8217;ve seen has ever come close to the surprise, magic, and <em>magnitude</em> of the first iPhone, and I don&#8217;t expect it to be surpassed in my lifetime.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:poJNAjxW71">
+<p>This was before Apple events were streamed, so &#8220;watching it live&#8221; really meant watching liveblog transcripts with occasional photos from people who were there.&#160;<a href="#fnref:poJNAjxW71" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2017/01/08/call-blockers">iPhone spam-call-blocking apps</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2017-01-08T00:08:39-05:00" pubdate="pubdate">January 8, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/08/call-blockers"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/08/call-blockers</span></a>
+                            </p>
+                        </header>
+
+                        <p><a href="https://appsto.re/us/cXg16.i">Hiya</a> creepily requires access to all of my contacts, which I think they transmit to their servers for vaguely specified reasons.</p>
+
+<p><a href="https://appsto.re/us/YXHTA.i">Truecaller</a> creepily requires my name, phone number, and email address to add to their directory, which I think might allow people to find my phone number under vaguely specified conditions.</p>
+
+<p><a href="https://appsto.re/us/KgPOdb.i">Nomorobo</a> isn&#8217;t creepy about anything, but costs $2/month with an in-app-purchase subscription.</p>
+
+<p>I had Hiya installed for weeks and it never identified a single spam call, during which time I got about ten. I followed all of their voodoo troubleshooting steps, but it just never worked, so I deleted it. (Too bad I can&#8217;t un-send them my contacts. Thanks a lot.)</p>
+
+<p>I had Truecaller installed for a few days, and it correctly identified two spam calls with no drama or voodoo required. It just works.</p>
+
+<p>When I learned about Nomorobo from readers and saw how creepy it wasn&#8217;t, I deleted Truecaller immediately and subscribed to Nomorobo, and it works <em>great</em>.</p>
+
+<p>A few days ago, after a 100% success rate for a couple of weeks &#8212; every spam call (and zero non-spam calls) identified before I answer &#8212; I enabled the option to send spam calls directly to voicemail.</p>
+
+<p>Now, from my point of view, I just don&#8217;t get spam calls anymore.</p>
+
+<p>To me, that&#8217;s $2/month very well spent.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article class="link">
+                        <header>
+                                                            <h2>
+                                    <a href="https://www.kickstarter.com/projects/manton/indie-microblogging-owning-your-short-form-writing">Indie Microblogging: Owning your short-form writing</a>
+                                    <span class="linkarrow">&rarr;</span>                                </h2>
+
+                            <p>
+                                <time datetime="2017-01-07T16:22:53-05:00" pubdate="pubdate">January 7, 2017</time>
+                                <a class="permalink" title="Permalink" href="/2017/01/07/indie-microblogging-kickstarter"><span class="noprint">∞</span><span class="printonly">https://marco.org/2017/01/07/indie-microblogging-kickstarter</span></a>
+                            </p>
+                        </header>
+
+                        <p>We&#8217;ve lost something big. We&#8217;re all complicit, myself very much included.</p>
+
+<p>We&#8217;ve all been pouring a lot more of our writing and attention into Twitter and Facebook than the rest of the web, and the diversity and decentralization of the web has suffered greatly. Far too much power now rests in far too few hands, and we&#8217;re starting to suffer tremendous consequences. (Bigly. A disaster.)<sup id="fnref:ptQXhm5Un1"><a href="#fn:ptQXhm5Un1" rel="footnote">1</a></sup></p>
+
+<p>Apathy and inaction lead to further entrenchment and concentration of power. It&#8217;s only going to get worse unless we take action.</p>
+
+<p>Manton Reece is giving it the best try I&#8217;ve seen. We still have a chance to take back the web. <a href="https://www.kickstarter.com/projects/manton/indie-microblogging-owning-your-short-form-writing">Please help however you can</a>.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:ptQXhm5Un1">
+<p>Sorry.&#160;<a href="#fnref:ptQXhm5Un1" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/12/13/apple-removes-battery-time-remaining">Apple fixes MacBook Pro battery life by removing time estimate</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-12-13T18:13:01-05:00" pubdate="pubdate">December 13, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/12/13/apple-removes-battery-time-remaining"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/12/13/apple-removes-battery-time-remaining</span></a>
+                            </p>
+                        </header>
+
+                        <p>My 15-inch 2016 MacBook Pro with Touch Bar is <a href="https://www.youtube.com/watch?v=YlXM6RUB_g0">pretty good in most ways</a>, but it&#8217;s a noticeable regression in battery life from the previous generation. Apple claims it lasts 10 hours, but I&#8217;ve never gotten that &#8212; in a fairly light web-productivity workload, I average around 5–7 hours, and if I&#8217;m using Xcode, I&#8217;m lucky to get 4–5 hours. This seems common — many other customers and reviewers have noted similarly disappointing battery life in the 5-hour range.</p>
+
+<p>Apple issued a software update today to address this.</p>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><img src="https://marco.org/media/2016/12/battery-time-remaining.png" style="max-width: 75%;"/></p>
+
+<p>You see, the problem wasn&#8217;t that Apple&#8217;s brand new, flagship, &#8220;pro&#8221; laptop&#8217;s battery only lasts 5 hours for a lot of its customers&#8217; actual usage. The real problem, <a href="http://www.loopinsight.com/2016/12/13/macos-sierra-10-12-2-released/">according to Apple in a statement to Jim Dalrymple</a>, is the estimated &#8220;time remaining&#8221; display:</p>
+
+<blockquote>
+  <p>You can still see the image on the top of the screen, and you can see the percentage, but you will no longer be able to see how much time is remaining before your battery dies.</p>
+
+  <p>The reason for removing it is very simple: it wasn’t accurate.</p>
+
+  <p>Apple said the percentage is accurate, but because of the dynamic ways we use the computer, the time remaining indicator couldn’t accurately keep up with what users were doing. Everything we do on the MacBook affects battery life in different ways and not having an accurate indicator is confusing.</p>
+</blockquote>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><img src="https://marco.org/media/2016/12/bull.jpg" style="max-width: 100%;"/></p>
+
+<p>Well, I&#8217;ve always found the time-remaining indicator pretty accurate. Just last night, I brought my 100%-charged laptop to the couch to order some <a href="https://nuts.com/">nuts</a> and browse the web for a while, and it reported about 5 hours remaining. After just over an hour, the battery was down to 77%, and it estimated that I had about 4 hours remaining.</p>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><a href="http://schiit.com/"><img src="https://marco.org/media/2016/12/schiit.jpg" style="max-width: 100%;"/></a></p>
+
+<p>I found it equally helpful when using Xcode normally at the start of a 5-hour flight, as it told me that I had about 4 hours of battery left. I ran it down to 8% before stopping &#8212; with about 30 minutes left in the flight &#8212; and it remained accurate the whole time.</p>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><a href="https://www.cardsagainsthumanity.com"><img src="https://marco.org/media/2016/12/cah-bs-box.jpg" style="max-width: 100%;"/></a></p>
+
+<p>Having used Apple laptops for over a decade, I&#8217;ve always found the time-remaining estimate to also be a good indicator of how much power I&#8217;m burning with my current activities so I can &#8220;budget&#8221; my battery usage when I&#8217;m going to need it.</p>
+
+<p>At the start of a long flight, for instance, I can check the time estimate, and if it only says I have 2 hours left at 90%, I know something&#8217;s burning a ton of power and I can go <em>do</em> something about that. A percentage only tells you the current state, not the rate of change &#8212; it would take much longer to notice an unexpected power drain from the percentage alone. (Fortunately, I can still check the estimated time remaining with <a href="https://bjango.com/mac/istatmenus/">iStat Menus</a>.)</p>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><img src="https://marco.org/media/2016/12/penn-teller.jpg" style="max-width: 100%;"/></p>
+
+<p>Apparently, that&#8217;s all wrong, and my laptop really would&#8217;ve lasted for that full flight had I just let it discharge past 8%.</p>
+
+<p>Problem solved!</p>
+
+<p style="text-align: center; padding-top: 2em; padding-bottom: 2em;"><a href="https://en.wikipedia.org/wiki/Harry_Frankfurt"><img src="https://marco.org/media/2016/12/harry-frankfurt.jpg" style="max-width: 75%;"/></a></p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/11/11/letter-to-young-people">A letter to today&rsquo;s young people</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-11-11T15:24:29-05:00" pubdate="pubdate">November 11, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/11/11/letter-to-young-people"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/11/11/letter-to-young-people</span></a>
+                            </p>
+                        </header>
+
+                        <p><em>The strongest despair I&#8217;ve heard about this election has come from high school and college students. I don&#8217;t know if this will really help anyone, and I hope it&#8217;s not patronizing. But just in case it helps:</em></p>
+
+<p>George W. Bush was elected during my freshman year of college. For the next 8 years — all of college, my first job, and the first two years of Tumblr — we suffered through that horrific administration. It was half of my adult life so far.</p>
+
+<p>It felt hopeless. It felt like we’d never have a functional government again. It felt like the damage would be irreparable. It felt like the good side lost and would never win again.</p>
+
+<p>But then, in 2008, the good side won, propelled into victory by Americans&#8217; motivation after those regressive and destructive years, and we had our turn for 8 years. It wasn’t perfect, and Obama didn’t (and couldn&#8217;t) fix everything Bush broke. But we did fix most of it, and made a <em>lot</em> of progress in major new areas as well. Overall, we came out way ahead.</p>
+
+<p>And we&#8217;ll do it again, because when you average it out over time, progress tends to only go in one direction: people being healthier, better educated, and better to each other. We have ups and downs, and we don&#8217;t end every year better than the last, but in the long run, we come out ahead.</p>
+
+<p>Most people in the world are good, and want to be good to each other. Whether they vote that way or not, far more Americans believe in progressive, liberal, inclusive views than regressive, aggressive, conservative ones.</p>
+
+<p>Young people know this better than anyone, because young people are <em>overwhelmingly</em> liberal, even more than older people. That&#8217;s not because you&#8217;re inexperienced &#8212; it&#8217;s because you&#8217;re right. Your generation is, by definition, further ahead on the march of progress than everyone else. It is literally <em>you</em> who cause the progress as older people die and you rise into power.</p>
+
+<p>This is going to be difficult for everyone — some much more than others. It may seem like it&#8217;ll last forever, especially if you weren&#8217;t an adult during the Bush years.</p>
+
+<p>But it won’t.</p>
+
+<p>In the meantime, do everything you can to help, support, and stand up for the millions of people whose country just let them down, many of whom live in homes and communities that have just become unwelcoming or unsafe.</p>
+
+<p>We’ll get our chance to repair the damage and move forward again, and you&#8217;ll bring us there.</p>
+
+<p>Hang in there.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/11/05/world-without-mac-pro">A world without the Mac Pro</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-11-05T11:41:39-04:00" pubdate="pubdate">November 5, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/11/05/world-without-mac-pro"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/11/05/world-without-mac-pro</span></a>
+                            </p>
+                        </header>
+
+                        <p>It&#8217;s looking increasingly likely that there will never be another Mac Pro. Here&#8217;s why that would be a shame.</p>
+
+<p>Pro buyers depend on Apple to make the hardware that satisfies our needs. And we&#8217;re flexible. We&#8217;ve adapted over the years to new CPU architectures, port changes, capability changes, price increases, and a slower update pace.</p>
+
+<p>The 5K iMac is a truly great computer. It&#8217;s the best general-purpose desktop Apple has ever made. It almost replaces the need for the Mac Pro. Many of us can get by with the 5K iMac.</p>
+
+<p>But there are some things that <em>only</em> a Mac Pro can deliver.</p>
+
+<p><strong>More than 4 cores.</strong> Per-core performance has been eking out diminishing returns for years, so today&#8217;s newest processors aren&#8217;t much faster than those from a few years ago. If you need more performance for parallel workloads &#8212; <em>very</em> common for video, photography, 3D, science, medicine, and software development &#8212; the only way to jump meaningfully ahead of mainstream CPUs is to <strong>add more cores.</strong></p>
+
+<p>Today&#8217;s Mac Pro-class <a href="https://en.wikipedia.org/wiki/List_of_Intel_Xeon_microprocessors#.22Broadwell-EP.22_.2814_nm.29">Xeon CPUs</a> easily pack <a href="http://ark.intel.com/products/92992">8 cores</a> at pro-accessible prices, <a href="http://ark.intel.com/products/91769">10</a> or <a href="http://ark.intel.com/products/91768">16</a> for a bit more, and scale all the way up to <a href="http://ark.intel.com/products/96899">22 cores</a>.<sup id="fnref:pGBJCawgq2"><a href="#fn:pGBJCawgq2" rel="footnote">1</a></sup> It may take a <em>decade</em> for an iMac to match the speed of today&#8217;s 16-core Xeons.<sup id="fnref:pGBJCawgq4"><a href="#fn:pGBJCawgq4" rel="footnote">2</a></sup></p>
+
+<p><strong>High-end GPU power.</strong> Only the Mac Pro has the space, budget, heat capacity, and PCIe bandwidth to offer high-performance desktop- and professional-grade GPUs. If gamers, game makers, visual effects workers, and OpenCL aren&#8217;t enough, the rapidly-emerging VR and AR markets should be &#8212; they&#8217;re the next wave of high-end pro buyers who need the fastest hardware money can buy, and Apple has nothing to offer them.</p>
+
+<p><strong>The most RAM.</strong> The brand-new MacBook Pro maxes out at 16 GB and the iMac maxes out at 32 GB from Apple or 64 GB with aftermarket RAM. The <em>three-year-old</em> Mac Pro can go to 64 GB from Apple, 128 GB aftermarket. Some pro workloads simply <em>need</em> more RAM than the consumer and mobile chips support.</p>
+
+<p><strong>The freedom of thickness and AC power.</strong> High-core-count CPUs and powerful GPUs need far more wattage and thermal management than the other Macs will ever have the thickness or battery capacity to accommodate. The Mac Pro doesn&#8217;t need to be small, thin, lightweight, or power-constrained &#8212; the rest of the lineup fills those roles well, freeing the Mac Pro to be as big as it needs to be.</p>
+
+<p><strong>Silence.</strong> Unlike every other Mac except the low-performance 12-inch MacBook, the Mac Pro remains <em>inaudible</em> in most rooms even under sustained heavy workloads &#8212; you don&#8217;t hear the fan spin up &#8212; because its size and clever thermal design allows for a massive heatsink, cooled by a huge, slow fan.</p>
+
+<p>This isn&#8217;t only important for pro environments such as recording studios and video sets, but it&#8217;s nice for <em>all</em> of its users (and their officemates). The Mac Pro is the only Mac that handles heavy workloads gracefully.</p>
+
+<p><strong>Reliability and longevity.</strong> The Mac Pro&#8217;s workstation chipsets, Xeon CPUs, and ECC RAM are all designed with more strict tolerances, resilience, and error correction than the mainstream components in every other Mac. And the heavy-duty thermal design keeps components cooler, which prolongs their life and improves stability. Most Macs have long lives before they break or become outdated, but Mac Pros outclass every other model by starting with a huge performance lead, then working hard for years without breaking a sweat.</p>
+
+<p>And by separating the computer from the display, either can be upgraded more freely, promoting customer investment in high-end displays <em>and</em> high-end computers as needs and technologies change.</p>
+
+<p><strong>Taking the burden off of the other Macs.</strong> Pros wouldn&#8217;t be as angry about the limitations of the new MacBook Pro line if there was an alternative that solved their needs. The Mac Pro sweeps up countless edge cases with one product at the top of the line &#8212; the only downside is cost, but many pros would rather spend money than compromise on their needs.</p>
+
+<p>Just as <a href="http://daringfireball.net/linked/2015/06/15/christopher-mims-jackass">the Mac&#8217;s power lets iOS be simpler</a>, a healthy Mac Pro frees up the rest of the Mac lineup to make more aggressive progress.</p>
+
+<p><strong>Current sales aren&#8217;t an indicator of future sales.</strong> Apple shouldn&#8217;t use the (presumably) low sales of the current Mac Pro to justify discontinuing the line entirely. The 2013 Mac Pro was introduced with a substantial price increase, far less internal expansion, fewer and more expensive processor options, and a forced dual-workstation-GPU configuration even for buyers who would&#8217;ve been fine with a single GPU. Then it was abandoned for three years, during which 5K displays finally came to market, but without a good option for Mac Pro buyers.</p>
+
+<p>The 2013 Mac Pro was a victim of limited configuration options in a market that values versatility and edge-case handling, poor timing behind the 5K transition, and years-long neglect. A 2017 Mac Pro need not suffer from the same issues, and could sell far better.</p>
+
+<p><strong>Any Mac Pro is better than no Mac Pro.</strong> The 2013 Mac Pro is a great design, but its size and power constraints are self-imposed. Mac Pro buyers care little about form. If future Mac Xeon workstations must change their form to be practical or palatable to Apple &#8212; for instance, by becoming more of an &#8220;iMac Pro&#8221; with a built-in 5K screen but a large, thick thermal enclosure on the back &#8212; that would be less ideal, but we&#8217;d take that over the lack of any high-end workstation Macs. (The existing iMac is great, but it isn&#8217;t enough.)</p>
+
+<p><strong>Nobody else can make macOS hardware.</strong> If Apple doesn&#8217;t address someone&#8217;s hardware needs, there&#8217;s no alternative.<sup id="fnref:pGBJCawgq1"><a href="#fn:pGBJCawgq1" rel="footnote">3</a></sup> We can&#8217;t just buy hideous Xeon workstations from Dell and install macOS on them. If we can&#8217;t do what we need on Mac hardware, our only choice is to leave the entire Mac platform.</p>
+
+<p>But the competition isn&#8217;t even <em>close.</em></p>
+
+<p>Linux can solve some pro needs, but not most. It&#8217;s a fantastic server OS but a miserable desktop one, and that will probably never change.</p>
+
+<p>Microsoft is boldly experimenting with PC hardware, but Windows and everything around Windows is woefully inferior to macOS and the Mac software ecosystem. Even if Microsoft did everything right, it would take Windows at <em>least</em> a decade to catch up &#8212; and they won&#8217;t do everything right.</p>
+
+<p>Google&#8217;s trying something, I&#8217;m sure, but Google is both terrible at consumer software <em>and</em> deeply, profoundly creepy. General-purpose computing must not require us to compromise our privacy and data for advertising.</p>
+
+<p>And just as nobody&#8217;s starting new general web search engines or mass-market online auction sites today, nobody else is going to make a viable general-purpose PC OS anymore. The minimum bar is too high. We&#8217;re stuck with the few we have for the long haul.</p>
+
+<p>But if the one you&#8217;re stuck with is macOS, that&#8217;s a great thing.</p>
+
+<p><strong>We don&#8217;t want to leave the Mac.</strong> We came here, built here, and stayed here all of this time because Macs are truly <em>awesome</em> computers, and macOS is the best operating system in the world.</p>
+
+<p>It&#8217;s the only pro-grade, workstation-class operating system that has ever been easy to use and nice enough that we <em>wanted</em> to spend more time at our workstations.</p>
+
+<p>And hidden behind our pro apps and terminal windows are the shared photo streams we made last night, showing pictures of our children to their grandparents, who are running the exact same operating system.</p>
+
+<p>Technology changes, markets change, and people change, but some moments in history are uniquely high points that are never quite matched.</p>
+
+<p>The world has never seen anything like macOS, and nothing will truly replace it. If we&#8217;re forced to move to something else, it&#8217;ll be painfully, inescapably, perpetually worse.</p>
+
+<p>Keep the Mac Pro alive, Apple, so none of us have to make that choice.</p>
+
+<p>The rest of the lineup is great for almost everyone. <em>Almost.</em> But please don&#8217;t abandon those of us who truly want or need the best computers in the world, because if they&#8217;re not Macs, they&#8217;re not good enough.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pGBJCawgq2">
+<p>That&#8217;s just with a single socket. If the Mac Pro offered dual-socket options like it did before the 2013 redesign, even higher-performance options open up, limited only by power consumption, heat, and money.&#160;<a href="#fnref:pGBJCawgq2" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pGBJCawgq4">
+<p>And this is today, before Skylake&#8217;s improvements have come to the Xeon line. Next year&#8217;s Skylake-E Xeons and Purley platform are a <em>major</em> upgrade that will put them even further ahead of the consumer line.&#160;<a href="#fnref:pGBJCawgq4" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+<li id="fn:pGBJCawgq1">
+<p>&#8220;Hackintoshes&#8221; aren&#8217;t good enough.&#160;<a href="#fnref:pGBJCawgq1" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/11/02/design-for-the-present">Design for the present</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-11-02T00:14:39-04:00" pubdate="pubdate">November 2, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/11/02/design-for-the-present"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/11/02/design-for-the-present</span></a>
+                            </p>
+                        </header>
+
+                        <p>It&#8217;s hard to get anyone to agree on what constitutes &#8220;pro&#8221; use, but I&#8217;d say it has three core requirements:</p>
+
+<ul>
+<li><strong>Reliability:</strong> Pro gear absolutely must be dependable, even when used heavily or in demanding conditions.</li>
+<li><strong>Power:</strong> Pro apps usually need more of every hardware resource than consumer apps &#8212; at least CPU power and memory, and often GPU power or I/O bandwidth &#8212; and pros will often pay high costs for high-spec machines that won&#8217;t hold them back or leave them waiting.</li>
+<li><strong>Versatility:</strong> Pro gear is used in diverse environments, often with unpredictable needs. Many pros never know when they may suddenly need an obscure port or feature, or when they will unexpectedly need to keep working on battery for a few more hours, and the consequences of not handling these conditions could be expensive or <em>very</em> inconvenient.</li>
+</ul>
+
+<p>The new MacBook Pro is probably great, and most of the initial skepticism probably won&#8217;t age well. But I want to pick on one aspect today.</p>
+
+<p>Having four USB-C ports is awesome.</p>
+
+<p>Having <em>only</em> four USB-C ports is going to hurt the versatility requirement of pro gear, because there&#8217;s a very real chance that you won&#8217;t have the right dongle when you need it.</p>
+
+<p>This is going to happen a <em>lot</em>, because even though USB-C is the future, it&#8217;s definitely not the present. We&#8217;ve had the standard USB plug (USB-A) in widespread use for 18 years, and it&#8217;s going to take a few more years for USB-C to become so ubiquitous that we can get away without USB-A ports most of the time.</p>
+
+<p>A pro laptop released today should definitely have USB-C ports &#8212; <em>mostly</em> USB-C ports, even &#8212; but it should also have at least one USB-A port.<sup id="fnref:pLUxv52T71"><a href="#fn:pLUxv52T71" rel="footnote">1</a></sup></p>
+
+<p>Including a port that&#8217;s still in <em>extremely</em> widespread use isn&#8217;t an admission of failure or holding onto the past &#8212; it&#8217;s making a pragmatic tradeoff for customers&#8217; real-world needs. I worry when Apple falls on the wrong side of decisions like that, because it&#8217;s putting form (and profitability) over function.</p>
+
+<p>Design for the future, but accommodate the reality of the present.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:pLUxv52T71">
+<p>I&#8217;d also argue that removing the SD-card reader was premature. SD cards are ubiquitous on cameras (even recent high-end models), and card readers are by far the fastest and most versatile way to import a lot of photos from of a camera. A lot of other pro A/V gear uses SD cards as well, such as most audio and video recorders. Standalone card readers work well, but they&#8217;re yet one more dongle that you won&#8217;t always have with you.&#160;<a href="#fnref:pLUxv52T71" rev="footnote">&#8617;&#xFE0E;</a></p>
+</li>
+
+</ol>
+</div>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/10/17/shame-on-y-combinator">Shame on Y Combinator</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-10-17T21:16:34-04:00" pubdate="pubdate">October 17, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/10/17/shame-on-y-combinator"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/10/17/shame-on-y-combinator</span></a>
+                            </p>
+                        </header>
+
+                        <p><a href="https://en.wikipedia.org/wiki/Y_Combinator_%28company%29">Y Combinator</a> is extremely influential in tech startups and startup culture.</p>
+
+<p>Peter Thiel, an investor who often participates in Y Combinator, is <a href="http://www.nytimes.com/2016/10/16/technology/peter-thiel-donald-j-trump.html?_r=0">donating $1.25 million to Donald Trump&#8217;s political efforts</a>, which has incited outrage among the tech community with many calling for Y Combinator to sever ties with Thiel.</p>
+
+<p>Y Combinator has apparently decided not to. President Sam Altman defended this position in <a href="http://blog.samaltman.com/the-2016-election">a blog post</a>, framed as a Clinton endorsement, that begins with a partial overview of how reprehensible and dangerous Trump is, but ends with a defense of continuing Thiel&#8217;s involvement in Y Combinator that&#8217;s effectively framed as a free-speech or tolerance issue:</p>
+
+<blockquote>
+  <p>Some have said that YC should terminate its relationship with Peter over this.  But as repugnant as Trump is to many of us, we are not going to fire someone over his or her support of a political candidate. [&#8230;]</p>
+
+  <p>The way we got into a situation with Trump as a major party nominee in the first place was by not talking to people who are very different than we are. [&#8230;]</p>
+
+  <p>That kind of diversity is painful and unpopular, but it is critical to health of a democratic and pluralistic society.  We shouldn’t start purging people for supporting the wrong political candidate. That&#8217;s not how things are done in this country.</p>
+</blockquote>
+
+<p>Altman&#8217;s framing of Thiel&#8217;s Trump support as a <em>diversity</em> issue isn&#8217;t just incorrect &#8212; it&#8217;s a harmful distortion that reveals a deep misunderstanding of the tech industry&#8217;s actual diversity issues. (I don&#8217;t and can&#8217;t fully understand our diversity problem, but I at least won&#8217;t pretend to.)</p>
+
+<p>To help illustrate why, here are some of Altman&#8217;s own words from the first half of that same post:</p>
+
+<blockquote>
+  <p>This election is exceptional.  Donald Trump represents an unprecedented threat to America&#8230;</p>
+
+  <p>He represents a real threat to the safety of women, minorities, and immigrants&#8230;</p>
+
+  <p>Trump shows little respect for the Constitution, the Republic, or for human decency&#8230;</p>
+
+  <p>I do not understand how one continues to support someone who brags about sexual assault, calls for a total and complete shutdown of Muslims entering the US, or any number or other disqualifying statements.</p>
+</blockquote>
+
+<p>Wrapping reprehensible statements or actions as &#8220;political beliefs&#8221; doesn&#8217;t protect them or exempt their supporters from consequences. Racism is racism. Sexual assault is sexual assault. Labeling reprehensible positions as &#8220;political beliefs&#8221; is a cowardly, meaningless shield.</p>
+
+<p>But even if such protection existed (it still doesn&#8217;t), this isn&#8217;t calling for someone to lose their job because they merely voted Republican &#8212; the scale of Thiel&#8217;s support and the conditions of this particular candidate matter.</p>
+
+<p>Thiel, a non-employee (a &#8220;part-time partner&#8221;), is directly supporting Donald Trump at a <em>massive</em> scale &#8212; over a million dollars! &#8212; <em>after</em> we&#8217;ve learned even more of Trump&#8217;s horrendous statements, positions, and past actions than we could&#8217;ve ever imagined.</p>
+
+<p>This isn&#8217;t voting for an economic or social policy &#8212; this is literally paying a huge amount of money to directly support a racist, sexist bigot with rapidly mounting allegations of multiple sexual assaults.</p>
+
+<p>One more quote from Altman:</p>
+
+<blockquote>
+  <p>If Peter said some of the things Trump says himself, he would no longer be part of Y Combinator.</p>
+</blockquote>
+
+<p>Funding Trump, especially at this scale, represents general support of what Trump has said and done. If <em>saying</em> what Trump said would be enough to override Altman&#8217;s &#8220;diversity&#8221; argument and sever ties with Thiel, giving over a million dollars to Trump&#8217;s campaign should qualify as well.</p>
+
+<p>Y Combinator should be especially sensitive to diversity and inclusion issues due to its public presence and large influence in the technology business. We have so many diversity and hostility problems (that the industry is <em>finally</em> working to fix) that Y Combinator should be leading the way toward inclusive, progressive solutions.</p>
+
+<p>Instead, they&#8217;re defending the large-scale support of racism, bigotry, and sexual assault by an influential partner and advisor to their startups as its own form of &#8220;diversity&#8221;.</p>
+
+<p>Shame on Y Combinator.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/10/10/dash-app-removal">Dash&rsquo;s removal from the App Store</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-10-10T19:02:45-04:00" pubdate="pubdate">October 10, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/10/10/dash-app-removal"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/10/10/dash-app-removal</span></a>
+                            </p>
+                        </header>
+
+                        <p>Last week, Apple terminated the developer account of one of my favorite Mac apps, the <a href="https://kapeli.com/dash">Dash</a> documentation viewer for programmers, for alleged App Store review manipulation.</p>
+
+<p>Dash is a great app that many Mac and iOS programmers use (and that needs no help getting positive reviews), and developer Bogdan Popescu insisted he&#8217;d never engaged in such fraud. Since Apple has a history of controversial App Store decisions that often get reversed after public scrutiny, many developers (including me) came to his defense last week, assuming that someone at Apple had made a mistake, and yelled on Twitter for Apple to reconsider or provide more concrete justification. <a href="http://mjtsai.com/blog/2016/10/05/apple-removed-dash-from-the-mac-app-store/">Michael Tsai has a good overview with more links</a>.</p>
+
+<p>Apple just issued the following statement to a handful of sites, included in <a href="http://www.imore.com/whats-happening-dash-and-app-store">this great write-up on iMore about the issues</a> (which you should read in its entirety):</p>
+
+<blockquote>
+  <p>Almost 1,000 fraudulent reviews were detected across two accounts and 25 apps for this developer so we removed their apps and accounts from the App Store. Warning was given in advance of the termination and attempts were made to resolve the issue with the developer but they were unsuccessful. We will terminate developer accounts for ratings and review fraud, including actions designed to hurt other developers. This is a responsibility that we take very seriously, on behalf of all of our customers and developers.</p>
+</blockquote>
+
+<p>This isn&#8217;t enough proof for some, but it&#8217;s enough for me. (Some <a href="https://twitter.com/rjonesy/status/785606722513612800">quick</a> <a href="https://twitter.com/Lextar/status/785611263892131840">searches</a> support Apple&#8217;s position, if you&#8217;re still unconvinced.)</p>
+
+<p>Like any controversial decision involving people&#8217;s livelihoods, Apple probably needs to be careful to avoid potential legal issues, and it would be in poor taste for a huge company to sling more mud than necessary in public against a tiny opponent.</p>
+
+<p>I’m glad our community assumed the best of another developer and pressured Apple to justify this severe action. We should now accept that they have.</p>
+
+<p>The public often doesn&#8217;t get the full story behind decisions and changes they see, but it&#8217;s usually not for sinister reasons &#8212; it&#8217;s often just someone taking the high road and letting another party save face.</p>
+
+<h4 id="update"><strong>Update!</strong></h4>
+
+<p><a href="https://blog.kapeli.com/dash-and-apple-my-side-of-the-story">Bogdan Popescu responded</a> with his side of the story and a recording of a phone call from Apple (without their consent, which is illegal in California, but apparently <a href="https://en.wikipedia.org/wiki/Telephone_recording_laws#Romania">not in Romania</a>). In summary, he bought another developer account for a relative with his credit card and using his old test devices, which made Apple&#8217;s fraud team consider them the same entity (seems reasonable), and <em>that</em> account engaged in the fraud.</p>
+
+<p>His post makes Apple sound pretty bad. But if you listen to the call (which I was torn about whether to do), it&#8217;s clear that Apple was being incredibly reasonable and going <em>above and beyond</em> to help him get reinstated and clarify what happened in a public statement, but Popescu didn&#8217;t seem to agree with Apple regarding the wording of key facts.</p>
+
+<p>We don&#8217;t know what happened between that call and Apple&#8217;s statements tonight. I&#8217;m guessing Popescu and Apple couldn&#8217;t reach an agreement over the wording of the public story, but I think what Apple asked for in that phone call was extremely reasonable.</p>
+
+<p>It&#8217;s also notable that Apple investigated this and tried to resolve it as well as they did. If it were any other company &#8212; say, Google for a suspended AdSense or YouTube account &#8212; I suspect the amount of effort devoted to it would be much lower.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/09/09/overcast-ads">Overcast trying ads, dark theme now free</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-09-09T19:46:52-04:00" pubdate="pubdate">September 9, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/09/09/overcast-ads"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/09/09/overcast-ads</span></a>
+                            </p>
+                        </header>
+
+                        <p>Overcast has had two business models to date:</p>
+
+<ul>
+<li><p><strong>Year one:</strong> Free up front, but with many limits and missing features unless you bought the $4.99 (one-time) in-app purchase to unlock them.</p>
+
+<p>This brought in <a href="https://marco.org/2015/01/15/overcast-sales-numbers">good money</a> up front, but income slowly declined, as all paid-once purchases do, and it restricted the app&#8217;s best and most compelling features to the very small percentage of people who paid. Everyone else got a sub-par app.</p></li>
+<li><p><strong>Year two:</strong> Free for all features that were previously locked behind the purchase, with an <a href="https://marco.org/2015/10/09/overcast2">optional $1/month patronage</a>, to deliver the best app to the most people and hopefully change the direction of the downward revenue curve by replacing one-time purchases with recurring income.</p>
+
+<p>This simply hasn&#8217;t brought in enough money, which I&#8217;ll get into below.</p></li>
+</ul>
+
+<p>Starting today, I&#8217;m trying a third:</p>
+
+<ul>
+<li><p><strong>Year three:</strong> Free for almost everything, with simple <strong>ads</strong> on some screens, and everyone now gets the dark theme. Patronage is now <strong>Overcast Premium,</strong> now just $9.99 per year, for ad-free use, file uploads, and some future features.</p>
+
+<p>Existing patrons become Premium accounts of the same duration, with all Premium benefits. At the end of your patronage, you&#8217;ll be asked to renew as Premium.</p>
+
+<p>Buyers of the old $4.99 unlock from year one: Restore Purchases from the Premium screen, and you won&#8217;t see the normal ads, but you may see occasional promos for Premium to support further development.</p></li>
+</ul>
+
+<h3>How patronage performed</h3>
+
+<p>Patronage was a big risk, both in finance and reputation. I took a lot of heat for it, and it initially made much less money than the previous model. But I knew that if I could convince <strong>5—10%</strong> of the userbase to pay, I&#8217;d come out ahead.</p>
+
+<p>Here&#8217;s how that went:</p>
+
+<p style="text-align: center;"><img src="https://marco.org/media/2016/09/overcast-patronage-rate.png"/></p>
+
+<p>Patronage initially brought no new exclusive features, based solely on goodwill, which only convinced about <strong>1.9%</strong> of people to pay. This wouldn&#8217;t be sustainable, so I had to add perks to patronage that some people would want enough to pay for. But to prevent the year-one problem of most people using an inferior or annoying app by not paying, the absence of the patron-only features needed to be inconsequential or unnecessary for typical usage.</p>
+
+<p>In March, I added the two new features only for patrons: a niche file-upload feature that required ongoing hosting costs, and a dark theme that was highly demanded but purely cosmetic.</p>
+
+<p>It worked fantastically at first. The patronage rate jumped from 1.9% to <strong>2.6%</strong> in one week, and slowly rose to just under <strong>3%</strong>. But growth has stalled there, and it&#8217;s clear that I&#8217;m not going to reach my 5–10% goal.</p>
+
+<p>And keeping the dark theme behind a subscription has been extremely unpopular, even among those generous enough to pay. People really don&#8217;t want to pay a monthly fee for what seems like a basic app feature, even if it&#8217;s purely cosmetic, and many patrons have been getting very angry when they stop paying and the dark theme goes away.</p>
+
+<h3>Options</h3>
+
+<p>Faced with these problems, I came up with a few solutions, all of which were terrible:</p>
+
+<ul>
+<li><strong>No change:</strong> The status quo brings in enough money to keep the service running and fund basic maintenance and occasional updates, but I want to do more: more frequent updates, more cool features, more server capacity, more users, and higher quality.</li>
+<li><strong>Lock existing free features behind patronage:</strong> This would anger pretty much everyone, and once it settled down, I&#8217;d be stuck with the same problem as year one: most users never get the best parts of the app.</li>
+<li><strong>Add new patron-only features:</strong> If any new patron-only features are widely demanded, I&#8217;ll be stuck with the year-one problem again. If not, they won&#8217;t bring in enough money. The latter is more likely: what most people want (and will pay for) is pretty well covered by Overcast&#8217;s current features.</li>
+<li><strong>Change to pure subscription pricing for the entire app:</strong> This may work for other types of apps, but probably not general consumer entertainment apps in highly competitive environments full of free alternatives, one of which comes installed on the phone. This would severely harm Overcast&#8217;s ability to get new users, hurting my political goal of protecting the awesome, open, decentralized world of podcasting with app diversity.</li>
+<li><strong>Change to a paid-up-front app, or year one&#8217;s one-time unlock:</strong> A smooth transition from the status quo to this would be impossible, and I&#8217;ve been down this road enough times to know that pay-once revenue curves only go downward. The App Store never made this easy, and the market is only getting more challenging over time.</li>
+</ul>
+
+<p>It felt hopeless, but my initial thinking was restricted by trying to wedge traditional software business models into the realities of today&#8217;s App Store. It&#8217;s hard to make older revenue models work today because the market is completely different.</p>
+
+<p>Charging money only works in scarcity, but most kinds of software are no longer scarce, especially on iPhone. Whatever I charge money for, someone else can give away, and vice versa. For instance, most of my competitors now offer a dark theme at no additional charge, but if I give mine away without any other changes, I&#8217;ll go out of business.</p>
+
+<p>There&#8217;s still money in some software, especially if it helps people get their work done, but the market for most consumer apps is much more like music, video, news, opinion, and web services than traditional indie software: an overwhelming supply of free choices, many of which are great or good enough, making it hard for anyone with a paywall to succeed.</p>
+
+<p>The content industries figured out the solution a long time ago. If <strong>97%</strong> of my users can&#8217;t or would rather not pay, but they spend substantial time in the app every day, the solution is probably ads.</p>
+
+<h3>Ads</h3>
+
+<p>Ads are the great compromise: money needs to come from somewhere, and the <strong>vast</strong> majority of people choose free-with-ads over direct payment. Ads need not be a bad thing: when implemented respectfully, all parties can get what they want.</p>
+
+<p>Most podcasts played in Overcast are funded by ads for this reason, and as a podcaster and (occasional) blogger myself, I already make most of my income from ads.</p>
+
+<p>I&#8217;m far from the first one to try an ad-supported app &#8212; among many others, my <a href="https://www.relay.fm/radar">co-host on Under The Radar</a>, David Smith, <a href="https://david-smith.org/blog/2016/09/05/evolving-business-app-store-business-models/">now makes the majority of his App Store income from ads</a> &#8212; and it&#8217;s unwise to rule out any reasonable business model in today&#8217;s App Store.</p>
+
+<p>So I&#8217;m trying ads in Overcast: simple, non-animated, mostly-text banners on the main list screens that unobtrusively scroll with the content.</p>
+
+<p style="text-align: center;"><img src="https://marco.org/media/2016/09/overcast-ads.png"/></p>
+
+<p>In exchange for ads, I&#8217;m giving everyone dark mode for free. If you&#8217;d rather not see ads, a Premium subscription (or restoring the old 1.0 unlock if you bought it) will hide them.</p>
+
+<p>In today&#8217;s app environment, for a daily-use consumer app like this, ads make a lot of sense for both users and developers. Ads align incentives toward making a high-quality app that you&#8217;ll actually want to use long-term, rather than just struggling to get your money up front or toying with psychology so you&#8217;ll buy more gems.</p>
+
+<p>A lot of indie developers struggle to make sustainable income in the App Store. I&#8217;ve experimented with many models over the years, and I&#8217;ll be happy to share the results of this change to hopefully be useful to other developers.</p>
+
+<p>I honestly don&#8217;t know if this will work long-term, but I think it probably will. If it does, it will solve a lot of problems and let me do quite a bit more, better and faster than before, and truly make the best app for <strong>everyone,</strong> rather than only 3% of my customers.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article>
+                        <header>
+                                                            <h2>
+                                    <a href="/2016/08/15/vbr-mp3-plea">Why don&rsquo;t podcasts use VBR MP3s? Because iOS and macOS don&rsquo;t accurately seek them</a>
+                                                                    </h2>
+
+                            <p>
+                                <time datetime="2016-08-15T13:46:09-04:00" pubdate="pubdate">August 15, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/08/15/vbr-mp3-plea"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/08/15/vbr-mp3-plea</span></a>
+                            </p>
+                        </header>
+
+                        <p><strong>Filed as Apple bug (Radar) <a href="rdar://27848317">27848317</a>.</strong> The problem, in short:</p>
+
+<p>AVFoundation, the low-level audio/video framework in iOS and macOS, does not accurately seek within <a href="https://en.wikipedia.org/wiki/Variable_bitrate">VBR</a> MP3s, making VBR impractical to use for long files such as podcasts. Jumping to a timestamp in an hour-long VBR podcast can result in an error of over a minute, without the listener even knowing because the displayed timecode shows the expected time.</p>
+
+<h3><strong>Why VBR?</strong></h3>
+
+<p>VBR encoding is far more space-efficient and better-sounding than constant-bitrate (CBR) encoding. It&#8217;s especially pronounced in podcasts, where VBR makes most podcasts 20–50% smaller AND better-sounding than the 64 kbps CBR encoding that most podcasters are forced to use today.</p>
+
+<p>VBR could save podcast listeners <em>massive</em> amounts of data transfer over time. (And therefore money, and battery life, and precious storage space on phones.)</p>
+
+<p>Without accurate seeking, streaming and web audio players don’t work properly, including share-at-timestamp links that are becoming key drivers of the sharing and spreading of podcasts.</p>
+
+<h3><strong>Why can&#8217;t podcasters use it?</strong></h3>
+
+<p>I explained how MP3s work, and why this is a problem, <a href="https://overcast.fm/+CdTym-vo/1:24:30">on Accidental Tech Podcast last week</a> &#8212; see that? That&#8217;s a share-at-timestamp link, and if that file was VBR, it wouldn&#8217;t seek to the correct time.</p>
+
+<p>See for yourself: <a href="http://static.marco.org/Jskjlf0YhqA.mp3">here&#8217;s that same podcast in VBR</a>. Note that the file is 25% smaller and the theme song (at 1:22:47 in the original file) sounds <em>way</em> nicer in the VBR version. But if you seek to the same timestamp as the above share link &#8212; 1:24:30 &#8212; you&#8217;ll hear the wrong audio. The player will <em>say</em> 1:24:30, but you&#8217;re actually hearing the audio at 1:25:16.</p>
+
+<p>That&#8217;s 46 seconds off, and that&#8217;s enough to break timestamp sharing, and that&#8217;s enough to ensure that nobody ever uses VBR files, and podcasts keep transferring <em>more</em> bytes to sound <em>worse</em> for the foreseeable future.</p>
+
+<h3><strong>We fixed this in the same year the Backstreet Boys released &#8220;I Want It That Way&#8221;</strong></h3>
+
+<p>Three simple solutions to accurate VBR stream-seeking have existed for almost twenty years to embed seek-offset tables at the start of VBR MP3s for precise seeking:</p>
+
+<ul>
+<li><a href="http://id3.org/id3v2.3.0">&#8220;MLLT&#8221; ID3 tag</a>, circa 1999 (preferred, most precise)</li>
+<li><a href="http://www.codeproject.com/Articles/8295/MPEG-Audio-Frame-Header#VBRIHeader">Fraunhofer VBRI frame</a>, circa 2003 (moderately precise)</li>
+<li><a href="http://wiki.hydrogenaud.io/index.php?title=MP3#VBRI.2C_XING.2C_and_LAME_headers">Xing/LAME frame</a> (too imprecise for long files)</li>
+</ul>
+
+<p>But AVFoundation supports <strong>none of them.</strong> VBRI and legacy Xing frames are read, but only the duration is used from each, not the seek table. MLLT tags are seemingly ignored.</p>
+
+<p>It appears that AVFoundation simply estimates byte offsets with the simple ratio of <code>(timestamp / duration) × totalBytes</code>, but that assumes a constant average bitrate over the file, which is incorrect and an unsafe assumption for VBR encoding. (<a href="http://lame.sourceforge.net/abr.php">ABR</a> maintains an average bitrate over the whole file, but doesn&#8217;t achieve a better enough size-to-quality ratio than CBR for most podcasts.)</p>
+
+<p>Supporting either MLLT or VBRI at the AVFoundation level (therefore affecting Safari, HTML5 <code>&lt;audio&gt;</code>, Apple&#8217;s Podcasts app, and more) would instantly make VBR podcasts practical, allowing much smaller files and better sound without sacrificing shareability and stream-seeking.</p>
+
+<p>I&#8217;ll be adding MLLT support to Overcast, but without a way to embed podcasts in the web player to preserve share-at-timestamp links, VBR files will continue to be practically unusable for podcasters.</p>
+
+<p><em>Know anyone in engineering at Apple? I&#8217;d appreciate any attention you can draw to this issue, which I&#8217;ve filed as <a href="rdar://27848317">bug 27848317</a>.</em></p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+                                    <article class="link">
+                        <header>
+                                                            <h2>
+                                    <a href="http://atp.fm/180">Accidental Tech Podcast: Don&rsquo;t Cry for John, Argentina</a>
+                                    <span class="linkarrow">&rarr;</span>                                </h2>
+
+                            <p>
+                                <time datetime="2016-07-27T11:11:18-04:00" pubdate="pubdate">July 27, 2016</time>
+                                <a class="permalink" title="Permalink" href="/2016/07/27/atp180"><span class="noprint">∞</span><span class="printonly">https://marco.org/2016/07/27/atp180</span></a>
+                            </p>
+                        </header>
+
+                        <p>Twitter&#8217;s Verified program, viability of podcast tools, and three Mac nerds figuring out how to play a Windows game.</p>
+                    </article>
+                    <div class="fin">&#9670;</div>
+
+			                <nav id="archives">
+                    <h3>Archives</h3>
+                    <div style="clear: both; font-size: 1px; line-height: 1px;">&nbsp;</div>
+                    <div style="float: left; width: 90px; text-align: right; padding-bottom: 2em;">
+                                                                                                        <a href="/2017/08/">Aug&nbsp;2017</a>
+                            <br/>
+                                                                                <a href="/2017/05/">May&nbsp;2017</a>
+                            <br/>
+                                                                                <a href="/2017/04/">Apr&nbsp;2017</a>
+                            <br/>
+                                                                                <a href="/2017/02/">Feb&nbsp;2017</a>
+                            <br/>
+                                                                                <a href="/2017/01/">Jan&nbsp;2017</a>
+                            <br/>
+                                                                                <a href="/2016/12/">Dec&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/11/">Nov&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/10/">Oct&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/09/">Sep&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/08/">Aug&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/07/">Jul&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/06/">Jun&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/05/">May&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/04/">Apr&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/03/">Mar&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/02/">Feb&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2016/01/">Jan&nbsp;2016</a>
+                            <br/>
+                                                                                <a href="/2015/12/">Dec&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/11/">Nov&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/10/">Oct&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/09/">Sep&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/08/">Aug&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/07/">Jul&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/06/">Jun&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/05/">May&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/04/">Apr&nbsp;2015</a>
+                            <br/>
+                                                                                                                    </div>
+                                <div style="float: left; width: 90px; text-align: right;">
+                                                        <a href="/2015/03/">Mar&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/02/">Feb&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2015/01/">Jan&nbsp;2015</a>
+                            <br/>
+                                                                                <a href="/2014/12/">Dec&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/11/">Nov&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/10/">Oct&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/09/">Sep&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/08/">Aug&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/07/">Jul&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/06/">Jun&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/05/">May&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/04/">Apr&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/03/">Mar&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/02/">Feb&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2014/01/">Jan&nbsp;2014</a>
+                            <br/>
+                                                                                <a href="/2013/12/">Dec&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/11/">Nov&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/10/">Oct&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/09/">Sep&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/08/">Aug&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/07/">Jul&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/06/">Jun&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/05/">May&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/04/">Apr&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/03/">Mar&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2013/02/">Feb&nbsp;2013</a>
+                            <br/>
+                                                                                                                    </div>
+                                <div style="float: left; width: 90px; text-align: right;">
+                                                        <a href="/2013/01/">Jan&nbsp;2013</a>
+                            <br/>
+                                                                                <a href="/2012/12/">Dec&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/11/">Nov&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/10/">Oct&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/09/">Sep&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/08/">Aug&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/07/">Jul&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/06/">Jun&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/05/">May&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/04/">Apr&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/03/">Mar&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/02/">Feb&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2012/01/">Jan&nbsp;2012</a>
+                            <br/>
+                                                                                <a href="/2011/12/">Dec&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/11/">Nov&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/10/">Oct&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/09/">Sep&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/08/">Aug&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/07/">Jul&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/06/">Jun&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/05/">May&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/04/">Apr&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/03/">Mar&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/02/">Feb&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2011/01/">Jan&nbsp;2011</a>
+                            <br/>
+                                                                                <a href="/2010/12/">Dec&nbsp;2010</a>
+                            <br/>
+                                                                                                                    </div>
+                                <div style="float: left; width: 90px; text-align: right;">
+                                                        <a href="/2010/11/">Nov&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/10/">Oct&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/09/">Sep&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/08/">Aug&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/07/">Jul&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/06/">Jun&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/05/">May&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/04/">Apr&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/03/">Mar&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/02/">Feb&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2010/01/">Jan&nbsp;2010</a>
+                            <br/>
+                                                                                <a href="/2009/12/">Dec&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/11/">Nov&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/10/">Oct&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/09/">Sep&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/08/">Aug&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/07/">Jul&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/06/">Jun&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/05/">May&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/04/">Apr&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/03/">Mar&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/02/">Feb&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2009/01/">Jan&nbsp;2009</a>
+                            <br/>
+                                                                                <a href="/2008/12/">Dec&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/11/">Nov&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/10/">Oct&nbsp;2008</a>
+                            <br/>
+                                                                                                                    </div>
+                                <div style="float: left; width: 90px; text-align: right;">
+                                                        <a href="/2008/09/">Sep&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/08/">Aug&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/07/">Jul&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/06/">Jun&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/05/">May&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/04/">Apr&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/03/">Mar&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/02/">Feb&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2008/01/">Jan&nbsp;2008</a>
+                            <br/>
+                                                                                <a href="/2007/12/">Dec&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/11/">Nov&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/10/">Oct&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/09/">Sep&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/08/">Aug&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/07/">Jul&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/06/">Jun&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/05/">May&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/04/">Apr&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/03/">Mar&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/02/">Feb&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2007/01/">Jan&nbsp;2007</a>
+                            <br/>
+                                                                                <a href="/2006/12/">Dec&nbsp;2006</a>
+                            <br/>
+                                            </div>
+                    <div style="clear: both; font-size: 1px; line-height: 1px;">&nbsp;</div>
+                </nav>
+
+            <footer style="text-align: center;">
+                <p>
+                    Follow Marco.org posts: <a href="https://twitter.com/marco_org">Twitter</a>, <a href="/rss">RSS feed</a>, or the <a href="/rss2">alternate RSS feed</a> in which link posts always point here first instead of their targets.
+                    <br/>
+                    <a href="https://twitter.com/marcoarment">Follow @marcoarment on Twitter</a> if you’d like.
+                </p>
+                <p>
+                    &copy;&nbsp;2006&ndash;2017 Marco Arment
+                </p>
+            </footer>
+        </section>
+    </body>
+</html>
