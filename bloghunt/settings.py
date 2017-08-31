@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.sites",
 
     # 3rd party apps
     'oauth2_provider',
     'rest_framework',
+    'pinax.stripe',
 
     # Local apps
     'feeds',
@@ -58,6 +60,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -146,8 +149,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'bloghunt.throttling.GlobalScopedDefaultsTrottle',
@@ -155,7 +158,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
         'user': '60/minute',
-        'user-write': '5/day',
+        'premium': '1000/minute',
     },
     'PAGE_SIZE': 25,
 }
@@ -166,6 +169,17 @@ if DEBUG:
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
+
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+    }
+}
+
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend'
+)
 
 # Celery Settings
 
@@ -181,3 +195,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=15)
 CELERY_DEFAULT_EXCHANGE = 'default'
 CELERY_TIMEZONE = 'UTC'
+
+# Stripe Settings
+
+PINAX_STRIPE_PUBLIC_KEY = os.environ['STRIPE_API_KEY']
+PINAX_STRIPE_SECRET_KEY = os.environ['STRIPE_API_SECRET']
+PINAX_STRIPE_DEFAULT_PLAN = os.environ['STRIPE_DEFAULT_PLAN']
+SITE_ID = 1

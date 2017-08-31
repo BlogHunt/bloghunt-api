@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.fields import empty
 
@@ -10,6 +11,13 @@ class SimpleErrorSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['message']
         model = feeds.models.Error
         read_only_fields = ('message',)
+
+
+class SimpleUserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        fields = ['email', 'username', 'is_authenticated']
+        model = get_user_model()
+        read_only_fields = ('email', 'username')
 
 
 class SimpleTagSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,3 +72,30 @@ class RecommendationSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data, *args, **kwargs):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data, *args, **kwargs)
+
+
+class UserDetailSerializer(serializers.HyperlinkedModelSerializer):
+    user = SimpleUserSerializer()
+    class Meta:
+        fields = ('user', 'gravatar_url', 'total_recommendations', 'total_sites_submitted')
+        model = models.UserDetails
+
+
+class PremiumUserDetailSerializer(serializers.HyperlinkedModelSerializer):
+    user = SimpleUserSerializer()
+    class Meta:
+        fields = ('user', 'api_client_id', 'api_client_secret', 'has_application', 'renewal_date')
+        model = models.PremiumUserDetails
+
+
+class UserSerializer(serializers.ModelSerializer):
+    details = UserDetailSerializer()
+    premium_details = PremiumUserDetailSerializer()
+
+    class Meta:
+        fields = ['email', 'username', 'is_authenticated', 'premium_details',
+            'details', 'is_premium']
+        model = models.PineUser
+        read_only_fields = ('email', 'username')
+
+

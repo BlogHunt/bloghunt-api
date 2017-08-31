@@ -30,11 +30,15 @@ urlpatterns = [
     url(r'^sites/new$', feeds.views.NewFeedView.as_view(),
         name='new-site'),
     url(r'^about$', feeds.views.about_view),
+    url(r'^accounts/profile$', users.views.UserDetailView.as_view()),
+    url(r'^accounts/generate_api_keys$', users.views.GenerateAPIKeysView.as_view()),
     url(r'^documentation$', feeds.views.documentation_view),
+    url(r'^api_documentation$', feeds.views.api_documentation_view),
     url(r'^users/', include(user_router.urls)),
     url(r'^', include(router.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+#     url(r"^payments/", include("pinax.stripe.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

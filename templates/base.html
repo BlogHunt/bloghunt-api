@@ -37,7 +37,8 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/about">About</a></li>
-            <li><a href="/documentation">Documentation</a></li>
+            <li><a href="/documentation">FAQ &amp; Help</a></li>
+            <li><a href="/api_documentation">API Documentation</a></li>
             {% if not user.is_authenticated %}
             <li><a href="/accounts/register/">Signup</a></li>
             <li><a href="/accounts/login/?next=/">Login</a></li>
@@ -51,6 +52,7 @@
                   <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
+                <li><a href="/accounts/profile">Account</a></li>
                 <li><a href="/users/sites">Submitted Sites</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="/accounts/logout/?next=/">Logout</a></li>

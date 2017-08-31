@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load rest_framework %}
+
+{% block morehead %}
+{% endblock %}
+
+{% block morescript %}
+    <script src="{% static "js/ajax-form.js" %}"></script>
+    <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+    <script>
+     window.drf = {
+      csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+      csrfCookieName: "{{ csrf_cookie_name|default:'csrftoken' }}"
+    };
+    $(document).ready(function() {
+      $('form.ajax').ajaxForm();
+    });
+    </script>
+{% endblock %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="container-fluid col-md-10 col-md-offset-1">
+    <div class="h1 text-center">
+        <img class="img-circle" src="{{ details.gravatar_url }}" width="70px"/>
+        &nbsp;
+        {{ username }}<br />
+    </div>
+    <div class="text-center">
+        <p class="text-muted">
+            {{ email }}<br />
+        {% if is_premium %}
+            Your account renews on {{ premium_details.renewal_date|date }}<br />
+        {% endif %}
+        You've submitted {{ details.total_sites_submitted|default:"0" }} sites,
+        and made {{ details.total_recommendations|default:"0" }} recommendations.
+    </p>
+    </div>
+    <div class="container-fluid" style="margin-bottom:50px;">
+        <div class="h3">Changing your Profile Picture</div>
+        Account profile pictures are pulled from <a href="https://en.gravatar.com">
+        Gravatar, a free service for cross-site account settings</a>. You can
+        change your profile picture there (or create a profile if you don't
+        have one) and your new picture will show up here.
+    {% if not is_premium %}
+        <!-- Upgrade Account -->
+        <div class="h3">Upgrade Account</div>
+        <p>
+            Developer using the Pine API, can remove the API throttling limit by
+            upgrading to a Premium Account.
+        </p>
+        <div class="container-fluid text-center">
+            <p class="lead">Coming soon!</p>
+<!--
+            <form  action="/payments/subscriptions/create/" method="GET">
+                <button type="submit" class="btn-sm btn-primary">
+                    Upgrade My Account for $15/year
+                </button>
+            </form>
+ -->
+        </div>
+     {% else %}
+        <!-- Generate API Token -->
+        <div class="h3">API Keys</div>
+        <p>
+            API Keys are used to access the Pine API with no limitations. This is useful
+            for developers wishing to build production software using the Pine API,
+            or by anyone wanting to use Pine more than the public API throttling
+            limitations allow.
+            More information can be found in the <a href="/documentation#api">Pine API
+            Documentation</a>.
+        </p>
+        <div class="row">
+            <div class="container-fluid col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if premium_details.has_application %}
+                        <div class="form-group">
+                            <label for="api_client_id">API Client ID</label>
+                            <input type="text" disabled value="{{ premium_details.api_client_id }}"
+                                class="form-control" id="api_client_id" />
+                        </div>
+                        <div class="form-group">
+                            <label for="api_client_secret">API Client Secret</label>
+                            <input type="text" disabled value="{{ premium_details.api_client_secret }}"
+                                class="form-control" id="api_client_secret" />
+                        </div>
+                        <p class="help-block">For instructions on how to use these credentials
+                        to authenticate against the API, <a href="/documentation">
+                        check out the API documentation.</a></p>
+                        {% else %}
+                        <p>
+                            You don't have any API Keys.
+                        </p>
+                        {% endif %}
+                        <form  class="ajax" action="/accounts/generate_api_keys" method="POST">
+                            <button type="submit" class="btn-sm btn-danger">
+                            {% if premium_details.has_application %}
+                                Generate New Keys
+                            {% else %}
+                                Generate Keys
+                            {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="text-danger">Warning:</span>
+                        Generating new API keys will cause any existing applications
+                        using the current keys to stop working.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Premium Account -->
+        <div class="h3">Payment History</div>
+        <p>
+            {% lorem p %}
+        </p>
+        <div class="container-fluid text-center">
+            <form  action="/payments/invoices/" method="GET">
+                <button type="submit" class="btn-sm btn-primary">
+                    View My Payment History
+                </button>
+            </form>
+        </div>
+        <div class="h3">Cancel Membership</div>
+        <p>
+            Cancelling your membership will stop any further payments to Pine from your
+            account and will refund you a prorated rate to the end of your billing period.
+        </p>
+        <p>
+            If you have any comments, questions, or concerns
+            please contact us, we'd love to hear from you.
+        </p>
+        <div class="container-fluid text-center">
+            <form class="ajax" action="/accounts/cancel_membership" method="POST">
+                <button type="submit" class="btn-sm btn-danger">
+                    Cancel My Membership
+                </button>
+            </form>
+        </div>
+    {% endif %}
+    <div>
+</div>
+</div>
+{% endblock %}
+

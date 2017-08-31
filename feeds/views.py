@@ -6,7 +6,6 @@ from rest_framework import viewsets, mixins, views, renderers
 from rest_framework.decorators import (detail_route, api_view,
                                        permission_classes, renderer_classes)
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from bloghunt.response import error_response
@@ -56,9 +55,10 @@ class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
 
 class NewFeedView(views.APIView):
     template_name = 'submit.html'
-    throttle_scope = 'upload'
-    authentication_classes = (SessionAuthentication,)
     permission_classes = (IsAuthenticated,)
+    throttle_rates = {
+        'user-write': '5/day'
+    }
 
     def get(self, request, *args, **kwargs):
         return Response()
@@ -108,3 +108,9 @@ def about_view(request):
 @permission_classes((AllowAny,))
 def documentation_view(request):
     return Response({}, template_name='documentation.html')
+
+@api_view()
+@renderer_classes((renderers.TemplateHTMLRenderer,))
+@permission_classes((AllowAny,))
+def api_documentation_view(request):
+    return Response({}, template_name='api_documentation.html')

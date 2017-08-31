@@ -46,7 +46,7 @@ class SimpleSiteRecommendationSerializer(serializers.HyperlinkedModelSerializer)
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Feed
-        fields = ('feed_url', )
+        fields = ('feed_url', 'cloud')
 
 
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
