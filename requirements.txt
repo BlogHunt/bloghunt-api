@@ -31,6 +31,7 @@ pyflakes==1.0.0
 pyOpenSSL==17.2.0
 python-dateutil==2.6.1
 pytz==2017.2
+redis==2.10.6
 requests==2.18.4
 static3==0.7.0
 stripe==1.62.1
