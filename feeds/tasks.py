@@ -51,7 +51,6 @@ def import_site_from_url(url, user_id, debug=False):
         error.save()
         site = models.Site(link=url, owner=user, error=error)
 
-    site.save()
     try:
         site.save()
     except IntegrityError:

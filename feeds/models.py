@@ -120,8 +120,7 @@ class Site(models.Model):
             if verbose:
                 print('Feed parsed...')
             site.link = feed.link
-            feed.site = site
-            feed.save()
+            site.feeds.add(feed, bulk=False)
         except parsers.NotAnRSSFeedError:
             if verbose:
                 print('Trying as site...')
@@ -134,8 +133,7 @@ class Site(models.Model):
                     feed = Feed.get_feed(url, utils.encoded_text_from_url(url))
                     if verbose:
                         print('Feed parsed...')
-                    feed.site = site
-                    feed.save()
+                    site.feeds.add(feed, bulk=False)
                 except parsers.NotAnRSSFeedError:
                     pass
         if site.feeds.count() == 0:
