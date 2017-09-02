@@ -6,17 +6,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 import feeds.models
 
-def create_sites_from_feed(apps, schema_editor):
-    """ For every feed in the system, create a related site object and poulate
-    it, then set the relation between the site and the feed.
-    """
-    existing_feeds = feeds.models.Feed.objects.all()
-    for feed in existing_feeds:
-        site = feeds.models.Site(link=feed.link)
-        site.save()
-        feed.site = site
-        feed.save()
-
 
 class Migration(migrations.Migration):
 
