@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 from ... import models
-
+from ... import pages
 
 class Command(base.BaseCommand):
     help = 'Populate RSS feed information from the feeds.'
@@ -17,12 +17,15 @@ class Command(base.BaseCommand):
         )
 
     def handle(self, all_feeds, verbosity, *args, **kwargs):
-        for feed in self.get_feeds_to_update(all_feeds):
+        feeds = self.get_feeds_to_update(all_feeds)
+        for i, feed in enumerate(feeds):
+            if verbosity > 0:
+                self.stdout.write('Updating [%s/%s]: %s' % (i+1, len(feeds), feed.feed_url))
             try:
-                feedpage = feed.get_feedpage()
+                feedpage = pages.get_feedpage(feed.feed_url)
             except Exception as e:
                 if verbosity > 1:
-                    self.stderr.write('Unable to parse {}\n\t{}'.format(feed.rss_url, e))
+                    self.stderr.write('Unable to parse {}\n\t{}'.format(feed.feed_url, e))
                 feed.last_updated = timezone.now()
                 feed.save(update_fields=['last_updated'])
                 continue
@@ -33,7 +36,7 @@ class Command(base.BaseCommand):
                 feed.save()
             except Exception:
                 if verbosity > 0:
-                    self.stderr.write('Error saving {} ({})'.format(feed.rss_url, feed.pk))
+                    self.stderr.write('Error saving {} ({})'.format(feed.feed_url, feed.pk))
 
     @staticmethod
     def get_feeds_to_update(all_feeds):
