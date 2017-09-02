@@ -120,12 +120,14 @@ class Site(models.Model):
             if verbose:
                 print('Feed parsed...')
             site.link = feed.link
+            site.save()
             site.feeds.add(feed, bulk=False)
         except parsers.NotAnRSSFeedError:
             if verbose:
                 print('Trying as site...')
             site_page = pages.get_sitepage(url, response_content)
             site.link = url
+            site.save()
             for url in site_page.possible_feeds:
                 if verbose:
                     print('Feed detected...\n%s' % url)
