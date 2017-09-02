@@ -7,9 +7,9 @@ from django.conf import settings
 from anyjson import loads as json_loads, dumps as json_dumps
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bloghunt-api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bloghunt.settings')
 
-app = Celery('bloghunt-api')
+app = Celery('bloghunt')
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
