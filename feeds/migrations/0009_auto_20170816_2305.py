@@ -14,9 +14,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(
-            create_sites_from_feed
-        ),
         migrations.AlterField(
             model_name='feed',
             name='site',
