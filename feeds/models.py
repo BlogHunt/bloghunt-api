@@ -57,7 +57,7 @@ class Keyword(models.Model):
 class Site(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tags = models.ManyToManyField(Tag, related_name='sites')
-    link = models.URLField(unique=True, blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
     created_on = models.DateTimeField(default=timezone.now)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='submitted_sites',
                               on_delete=models.CASCADE, blank=True, null=True)
