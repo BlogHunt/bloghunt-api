@@ -135,6 +135,7 @@ class Site(models.Model):
                     pass
         if site.feeds.count() == 0:
             raise parsers.SiteHasNoFeedsError('Site has no valid feeds.')
+        site.default_feed = site.feeds[0]
         return site
 
 
