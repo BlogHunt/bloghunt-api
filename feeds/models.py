@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.utils.html import strip_tags
 from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -89,11 +90,11 @@ class Site(models.Model):
 
     @property
     def title(self):
-        return getattr(self.default_feed, 'title', 'Untitled site')
+        return strip_tags(getattr(self.default_feed, 'title', 'Untitled site'))
 
     @property
     def description(self):
-        return getattr(self.default_feed, 'description', None)
+        return strip_tags(getattr(self.default_feed, 'description', ''))
 
     @property
     def image(self):
