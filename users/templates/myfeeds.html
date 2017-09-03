@@ -153,48 +153,57 @@
                         <div class="text-center container-fluid">
                             {{ total_recommendations|default:"0" }} people like this.
                         </div>
-                        <div class="text-left">
-                            <div class="h4">
-                                Description
-                            </div>
-                            {% if description %}
-                                <p>{{ description }}</p>
-                            {% else %}
-                                <p><i class="text-muted">No description</i></p>
-                            {% endif %}
-                            <hr />
-                            <div class="h4">
-                                Tags
-                            </div>
-                            <form action="{% url 'sites-detail' pk=id format='json' %}" method="PATCH">
+                        <!-- Update form -->
+                        <form action="{% url 'sites-detail' pk=id format='json' %}" method="PATCH">
+                            <div class="text-left">
+                                <div class="h4">
+                                    Description
+                                </div>
+                                {% if description %}
+                                    <p>{{ description }}</p>
+                                {% else %}
+                                    <p><i class="text-muted">No description</i></p>
+                                {% endif %}
+                                <hr />
+                                <div class="h4">
+                                    Tags
+                                </div>
                                 {% csrf_token %}
                                 <div style="margin-bottom:10px;" class="text-center">
                                     <select name="tags" class="form-control site-tags-multiple" multiple="multiple"
-                                        data-placeholder="Select up to 3 tags." style="width:90%">
+                                        data-placeholder="Select up to 3 tags.">
                                     {% for tag in all_tags %}
                                       <option value="{{tag.slug}}" {% if tag in tags %}selected{% endif %}>{{ tag.name }}</option>
                                     {% endfor %}
                                     </select>
-                                    <div class="visible-xs-block" style="height:5px;"/></div>
-                                    <button type="submit" class="btn-sm btn-primary">Save</button>
                                 </div>
-                            </form>
-                         </div>
-                        <hr />
-                        <div class="container-fluid text-right">
-                            {% for feed in feeds %}
-                            <div class="row" style="margin-bottom:5px;">
-                                <div class="col-xs-12">
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-default" href="{{ feed.feed_url }}"><i class="fa fa-feed"></i>&nbsp;Feed</a>
-                                        </span>
-                                        <input type="text" value="{{ feed.feed_url }}" disabled class="form-control">
+                                <hr />
+                                <div class="text-left">
+                                    <h4>Default feed</h4>
+                                    <p class="text-muted">
+                                        Below are all of the feeds found on the site.
+                                        Site information is pulled from it's default feed.
+                                        If a site's information looks wrong it could be that
+                                        we're looking at the wrong source.
+                                        By default, the first feed found is used as the default.
+                                    </p>
+                                    {% for feed in feeds %}
+                                    <div class="row" style="margin-bottom:5px;">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="default_feed" value="{{ feed.feed_url }}"
+                                                        {%if feed.feed_url == default_feed.feed_url %}checked{% endif %}>
+                                                </span>
+                                                <input type="text" value="{{ feed.feed_url }}" disabled class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
+                            <button type="submit" class="btn-sm btn-primary">Save</button>
+                        </form>
                     </div>
                  </div>
             </div>

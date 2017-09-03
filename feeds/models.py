@@ -63,16 +63,11 @@ class Site(models.Model):
                               on_delete=models.CASCADE, blank=True, null=True)
     error = models.OneToOneField(Error, related_name='site', on_delete=models.CASCADE,
                                  blank=True, null=True)
+    default_feed = models.OneToOneField('Feed', related_name='host_site',
+                                        on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.title
-
-    @property
-    def _default_feed(self):
-        try:
-            return self.feeds.all()[0]
-        except IndexError:
-            return None
 
     @property
     def time_since_update(self):
@@ -94,15 +89,15 @@ class Site(models.Model):
 
     @property
     def title(self):
-        return getattr(self._default_feed, 'title', 'Untitled site')
+        return getattr(self.default_feed, 'title', 'Untitled site')
 
     @property
     def description(self):
-        return getattr(self._default_feed, 'description', None)
+        return getattr(self.default_feed, 'description', None)
 
     @property
     def image(self):
-        return getattr(self._default_feed, 'image', None)
+        return getattr(self.default_feed, 'image', None)
 
     @staticmethod
     def get_site(url, owner=None, verbose=False):
