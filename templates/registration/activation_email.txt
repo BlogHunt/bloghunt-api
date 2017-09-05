@@ -4,7 +4,7 @@ You have asked to register an account at
 and your address will be removed from our records.
 
 To activate this account, please click the following link:
-{{ activation_key_url }}
+{{ sitedomain }}{{  activation_key_url }}
 
 Sincerely,
 {{ sitename }} Management
