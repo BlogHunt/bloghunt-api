@@ -122,6 +122,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Sending Email
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
+EMAIL_PORT = os.environ.get('EMAIL_PORT', None)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD  = os.environ.get('EMAIL_HOST_PASSWORD ', None)
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
