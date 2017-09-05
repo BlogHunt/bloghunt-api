@@ -1,0 +1,10 @@
+{% load i18n %}
+You have asked to register an account at
+{{ sitename }}.  If this wasn't you, please ignore this email
+and your address will be removed from our records.
+
+To activate this account, please click the following link:
+{{ activation_key_url }}
+
+Sincerely,
+{{ sitename }} Management
