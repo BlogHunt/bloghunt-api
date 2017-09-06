@@ -1,10 +1,12 @@
 {% load i18n %}
-You have asked to register an account at
-{{ sitename }}.  If this wasn't you, please ignore this email
-and your address will be removed from our records.
 
-To activate this account, please click the following link:
-{{ sitedomain }}{{  activation_key_url }}
+Welcome to {{ site.name }}!
 
-Sincerely,
-{{ sitename }} Management
+To activate your account, please click the link below:
+https://{{ site.domain }}{% url 'registration_activate' activation_key=activation_key%}
+
+
+If you didn't sign up for an account with {{ site.name }}, please ignore this email and your address will be removed from our records.
+
+Happy Searching,
+{{ site.name }} Support

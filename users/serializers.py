@@ -91,7 +91,7 @@ class RecommendationSerializer(serializers.HyperlinkedModelSerializer):
 class UserDetailSerializer(serializers.HyperlinkedModelSerializer):
     user = SimpleUserSerializer()
     class Meta:
-        fields = ('user', 'gravatar_url', 'total_recommendations', 'total_sites_submitted')
+        fields = ('user', 'gravatar_url')
         model = models.UserDetails
 
 
@@ -108,7 +108,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ['email', 'username', 'is_authenticated', 'premium_details',
-            'details', 'is_premium']
+            'details', 'is_premium', 'total_recommendations', 'total_sites_submitted']
         model = models.PineUser
         read_only_fields = ('email', 'username')
 

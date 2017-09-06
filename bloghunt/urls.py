@@ -4,6 +4,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.9/topics/http/urls/
 """
 from django.conf import settings
+from django.views.generic.base import RedirectView
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -14,6 +15,7 @@ import users.views
 
 # Needed imports
 from feeds import tasks
+from users import signals
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -30,6 +32,7 @@ urlpatterns = [
     url(r'^sites/new$', feeds.views.NewFeedView.as_view(),
         name='new-site'),
     url(r'^about$', feeds.views.about_view),
+    url(r'^accounts/profile/$', RedirectView.as_view(url='/accounts/profile')),
     url(r'^accounts/profile$', users.views.UserDetailView.as_view()),
     url(r'^accounts/generate_api_keys$', users.views.GenerateAPIKeysView.as_view()),
     url(r'^documentation$', feeds.views.documentation_view),

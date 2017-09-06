@@ -35,8 +35,8 @@
         {% if is_premium %}
             Your account renews on {{ premium_details.renewal_date|date }}<br />
         {% endif %}
-        You've submitted {{ details.total_sites_submitted|default:"0" }} sites,
-        and made {{ details.total_recommendations|default:"0" }} recommendations.
+        You've submitted {{ total_sites_submitted|default:"0" }} sites,
+        and made {{ total_recommendations|default:"0" }} recommendations.
     </p>
     </div>
     <div class="container-fluid" style="margin-bottom:50px;">

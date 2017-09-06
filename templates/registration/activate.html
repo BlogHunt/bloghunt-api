@@ -1,40 +1,22 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block title %}{% if account %}{% trans "Activation complete" %}{% else %}{% trans "Activation problem" %}{% endif %}{% endblock %}
-{% block body %}
+{% load static %}
+
+{% block title %}{% trans "Activation failed" %}{% endblock %}
+{% block content %}
 <div class="container-fluid">
   <div class="row" style="margin-top:50px;">
     <div class="col-sm-12 col-md-5 col-md-offset-2 text-center">
       <div class="h2">
-        {% url 'auth_login' as auth_login_url %}
-        {% if account %}
-          Your account is registered!
-        {% else %}
           There was a problem registering your account.
-        {% endif %}
         <br />
         <small>
-        {% if account %}
-          {% blocktrans %}
-            Thanks {{ account }}, your account is now active!
-            You can now <a href='{{ auth_login }}'>login</a> using the username and password you set at registration.
-          {% endblocktrans %}
-        {% else %}
             {% blocktrans %}Oops &ndash; it seems that your activation key is invalid. Please check the url and try again.{% endblocktrans %}
-        {% endif %}
         </small>
-      </div>
-      <div class="container-fluid text-center">
-        <div class="col-sm-12">
-          <br />
-          {% if account %}
-            <a class="btn btn-primary" href="/accounts/profile">My Account</a>
-          {% endif %}
-        </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 text-center">
-      <img class="" src="/images/spruce-tree.jpg"
+      <img class="" src="{% static 'images/spruce-tree.jpg' %}"
         style="width:90%; max-width:400px;" />
     </div>
   </div>

@@ -34,14 +34,6 @@ class UserDetails(models.Model):
         hash = hashlib.md5(self.user.email.encode())
         return self.GRAVATAR_URL_FORMAT.format(hash=hash.hexdigest())
 
-    @property
-    def total_recommendations(self):
-        self.user.recommendations.count()
-
-    @property
-    def total_sites_submitted(self):
-        return self.user.submitted_sites.count()
-
 
 class PremiumUserDetails(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='premium_details')
@@ -87,3 +79,12 @@ class PineUser(User):
     def get_users_to_renew(self):
         year_ago = timezone.now() - timedelta(years=1)
         return PineUser.objects.filter(premium_details__last_charge__lte=year_ago)
+
+    @property
+    def total_recommendations(self):
+        return self.recommendations.count()
+
+    @property
+    def total_sites_submitted(self):
+        return self.submitted_sites.count()
+

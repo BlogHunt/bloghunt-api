@@ -1,5 +1,5 @@
 {% autoescape off %}
   {% load i18n %}
-    {% blocktrans %}Account registration for {{ sitename }}
+    {% blocktrans %}Account registration for {{ site.name }}
     {% endblocktrans %}
 {% endautoescape %}

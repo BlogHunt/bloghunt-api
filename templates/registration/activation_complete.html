@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Activation complete" %}{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top:50px;">
+    <div class="col-sm-12 col-md-5 col-md-offset-2 text-center">
+      <div class="h2">
+          Your account is registered!
+        <br />
+        <small>
+            Your account is now active!
+            You can now <a href="{% url 'auth_login' %}">login</a> using the username and password you set at registration.
+        </small>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center">
+      <img class="" src="{% static 'images/spruce-tree.jpg' %}"
+        style="width:90%; max-width:400px;" />
+    </div>
+  </div>
+</div>
+{% endblock %}
