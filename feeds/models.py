@@ -56,6 +56,14 @@ class Keyword(models.Model):
 
 
 class Site(models.Model):
+    BlogType = 'blog'
+    MicroblogType = 'microblog'
+
+    types = (
+        (BlogType, 'Blog'),
+        (MicroblogType, 'Microblog'),
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tags = models.ManyToManyField(Tag, related_name='sites')
     link = models.URLField(blank=True, null=True)
@@ -66,6 +74,7 @@ class Site(models.Model):
                                  blank=True, null=True)
     default_feed = models.OneToOneField('Feed', related_name='host_site',
                                         on_delete=models.CASCADE, blank=True, null=True)
+    type = models.CharField(choices=types, default=BlogType, max_length=10)
 
     def __str__(self):
         return self.title

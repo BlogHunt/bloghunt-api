@@ -56,7 +56,7 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         fields = (
-            'url', 'title', 'description', 'link', 'tags', 'feeds',
+            'url', 'title', 'description', 'link', 'tags', 'feeds', 'type',
             'image', 'time_since_update', 'total_recommendations', 'recommendation',
         )
         model = models.Site

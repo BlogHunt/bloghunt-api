@@ -30,7 +30,8 @@
     {% if error or results != None %}
     <div class="container-fluid">
         <div class="h2">
-            Submitted Sites
+            Submitted Sites<br />
+            <small>Total Sites: {{ user.submitted_sites.count }}</small>
         </div>
         <div class="list-group">
         {% for site in results %}

@@ -15,7 +15,7 @@ from . import models, serializers, tasks
 class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     template_name = 'feeds.html'
 
-    queryset = (
+    base_queryset = (
         models.Site.objects
         .filter(error=None)
         .annotate(recommendations_count=Count('recommendations'))
@@ -23,6 +23,7 @@ class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
         .prefetch_related('tags')
         .prefetch_related('feeds')
     )
+
     serializer_class = serializers.SiteSerializer
     filter_fields = (
         'tags',
@@ -31,6 +32,14 @@ class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
         'feeds__title',
         'feeds__description',
     )
+
+    def get_queryset(self):
+        type = self.request.GET.get('type', '')
+        if not type:
+            return self.base_queryset
+        else:
+            return self.base_queryset.filter(type=type)
+
 
     def list(self, request, *args, **kwargs):
         q = request.GET.get('search', '').strip()

@@ -19,7 +19,7 @@ from users import signals
 
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'sites', feeds.views.SiteViewSet)
+router.register(r'sites', feeds.views.SiteViewSet, base_name='site')
 router.register(r'tags', feeds.views.TagViewSet)
 # router.register(r'keywords', feeds.views.KeywordViewSet)
 
