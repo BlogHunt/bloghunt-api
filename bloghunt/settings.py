@@ -153,7 +153,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ),
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.TemplateHTMLRenderer',
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -171,12 +170,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 25,
 }
 
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
-        'rest_framework.renderers.TemplateHTMLRenderer',
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    )
+# if DEBUG:
+#     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+#         'rest_framework.renderers.JSONRenderer',
+# #         'rest_framework.renderers.BrowsableAPIRenderer',
+#     )
 
 OAUTH2_PROVIDER = {
     'SCOPES': {

@@ -41,6 +41,9 @@ class SimpleSiteRecommendationSerializer(serializers.HyperlinkedModelSerializer)
     class Meta:
         model = users.models.Recommendation
         fields = ('url', )
+        extra_kwargs = {
+            'url': {'view_name': 'users:recommendation-detail'},
+        }
 
 
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
@@ -71,3 +74,50 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
         return SimpleSiteRecommendationSerializer(obj, context={
             'request': self.context['request']
         }).data
+
+
+# API Serializers
+
+
+class SimpleTagAPISerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        fields = ['url', 'name']
+        model = models.Tag
+        extra_kwargs = {
+            'url': {'view_name': 'api:tag-detail'},
+        }
+
+
+class TagAPISerializer(SimpleTagSerializer):
+    PAGE_SIZE = 10
+    sites = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = ['url', 'name', 'sites']
+        model = models.Tag
+        read_only_fields = ['sites']
+        extra_kwargs = {
+            'url': {'view_name': 'api:site-detail'},
+        }
+
+    def get_sites(self, tag):
+        queryset = models.Site.objects.filter(tags=tag).order_by('-recommendations')[:self.PAGE_SIZE]
+        serializer = SiteAPISerializer(queryset, many=True, context=self.context)
+        return serializer.data
+
+
+class SiteAPISerializer(serializers.HyperlinkedModelSerializer):
+    tags = SimpleTagAPISerializer(many=True)
+    feeds = SimpleFeedSerializer(many=True)
+
+    class Meta:
+        model = models.Site
+        fields = (
+            'url', 'title', 'description', 'link', 'type', 'image',
+            'feeds', 'tags', 'total_recommendations',
+        )
+        read_only_fields = ('__all__',)
+        extra_kwargs = {
+            'url': {'view_name': 'api:site-detail'},
+        }
+

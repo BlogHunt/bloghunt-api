@@ -14,6 +14,7 @@ from . import models, serializers, tasks
 
 class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     template_name = 'feeds.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
 
     base_queryset = (
         models.Site.objects
@@ -64,6 +65,7 @@ class SiteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.Gen
 
 class NewFeedView(views.APIView):
     template_name = 'submit.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     permission_classes = (IsAuthenticated,)
     throttle_rates = {
         'user-write': '5/day'
@@ -90,17 +92,20 @@ class NewFeedView(views.APIView):
 
 class TagViewSet(viewsets.ModelViewSet):
     template_name = 'tags.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     queryset = models.Tag.objects.order_by('slug')
     serializer_class = serializers.TagSerializer
 
 
 class KeywordViewSet(viewsets.ModelViewSet):
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     queryset = models.Keyword.objects.order_by('tag')
     serializer_class = serializers.KeywordSerializer
 
 
 class HomeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     template_name = 'home.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     queryset = models.Tag.objects.order_by('slug')
     serializer_class = serializers.TagSummarySerializer
 
@@ -123,3 +128,15 @@ def documentation_view(request):
 @permission_classes((AllowAny,))
 def api_documentation_view(request):
     return Response({}, template_name='api_documentation.html')
+
+
+# API Views
+
+class SiteAPIViewSet(SiteViewSet):
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = serializers.SiteAPISerializer
+
+
+class TagAPIViewSet(TagViewSet):
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = serializers.TagAPISerializer

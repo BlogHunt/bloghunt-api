@@ -10,7 +10,6 @@
     </div>
     <!-- API Documentation -->
     <p>As part of our the goal of providing a global search index of blogs, Pine features a simple, modern, free, and open JSON-REST API for developers to use (no more XML-RPC 🎉). The API is read-only so you'll still need to use the site to submit feeds. Access to the API does not require a login token or OAuth key.</p>
-    <p>The REST API follows the same structure as the HTML site: a home page, site search, site detail pages, and tag based search. In each of these cases appending <code>.json</code> or adding the query parameter <code>format=json</code> to any read-only page should be sufficient. For convenience, at the bottom of most pages is a link to view the same request using the REST API.</p>
     <p>General requests to the API and site are rate limited by client IP to <code>60/minute</code> to prevent spam. Normally this won't be an issue for users or for those looking to write simple scripts against the API. However if you need more frequent access to the API you can upgrade to a Premium Account to remove this restriction. Premium accounts are useful for anyone wanting to build production software against the Pine API.
     </p>
     <p><b>Note: </b>The API is still under development and the format is subject to change, but we will try to maintain backwards compatibility in most cases. Fields may be added to responses, but rarely removed or changed unless absolutely necessary.</p>
@@ -19,32 +18,32 @@
     </div>
 
     <h4>Root Endpoint</h4>
-    <code>/.json</code>
+    <code>/api/</code>
     <p>This is the root endpoint url. This endpoint contains a series of links to other public parts of the API.</p>
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#root-sample" aria-expanded="false" aria-controls="root-sample">
       Sample Request
     </a>
     <div id="root-sample" class="collapse" >
 <code><pre>
-$ http /.json
+$ http /api/
 
 {
-    "sites": "https://pinesearch.com/sites.json",
-    "tags": "https://pinesearch.com/tags.json"
+    "sites": "https://pinesearch.com/api/sites",
+    "tags": "https://pinesearch.com/api/tags"
 }
 </pre></code>
         </div>
 
         <!-- Site Search Docs -->
         <h4>Site Search</h4>
-        <code>/sites.json?search=some+query</code>
+        <code>/api/sites?search=some+query</code>
         <p>This endpoint requires a search query parameter containing a given user's query string (URL encoded of course) and returns a list of paginated results for sites matching the query. Each site in result set also includes a detail link (see below) which can be used to retrieve the site's information directly.</p>
         <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#site-search-sample" aria-expanded="false" aria-controls="site-search-sample">
           Sample Request
         </a>
         <div id="site-search-sample" class="collapse" >
 <code><pre>
-$ http /sites.json?search=wiki
+$ http /api/sites?search=wiki
 
 {
     "count": 1,
@@ -66,7 +65,7 @@ $ http /sites.json?search=wiki
             "tags": [],
             "title": "Wikimedia Blog",
             "total_recommendations": 0,
-            "url": "http://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+            "url": "http://pinesearch.com/api/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7"
         }
     ]
 }
@@ -75,14 +74,14 @@ $ http /sites.json?search=wiki
 
     <!-- Site Page Docs -->
     <h4>Site Page</h4>
-    <code>/sites/{id}.json</code>
+    <code>/api/sites/{id}</code>
     <p>This endpoint returns the details for the site indicated by the <code>{id}</code> in the URL and contains all of the information about a site including when the site's feeds claim that it was last updated.</p>
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#site-page-sample" aria-expanded="false" aria-controls="site-page-sample">
       Sample Request
     </a>
     <div id="site-page-sample" class="collapse" >
 <code><pre>
-$ http /sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json
+$ http /api/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7
 
 {
     "description": "News from Wikipedia and the Wikimedia movement",
@@ -99,21 +98,21 @@ $ http /sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json
     "tags": [],
     "title": "Wikimedia Blog",
     "total_recommendations": 0,
-    "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+    "url": "https://pinesearch.com/api/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7"
 }
 </pre></code>
     </div>
 
     <!-- Tag List Docs -->
     <h4>Tags List</h4>
-    <code>/tags.json</code>
+    <code>/api/tags</code>
     <p>This endpoint provides links to all of the different tags and their associated Top Charts of Sites.</p>
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#tag-list-sample" aria-expanded="false" aria-controls="tag-list-sample">
       Sample Request
     </a>
     <div id="tag-list-sample" class="collapse" >
 <code><pre>
-$ http /tags/art.json
+$ http /api/tags/art
 
 {
     "count": 1,
@@ -138,15 +137,15 @@ $ http /tags/art.json
                     "tags": [
                         {
                             "name": "Technology",
-                            "url": "https://pinesearch.com/tags/tech.json"
+                            "url": "https://pinesearch.com/api/tags/tech"
                         }
                     ],
                     "title": "Wikimedia Blog",
                     "total_recommendations": 0,
-                    "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+                    "url": "https://pinesearch.com/api/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7"
                 }
             ],
-            "url": "https://pinesearch.com/tags/tech.json"
+            "url": "https://pinesearch.com/api/tags/tech"
         }
     ]
 }</pre></code>
@@ -154,14 +153,14 @@ $ http /tags/art.json
 
     <!-- Tag Page Docs -->
     <h4>Tag Page</h4>
-    <code>/tags/{slug}.json</code>
+    <code>/api/tags/{slug}</code>
     <p>A given tag and it's Top Charts list and further details will be under this endpoint. Here you'll find a list of feeds sorted by number of recommendations that are classified under the given tag as well as some additional information about the tag itself.</p>
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#tag-page-sample" aria-expanded="false" aria-controls="tag-page-sample">
       Sample Request
     </a>
     <div id="tag-page-sample" class="collapse" >
 <code><pre>
-$ http /tags/tech.json
+$ http /api/tags/tech
 
 {
     "name": "Technology",
@@ -182,18 +181,19 @@ $ http /tags/tech.json
             "tags": [
                 {
                     "name": "Technology",
-                    "url": "https://pinesearch.com/tags/tech.json"
+                    "url": "https://pinesearch.com/api/tags/tech"
                 }
             ],
             "title": "Wikimedia Blog",
             "total_recommendations": 0,
-            "url": "https://pinesearch.com/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7.json"
+            "url": "https://pinesearch.com/api/sites/d063a62f-ee3a-4cbd-96c9-0bde321ee7b7"
         }
     ],
-    "url": "https://pinesearch.com/tags/tech.json"
+    "url": "https://pinesearch.com/api/tags/tech"
 }
 </pre></code>
     </div>
+<!--
     <h3>Premium User API Authentication</h3>
     <p>
         If you're a premium user, you can use the account credentials, found on your profile page, to bypass the normal request throttling.
@@ -205,10 +205,10 @@ $ http /tags/tech.json
         <b>Important:</b> There is still a throttle on Premium account requests of <code>1000/minute</code>, but it mainly exists to prevent spam. If you run into a problem with this limitation please contact us.
     </p>
 
-    <!-- Authenticating with the API -->
+    <!~~ Authenticating with the API ~~>
     <h4>Authenticating with the API</h4>
     <p>
-        Before making authenticated requests, every client needs to request an access token to make requests with. To get an access token, make a POST request to <code>/o/token/</code> using HTTP basic authentication with your <code>client_id</code> as the username and  <code>client_secret</code> as the password. The request must also have a <code>grant_type</code> request parameter with the value set to <code>client_credentials</code>.
+        Before making authenticated requests, every client needs to request an access token to make requests with. To get an access token, make a POST request to <code>/api/o/token/</code> using HTTP basic authentication with your <code>client_id</code> as the username and  <code>client_secret</code> as the password. The request must also have a <code>grant_type</code> request parameter with the value set to <code>client_credentials</code>.
     </p>
 
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#oauth-authenticate" aria-expanded="false" aria-controls="oauth-authenticate">
@@ -216,7 +216,7 @@ $ http /tags/tech.json
     </a>
     <div id="oauth-authenticate" class="collapse" >
     <code><pre>
-$ curl -X POST http://pinesearch.com/o/token/ \
+$ curl -X POST http://pinesearch.com/api/o/token/ \
     -u "&lt;client_id&gt;:&lt;client_secret&gt;" \
     -d "grant_type=client_credentials"
 
@@ -234,7 +234,7 @@ $ curl -X POST http://pinesearch.com/o/token/ \
         <b>Important:</b> The above flow does not provide a refresh token. If your token becomes expired you must request a new one.
     </p>
 
-    <!-- Making Authenticated Requests -->
+    <!~~ Making Authenticated Requests ~~>
     <h4>Making Authenticated Requests</h4>
     <p>Once you've authenticated and gotten an access token, simply add an <code>Authorization: Bearer &lt;access_token&gt;</code> header to your requests. That's it, you're done!
     </p>
@@ -245,13 +245,13 @@ $ curl -X POST http://pinesearch.com/o/token/ \
     <div id="oauth-use" class="collapse" >
     <code><pre>
 $ curl -H "Authorization: Bearer &lt;access_token&gt;" \
-    https://pinesearch.com/sites?search=siracusa
+    https://pinesearch.com/api/sites?search=siracusa
 </pre></code>
     </div>
 
-    <!-- Revoking a Token -->
+    <!~~ Revoking a Token ~~>
     <h4>Revoking a Token</h4>
-    <p>You can revoke an access token by making a POST request to <code>/o/revoke_token</code> with the token, client id, and client secret as form parameters.
+    <p>You can revoke an access token by making a POST request to <code>/api/o/revoke_token</code> with the token, client id, and client secret as form parameters.
     </p>
 
     <a class="btn btn-sm btn-default" role="button" data-toggle="collapse" href="#oauth-revoke" aria-expanded="false" aria-controls="oauth-revoke">
@@ -259,9 +259,10 @@ $ curl -H "Authorization: Bearer &lt;access_token&gt;" \
     </a>
     <div id="oauth-revoke" class="collapse" >
     <code><pre>
-$ curl --data "token=&lt;access_token&gt;&client_id=&lt;client_id&gt;&client_secret=&lt;client_secret&gt;" \
-    https://pinesearch.com/o/revoke_token/</pre></code>
+$ curl ~~data "token=&lt;access_token&gt;&client_id=&lt;client_id&gt;&client_secret=&lt;client_secret&gt;" \
+    https://pinesearch.com/api/o/revoke_token/</pre></code>
     </div>
     <div>
+ -->
 {% endblock %}
 

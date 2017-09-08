@@ -16,6 +16,7 @@ from . import serializers
 
 class UserSiteViewSet(viewsets.ModelViewSet):
     template_name = 'myfeeds.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     serializer_class = serializers.UserSiteSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)
@@ -27,7 +28,8 @@ class UserSiteViewSet(viewsets.ModelViewSet):
 
 class RecommendationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
         viewsets.GenericViewSet):
-    template_name = 'recommendations.html'
+    template_name = 'recommendation.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     serializer_class = serializers.RecommendationSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)
@@ -37,6 +39,7 @@ class RecommendationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 
 class UserDetailView(generics.GenericAPIView):
     template_name = 'account.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     serializer_class = serializers.UserSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)
@@ -51,6 +54,7 @@ class UserDetailView(generics.GenericAPIView):
 
 class GenerateAPIKeysView(generics.GenericAPIView):
     template_name = 'account.html'
+    renderer_classes = (renderers.TemplateHTMLRenderer,)
     serializer_class = serializers.UserSerializer
     filter_backends = (filters.IsOwnerFilterBackend,)
     authentication_classes = (SessionAuthentication,)

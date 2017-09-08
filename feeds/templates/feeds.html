@@ -147,13 +147,13 @@
                             {{ total_recommendations }} people like this.
                             {% if user.is_authenticated %}
                                 {% if not recommendation %}
-                                <form method="POST" action="{% url 'recommendation-list' format='json' %}">
+                                <form method="POST" action="{% url 'users:recommendation-list' %}">
                                     {% csrf_token %}
                                     <input type="hidden" name="site" value="{{ url }}" />
                                     <button class="btn-xs btn-primary">Recommend</button>
                                 </form>
                                 {% else %}
-                                <form method="DELETE" action="{{ recommendation.url }}.json">
+                                <form method="DELETE" action="{{ recommendation.url }}">
                                     <button class="btn-xs btn-warning">Un-Recommend</button>
                                 </form>
                                 {% endif %}
@@ -201,11 +201,7 @@
     {% endif %}
     <hr />
     <div class="container-fluid text-center">
-        {% if error or results != None %}
-        <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
-        {% else %}
-        <p><a href="{{ request.get_full_path }}?format=json">API Query for this item</a></p>
-        {% endif %}
+        <p><a href="/api{{ request.path }}">API Query for this search</a></p>
         <p><a href="/api_documentation">API Documentation</a></p>
     </div>
 {% endblock %}
