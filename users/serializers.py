@@ -43,11 +43,11 @@ class UserSiteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         fields = (
             'id', 'url', 'feeds', 'title', 'description', 'link', 'tags', 'default_feed',
-            'image', 'time_since_update', 'error', 'all_tags', 'created_on',
+            'image', 'time_since_update', 'error', 'all_tags', 'created_on', 'types', 'type'
         )
         model = feeds.models.Site
         read_only_fields = (
-            'id', 'url', 'feeds', 'title', 'description', 'link',
+            'id', 'url', 'feeds', 'title', 'description', 'link', 'types',
             'image', 'time_since_update', 'error', 'all_tags', 'created_on'
         )
 
@@ -75,7 +75,7 @@ class UserSiteSerializer(serializers.HyperlinkedModelSerializer):
             ][:2]
 
         # Now update as normal.
-        return super().update(site, validated_data)
+        return super(UserSiteSerializer, self).update(site, validated_data)
 
 
 class RecommendationSerializer(serializers.HyperlinkedModelSerializer):

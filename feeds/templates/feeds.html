@@ -72,7 +72,7 @@
                             <img src="{{ site.image }}" width="40" height="40" class="img-circle"/>
                             &nbsp;
                         {% endif %}
-                    <a href="{{ feed.url }}" >
+                    <a href="{{ site.url }}" >
                         {{ site.title }}
                     </a>
                     </h4>
@@ -125,9 +125,9 @@
                 <div class="panel-body">
                     <div class="container-fluid text-center">
                         {% if image %}
-                            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ feed.title }}" />
+                            <img class="img-circle" width="80px" src="{{ image }}" alt="{{ site.title }}" />
                         {% else %}
-                            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ feed.title }}" />
+                            <img class="img-circle" width="80px" src="{% static 'images/blank-profile-small.png' %}" alt="{{ site.title }}" />
                         {% endif %}&nbsp;<br />
                         <div class="h3">
                             {% if title %}
