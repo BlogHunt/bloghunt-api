@@ -86,9 +86,6 @@
     </div>
     <hr />
     <div class="container-fluid text-center">
-        {% if request.GET.search %}
-        <p><a href="{{ request.get_full_path }}&format=json">API Query for this search</a></p>
-        {% endif %}
         <p><a href="/api_documentation">API Documentation</a></p>
     </div>
 {% endblock %}

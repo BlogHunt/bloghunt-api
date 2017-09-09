@@ -201,7 +201,7 @@
     {% endif %}
     <hr />
     <div class="container-fluid text-center">
-        <p><a href="/api{{ request.path }}">API Query for this search</a></p>
+        <p><a href="/api{{ request.path }}?type={{ request.GET.type }}&search={{ request.GET.search }}">API Query for this search</a></p>
         <p><a href="/api_documentation">API Documentation</a></p>
     </div>
 {% endblock %}
