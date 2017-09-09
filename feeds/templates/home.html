@@ -6,26 +6,50 @@
 {% block morehead %}
     <meta name="description" content="Pine is a search engine and directory for Blogs and their RSS and JSON Feeds. It also has a fully featured and free API for developers.">
     <meta name="keywords" content="blogs,rss,json feed,search,directory,index,api">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+{% endblock %}
+
+{% block morescript %}
+    <script type="text/javascript">
+        $.fn.extend({
+            animateCss: function (animationName) {
+                var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+                this.addClass('animated ' + animationName).one(animationEnd, function() {
+                    $(this).removeClass('animated ' + animationName);
+                });
+                return this;
+            }
+        });
+        $(function() {
+            const delay = 110;
+            $('.animated').each(function(i, e) {
+                $(e).hide();
+                setTimeout(function() {
+                    $(e).show();
+                    $(e).animateCss('fadeIn')
+                }, delay * i)
+            });
+        })
+    </script>
+
 {% endblock %}
 
 {% block content %}
     <!-- Search Form -->
     <div class="h1 text-center">
-        <img src="{% static 'images/spruce-tree-small.jpeg'%}">
+        <img src="{% static 'images/pine-needles-small.png'%}">
         Pine<br />
         <small>The blog directory for the modern web.</small>
     </div><br />
-    <div class="container-fluid">
-        <form method="get" action="/sites">
-            <div class="input-group">
-              <input type="text" placeholder="The Talk Show" autofocus required
-                name="search" value="{{ request.GET.search }}" class="form-control">
-              <div class="input-group-btn">
-                <button type="submit" class="btn btn-default"><i class="fa fa-lg fa-search"></i></button>
-              </div><!-- /btn-group -->
-            </div><!-- /input-group -->
-        </form>
-    </div>
+    <form method="get" action="/sites">
+        <div class="input-group">
+          <input type="text" placeholder="xkcd" autofocus required
+            name="search" value="{{ request.GET.search }}" class="form-control">
+          <div class="input-group-btn">
+            <button type="submit" class="btn btn-default"><i class="fa fa-lg fa-search"></i></button>
+          </div><!-- /btn-group -->
+        </div><!-- /input-group -->
+    </form>
     <div class="text-center">
         <p><br />
             <b>Developers:</b> Check out the <a href="/api_documentation">free search API</a>!
@@ -36,7 +60,7 @@
     <div class="row">
         {% for tag in results %}
         <div class="col-xs-12 col-sm-4" style="max-height:320px;">
-            <div class="panel panel-default">
+            <div class="panel panel-default animated">
                 <div class="panel-heading">
                     <a class="panel-title" href="{{ tag.url }}">{{ tag.name }}</a>
                 </div>
