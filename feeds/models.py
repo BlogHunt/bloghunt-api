@@ -103,7 +103,10 @@ class Site(models.Model):
 
     @property
     def description(self):
-        return strip_tags(getattr(self.default_feed, 'description', ''))
+        description = getattr(self.default_feed, 'description', None)
+        if description:
+            return strip_tags(description)
+        return description
 
     @property
     def image(self):
@@ -150,6 +153,13 @@ class Site(models.Model):
 
 
 class Feed(models.Model):
+    RSSFeed = 'rss'
+    JSONFeed = 'jsonfeed'
+    FEED_TYPES = (
+        ('RSS Feed', RSSFeed),
+        ('JSON Feed', JSONFeed)
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     feed_url = models.URLField('Feed URL', unique=True)
     title = models.CharField(max_length=250, blank=True, null=True)
@@ -160,6 +170,7 @@ class Feed(models.Model):
     cloud = models.URLField('Cloud URL', blank=True, null=True)
     cached_content = models.TextField()
     site = models.ForeignKey(Site, related_name='feeds', on_delete=models.CASCADE)
+    type = models.CharField(choices=FEED_TYPES, default=RSSFeed, max_length=10)
 
     class Meta:
         unique_together = ('site', 'feed_url')
@@ -172,8 +183,9 @@ class Feed(models.Model):
         self.description = feedpage.description
         self.link = feedpage.link
         self.image = feedpage.image
-        self.cloud = feedpage.cloud
         self.last_updated = timezone.now()
+
+        self.cloud = getattr(feedpage, 'cloud', None)
         return self
 
     @staticmethod

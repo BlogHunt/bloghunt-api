@@ -3,7 +3,7 @@
 author: Brian Schrader
 """
 
-import re
+import re, json
 
 from bs4 import BeautifulSoup, Doctype
 from lxml import etree
@@ -20,6 +20,10 @@ class NotAnRSSFeedError(NotAFeedError):
     pass
 
 
+class NotAJSONFeedError(NotAFeedError):
+    pass
+
+
 class SiteHasNoFeedsError(Exception):
     pass
 
@@ -32,7 +36,7 @@ def get_site_soup(content):
 
 
 def get_rss_feed_parts(content, overtime=False):
-    """ Given the text content of what is supposed to be an RSS feed,
+    """ Given the byte content of what is supposed to be an RSS feed,
     return the channel element tree and the default namespace.
 
     :throws:
@@ -47,6 +51,18 @@ def get_rss_feed_parts(content, overtime=False):
     nsmatch = re.match('\{.*\}', channel.tag)
     defaultns = nsmatch.group(0) if nsmatch else ''
     return (channel, defaultns)
+
+
+def get_json_feed(content):
+    """ Given the byte content of what is supposed to be a JSON feed,
+    return the feed as a page.
+
+    Note: Only UTF-8 encoded feeds are supported.
+    """
+    feed = json.loads(content.decode('utf-8'))
+    if not _is_json_feed(feed):
+        raise NotAJSONFeedError('JSON is not a valid feed.')
+    return feed
 
 
 # Private
@@ -97,4 +113,17 @@ def _is_probably_an_rss_feed(tree):
 
     # TODO: Add more checks.
 
+    return False
+
+
+def _is_json_feed(feed):
+    """ Checks a few heuristics to see if a given JSON object
+    is a valid JSON feed.
+
+    Heuristics
+    ----------
+    - If the feed has a version.
+    """
+    if feed.get('version'):
+        return True
     return False

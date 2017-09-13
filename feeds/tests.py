@@ -98,21 +98,12 @@ class TestFeedPage(unittest.TestCase):
             'link': 'http://example.org/',
         })
 
-    def test_json_feed_fails_loose(self):
-        mock_response = requests.Response()
-        mock_response.status_code = 200
-        mock_response._content = b'{}'
-        with self.assertRaises(parsers.NotAFeedError):
-            with mock.patch('requests.get', return_value=mock_response):
-                feedpage = pages.get_feedpage('', overtime=True)
-
-    def test_json_feed_fails_strict(self):
-        mock_response = requests.Response()
-        mock_response.status_code = 200
-        mock_response._content = b'{}'
-        with self.assertRaises(lxml.etree.XMLSyntaxError):
-            with mock.patch('requests.get', return_value=mock_response):
-                feedpage = pages.get_feedpage('', overtime=False)
+    def test_atom(self):
+        self.check_feed('feed.json', {
+            'title': 'JSON Feed',
+            'description': 'JSON Feed is a pragmatic syndication format for blogs, microblogs, and other time-based content.',
+            'link': 'https://jsonfeed.org/',
+        })
 
 
 # class TestApiCreateFeed(resttest.APITestCase):

@@ -49,7 +49,17 @@ class SimpleSiteRecommendationSerializer(serializers.HyperlinkedModelSerializer)
 class SimpleFeedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Feed
-        fields = ('feed_url', 'cloud')
+        fields = ('feed_url', 'cloud', 'type')
+
+    def to_representation(self, feed):
+        if feed.type == models.Feed.JSONFeed:
+            cloud = self.fields.pop('cloud', None)
+
+        data = super(SimpleFeedSerializer, self).to_representation(feed)
+
+        if feed.type == models.Feed.JSONFeed:
+            self.fields['cloud'] = cloud
+        return data
 
 
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
