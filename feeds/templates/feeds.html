@@ -47,6 +47,10 @@
                             href="{% url 'site-list' %}?search={{request.GET.search}}&type=microblog">
                             Microblogs
                         </a>
+                        <a type="button" class="btn btn-sm btn-primary {% if request.GET.type == 'photoblog'%}active{% endif %}"
+                            href="{% url 'site-list' %}?search={{request.GET.search}}&type=photoblog">
+                            Photoblogs
+                        </a>
                     </div>
                 </div><!-- /input-group -->
             </div></div>

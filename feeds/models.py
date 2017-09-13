@@ -57,11 +57,13 @@ class Keyword(models.Model):
 
 class Site(models.Model):
     BlogType = 'blog'
+    PhotoblogType = 'photoblog'
     MicroblogType = 'microblog'
 
     types = (
         (BlogType, 'Blog'),
         (MicroblogType, 'Microblog'),
+        (PhotoblogType, 'Photoblog'),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
